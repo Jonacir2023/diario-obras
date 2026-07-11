@@ -1,0 +1,5141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#2c2c2c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Diário Obra">
+<link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkRpw6FyaW8gZGUgT2JyYXMiLAogICJzaG9ydF9uYW1lIjogIkRpw6FyaW8gT2JyYSIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMWEyMzMyIiwKICAidGhlbWVfY29sb3IiOiAiIzFhMjMzMiIsCiAgImljb25zIjogW3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTkyIDE5Mic+PHJlY3Qgd2lkdGg9JzE5MicgaGVpZ2h0PScxOTInIGZpbGw9JyMxYTIzMzInLz48dGV4dCB4PSc1MCUnIHk9JzU4JScgZm9udC1zaXplPSc5MCcgdGV4dC1hbmNob3I9J21pZGRsZScgZmlsbD0nI2Y1YjMzNCcgZm9udC1mYW1pbHk9J3NhbnMtc2VyaWYnIGZvbnQtd2VpZ2h0PSdib2xkJz5ETzwvdGV4dD48L3N2Zz4iLCJzaXplcyI6IjE5MngxOTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCJ9XQp9">
+<title>Diário de Obras</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&display=swap');
+  
+  :root {
+    /* Paleta Concreto Rústico */
+    --bg:          #e8e4df;        /* concreto claro desgastado */
+    --bg-card:     #f0ece7;        /* concreto polido */
+    --bg-dark:     #2c2c2c;        /* concreto escuro */
+    --bg-mid:      #3d3935;        /* concreto médio */
+    --ink:         #1c1a18;        /* quase preto industrial */
+    --ink-soft:    #4a4540;        /* cinza concreto */
+    --ink-faint:   #8a8178;        /* cinza claro */
+    --accent:      #d4541a;        /* laranja óxido de ferro */
+    --accent-soft: #e8a030;        /* amarelo capacete */
+    --accent-dim:  rgba(212,84,26,0.12);
+    --line:        #ccc5bc;        /* junta de concreto */
+    --line-soft:   #dbd4cb;        /* risco superficial */
+    --green:       #3a6b45;        /* verde segurança */
+    --red:         #b83228;        /* vermelho alerta */
+    --blue:        #2a4a72;        /* azul projeto */
+    --serif:       'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --sans:        'Barlow', -apple-system, sans-serif;
+    /* Textura concreto via SVG inline */
+    --texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeBlend in='SourceGraphic' mode='multiply' result='blend'/%3E%3CfeComposite in='blend' in2='SourceGraphic' operator='in'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  }
+  
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    overscroll-behavior: none;
+    min-height: 100vh;
+  }
+
+  body {
+    max-width: 480px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+    background-color: var(--bg);
+    background-image:
+      var(--texture),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(0,0,0,0.03) 40px
+      );
+  }
+  
+  /* HEADER — concreto escuro rústico */
+  .header {
+    background: var(--bg-dark);
+    background-image:
+      var(--texture),
+      linear-gradient(180deg, #363230 0%, #2c2c2c 100%);
+    color: #f0ece7;
+    padding: 14px 18px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 3px 16px rgba(0,0,0,0.35);
+    border-bottom: 3px solid var(--accent);
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+  .header-id { flex: 1; min-width: 0; }
+  .header-empresa {
+    font-size: 10px;
+    color: var(--accent-soft);
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--serif);
+  }
+  .header h1 {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: #f0ece7;
+  }
+  .header-obra {
+    font-size: 11px;
+    color: rgba(240,236,231,0.6);
+    font-style: normal;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .header-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 6px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: 13px;
+    border: 2px solid rgba(255,255,255,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .header-logo img { width: 100%; height: 100%; object-fit: contain; }
+  .header-date {
+    font-size: 11px;
+    color: var(--accent-soft);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: var(--serif);
+    padding: 6px 0 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 2px;
+  }
+  
+  /* TABS */
+  .tabs {
+    background: var(--bg-mid);
+    background-image: var(--texture);
+    border-top: 1px solid rgba(0,0,0,0.2);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .tab {
+    padding: 10px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: var(--serif);
+    color: rgba(240,236,231,0.45);
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: center;
+    touch-action: manipulation;
+    user-select: none;
+  }
+  .tab.active {
+    color: var(--accent-soft);
+    border-bottom-color: var(--accent);
+    background: rgba(212,84,26,0.08);
+  }
+  
+  /* RESUMO */
+  .resumo-periodo-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .resumo-ptab {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid var(--line);
+    border-bottom: 3px solid var(--line);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.5);
+    font-size: 11px;
+    font-weight: 800;
+    font-family: var(--serif);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .resumo-ptab.active {
+    border-color: var(--accent);
+    border-bottom-color: rgba(0,0,0,0.2);
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 3px 8px rgba(212,84,26,0.3);
+  }
+  .resumo-nav-semana {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+  .resumo-nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    border-bottom: 2px solid var(--line);
+    background: rgba(255,255,255,0.5);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .resumo-nav-label {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .resumo-stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .resumo-stat {
+    background: var(--bg-mid);
+    background-image: var(--texture);
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 4px;
+    padding: 10px 8px;
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+  .resumo-stat-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--accent-soft);
+    font-family: var(--serif);
+    line-height: 1;
+  }
+  .resumo-stat-label {
+    font-size: 9px;
+    color: rgba(240,236,231,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 3px;
+    font-family: var(--serif);
+    font-weight: 700;
+  }
+  .resumo-ativ-item {
+    background: var(--bg-card);
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .resumo-ativ-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .resumo-ativ-nome {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+  }
+  .resumo-ativ-total {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--serif);
+    white-space: nowrap;
+  }
+  .resumo-ativ-unid {
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 1px;
+  }
+  .resumo-bar-wrap {
+    height: 6px;
+    background: var(--line-soft);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .resumo-bar {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    transition: width 0.4s ease;
+  }
+  .resumo-ativ-detalhe {
+    font-size: 11px;
+    color: var(--ink-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+  .resumo-dia-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: var(--bg);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 10px;
+    color: var(--ink-soft);
+  }
+  .resumo-vazio {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--ink-faint);
+    font-size: 13px;
+    font-style: italic;
+  }
+  .resumo-efetivo-bloco {
+    background: var(--bg-card);
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .resumo-efetivo-titulo {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 6px;
+  }
+  .resumo-efetivo-media {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green);
+    font-family: var(--serif);
+  }
+
+  .view { display: none; padding: 14px; }
+  .view.active { display: block; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .section {
+    background: var(--bg-card);
+    background-image: var(--texture);
+    border-radius: 6px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--line);
+    box-shadow:
+      0 2px 8px rgba(0,0,0,0.08),
+      inset 0 1px 0 rgba(255,255,255,0.6);
+    position: relative;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  .section-title-text { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+  
+  label {
+    display: block;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+    margin-top: 12px;
+    font-family: var(--serif);
+  }
+  label:first-child { margin-top: 0; }
+
+  input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-bottom: 2px solid var(--line);
+    background: rgba(255,255,255,0.7);
+    border-radius: 4px;
+    font-size: 15px;
+    font-family: var(--sans);
+    color: var(--ink);
+    transition: all 0.15s;
+    -webkit-appearance: none;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 0 0 3px rgba(212,84,26,0.12);
+  }
+  textarea { resize: vertical; min-height: 70px; line-height: 1.5; }
+  
+  .time-row, .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  /* TEMPO - chips */
+  .tempo-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .tempo-chip {
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-bottom: 2px solid var(--line);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.5);
+    font-size: 12px;
+    font-weight: 700;
+    font-family: var(--serif);
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.15s;
+  }
+  .tempo-chip.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    border-bottom-color: rgba(0,0,0,0.2);
+    box-shadow: 0 2px 8px rgba(212,84,26,0.3);
+  }
+  
+  /* CAT BLOCKS / LIST */
+  .cat-block {
+    margin-bottom: 10px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-card);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .cat-header {
+    background: var(--bg-mid);
+    background-image: var(--texture);
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid rgba(0,0,0,0.15);
+    gap: 6px;
+  }
+  .cat-header-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+  .cat-icon { font-size: 16px; }
+  .cat-name {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 14px;
+    color: #f0ece7;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cat-count {
+    background: var(--accent);
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 2px;
+    min-width: 26px;
+    text-align: center;
+    font-family: var(--serif);
+    letter-spacing: .5px;
+  }
+  .cat-toggle {
+    color: rgba(240,236,231,0.5);
+    font-size: 12px;
+    transition: transform 0.2s;
+    padding-left: 4px;
+  }
+  .cat-block.collapsed .cat-toggle { transform: rotate(-90deg); }
+  .cat-block.collapsed .cat-body { display: none; }
+  
+  .cat-body { padding: 4px 0; }
+  
+  .item-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    gap: 10px;
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-row.checked { background: rgba(45, 106, 79, 0.04); }
+  .item-row.clickable { cursor: pointer; }
+  
+  .checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--line);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    background: var(--bg-card);
+  }
+  .item-row.checked .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .item-row.checked .checkbox::after {
+    content: '✓';
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  
+  .item-info { flex: 1; min-width: 0; }
+  .item-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 1px;
+  }
+  .item-meta {
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .item-meta .mat, .item-meta .num {
+    font-family: 'SF Mono', Menlo, monospace;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .item-extra {
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  
+  .item-actions { display: flex; gap: 4px; }
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--ink-faint);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .icon-btn:active { background: var(--line-soft); }
+  
+  .badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .badge-op { background: rgba(45,106,79,0.15); color: var(--green); }
+  .badge-pa { background: rgba(193,57,43,0.15); color: var(--red); }
+  .badge-leve { background: rgba(245,179,52,0.2); color: #8a6315; }
+  .badge-med { background: rgba(200,84,31,0.18); color: var(--accent); }
+  .badge-grave { background: rgba(193,57,43,0.18); color: var(--red); }
+  
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 14px;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+    width: 100%;
+  }
+  .btn-primary { background: var(--accent); color: white; box-shadow: 0 2px 6px rgba(200,84,31,0.25); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-secondary { background: var(--ink); color: white; }
+  .btn-ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+  .btn-whatsapp { background: #25D366; color: white; }
+  .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .btn-stack > * + * { margin-top: 8px; }
+  
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; animation: fadeIn 0.2s; }
+  .modal {
+    background: var(--bg);
+    width: 100%;
+    max-width: 480px;
+    border-radius: 16px 16px 0 0;
+    padding: 18px;
+    max-height: 88vh;
+    overflow-y: auto;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-title {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  
+  /* SELETOR DE OPERADOR (modal) */
+  .op-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg-card);
+    margin-top: 6px;
+  }
+  .op-search {
+    margin-bottom: 8px;
+  }
+  .op-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    background: var(--line-soft);
+    padding: 3px;
+    border-radius: 8px;
+  }
+  .op-tab {
+    flex: 1;
+    padding: 7px 4px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    background: transparent;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .op-tab.active {
+    background: var(--bg-card);
+    color: var(--accent);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .op-item {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  .op-item:last-child { border-bottom: none; }
+  .op-item:active { background: var(--line-soft); }
+  .op-item.selected { background: rgba(45, 106, 79, 0.08); }
+  .op-item-name { font-weight: 600; font-size: 14px; }
+  .op-item-meta { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+  .op-item-meta .mat { color: var(--accent); font-family: 'SF Mono', Menlo, monospace; font-weight: 600; }
+  .op-cat-label {
+    padding: 6px 12px;
+    background: var(--line-soft);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+  
+  /* OUTPUT */
+  .output-box {
+    background: #f8f6f0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    color: var(--ink);
+    max-height: 50vh;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    word-break: break-word;
+  }
+  
+  .stats-row {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .stats-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .stats-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .stat {
+    background: var(--bg-card);
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    padding: 8px 4px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--ink-faint);
+    margin-top: 3px;
+    font-weight: 600;
+  }
+  
+  .quick-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .quick-btn {
+    padding: 7px;
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .quick-btn:active { background: var(--line-soft); }
+  
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ink);
+    color: white;
+    padding: 11px 18px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    max-width: 90%;
+    text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  
+  .empty {
+    text-align: center;
+    padding: 24px 14px;
+    color: var(--ink-faint);
+    font-style: italic;
+    font-size: 13px;
+  }
+  
+  hr.divider { border: none; border-top: 1px dashed var(--line); margin: 12px 0; }
+  
+  .add-btn-full {
+    background: transparent;
+    color: var(--accent);
+    border: 1px dashed var(--line);
+    padding: 11px;
+    width: 100%;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .add-btn-full:active { background: rgba(200, 84, 31, 0.05); }
+  
+  /* CONFIG SUBTABS */
+  .subtabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    background: var(--line-soft);
+    padding: 3px;
+    border-radius: 8px;
+  }
+  .subtab {
+    flex: 1;
+    padding: 8px 4px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .subtab.active {
+    background: var(--bg-card);
+    color: var(--accent);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .config-pane { display: none; }
+  .config-pane.active { display: block; }
+  
+  /* CALENDÁRIO */
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+  .cal-title {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    text-transform: capitalize;
+  }
+  .cal-nav-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--line);
+    background: var(--bg-card);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .cal-day-head {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 0;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    background: var(--bg-card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    position: relative;
+    transition: all 0.15s;
+  }
+  .cal-day:active { transform: scale(0.95); }
+  .cal-day.empty { background: transparent; border: none; cursor: default; }
+  .cal-day.has-data {
+    background: linear-gradient(180deg, #fff 0%, #fef3d3 100%);
+    border-color: var(--accent-soft);
+  }
+  .cal-day.today {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .cal-day.today.has-data { background: var(--accent); }
+  .cal-day.weekend { color: var(--accent); }
+  .cal-day.today.weekend { color: white; }
+  .cal-day-dot {
+    width: 4px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 4px;
+  }
+  .cal-day.today .cal-day-dot { background: white; }
+  
+  .info-card {
+    background: linear-gradient(135deg, #fef3d3 0%, #fef9e7 100%);
+    border: 1px solid var(--accent-soft);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--ink);
+  }
+  .info-card.editing {
+    background: linear-gradient(135deg, #ffd6c2 0%, #fee9de 100%);
+    border-color: var(--accent);
+  }
+  
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b95a3' d='M2 4l4 4 4-4z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+  
+  /* LOGO UPLOAD */
+  .logo-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: var(--bg);
+    border-radius: 6px;
+    margin-top: 6px;
+  }
+  .logo-preview-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid var(--line);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .logo-preview-box img { width: 100%; height: 100%; object-fit: contain; }
+  .logo-preview-text {
+    flex: 1;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  
+  .info-line {
+    font-size: 12px;
+    color: var(--ink-soft);
+    padding: 8px 12px;
+    background: var(--bg);
+    border-radius: 6px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dia-semana {
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-top">
+    <div class="header-id">
+      <div class="header-empresa" id="hdrEmpresa">EMPRESA</div>
+      <h1>Diário de Obras</h1>
+      <div class="header-obra" id="hdrObra">—</div>
+      <div id="hdrCidade" style="font-size:12px;color:var(--accent);opacity:0.8;margin-top:2px;display:none"></div>
+    </div>
+    <div class="header-logo" id="hdrLogo">LOGO</div>
+  </div>
+  <div class="header-date" id="hdrDate">—</div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-view="diario">📝<br>Diário</button>
+  <button class="tab" data-view="gerar">📤<br>Gerar</button>
+  <button class="tab" data-view="resumo">📊<br>Resumo</button>
+  <button class="tab" data-view="calendario">📅<br>Calendário</button>
+  <button class="tab" data-view="config">⚙️<br>Cadastro</button>
+</nav>
+
+<!-- ============ DIÁRIO ============ -->
+<main id="view-diario" class="view active">
+  <div class="info-card" id="editingCard" style="display:none">
+    <span style="font-size:18px">📝</span>
+    <div style="flex:1">
+      <strong>Editando diário passado:</strong> <span id="editingDate"></span>
+    </div>
+    <button class="icon-btn" onclick="voltarParaHoje()" title="Voltar para hoje">🔙</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><div class="section-title-text">📅 Data do Diário</div></div>
+    <input type="date" id="dataDiario">
+    <div class="info-line">
+      <span>📆</span>
+      <span class="dia-semana" id="diaSemana">—</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">📍 Local da Obra</div>
+    </div>
+    <input type="text" id="localObra" list="localObraList" placeholder="Ex.: Bloco A — 2º Pavimento" style="margin-bottom:8px">
+    <datalist id="localObraList"></datalist>
+    <textarea id="descricaoLocal" placeholder="Descrição do local onde os trabalhos foram executados..." style="min-height:72px;resize:vertical"></textarea>
+  </div>
+  
+  <div class="section">
+    <div class="section-title"><div class="section-title-text">🌤️ Condições do Tempo</div></div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:6px">🌅 Manhã</div>
+      <div class="tempo-chips" id="tempoChipsManha">
+        <div class="tempo-chip" data-periodo="manha" data-tempo="sol">☀️ Sol</div>
+        <div class="tempo-chip" data-periodo="manha" data-tempo="nublado">⛅ Nublado</div>
+        <div class="tempo-chip" data-periodo="manha" data-tempo="chuva">🌧️ Chuva</div>
+      </div>
+      <div id="chuvaManhaBox" style="display:none;margin-top:8px">
+        <input type="number" id="chuvaManhaQtd" placeholder="Quantidade de chuva (mm)" min="0" step="0.1" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg-card);font-family:var(--sans);font-size:14px;color:var(--ink)">
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:6px">🌇 Tarde</div>
+      <div class="tempo-chips" id="tempoChipsTarde">
+        <div class="tempo-chip" data-periodo="tarde" data-tempo="sol">☀️ Sol</div>
+        <div class="tempo-chip" data-periodo="tarde" data-tempo="nublado">⛅ Nublado</div>
+        <div class="tempo-chip" data-periodo="tarde" data-tempo="chuva">🌧️ Chuva</div>
+      </div>
+      <div id="chuvaTardeBox" style="display:none;margin-top:8px">
+        <input type="number" id="chuvaTardeQtd" placeholder="Quantidade de chuva (mm)" min="0" step="0.1" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg-card);font-family:var(--sans);font-size:14px;color:var(--ink)">
+      </div>
+    </div>
+  </div>
+  
+  <div class="section">
+    <div class="section-title"><div class="section-title-text">⏰ Jornada de Trabalho</div></div>
+    <div class="grid-2" style="gap:6px;align-items:end">
+      <div><label style="margin-top:0">☕ Café início</label><input type="time" id="cafeInicio" value="06:30"></div>
+      <div><label style="margin-top:0">Café fim — Início de Jornada</label><input type="time" id="cafeFim" value="07:00"></div>
+      <div><label>🍽️ Almoço início</label><input type="time" id="almocoInicio" value="12:00"></div>
+      <div><label>Almoço fim</label><input type="time" id="almocoFim" value="13:00"></div>
+      <div style="grid-column:1/-1"><label>🔚 Encerramento da Jornada</label><input type="time" id="encerramento" value="17:00"></div>
+    </div>
+    <div class="info-line" id="jornadaInfo" style="display:none">
+      <span>ℹ️</span>
+      <span id="jornadaInfoText"></span>
+    </div>
+  </div>
+  
+  <div class="section">
+    <div class="section-title"><div class="section-title-text">📋 DSS — Diálogo de Segurança</div></div>
+    <div class="grid-2" style="gap:8px;align-items:end">
+      <div>
+        <label style="margin-top:0">🕐 Horário do DSS</label>
+        <input type="time" id="dssHorario">
+      </div>
+      <div>
+        <label style="margin-top:0">👷 Ministrado por</label>
+        <select id="dssMinistrou">
+          <option value="">— Selecionar —</option>
+        </select>
+      </div>
+    </div>
+    <label>Tema</label>
+    <textarea id="dssTema" placeholder="Tema abordado no DSS do dia..."></textarea>
+  </div>
+  
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">👷 Efetivo</div>
+      <button class="icon-btn" onclick="abrirAbaEfetivo()" title="Selecionar presentes">➕</button>
+    </div>
+    <div class="stats-row cols-3">
+      <div class="stat"><div class="stat-num" id="statPresentes">0</div><div class="stat-label">Presentes</div></div>
+      <div class="stat"><div class="stat-num" id="statAusentes">0</div><div class="stat-label">Ausentes</div></div>
+      <div class="stat"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Cadastro</div></div>
+    </div>
+    <div id="efetivoList"></div>
+  </div>
+  
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">🚜 Equipamentos Utilizados</div>
+      <button class="icon-btn" onclick="abrirAbaEquipamentos()" title="Selecionar equipamentos">➕</button>
+    </div>
+    <div id="equipList"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">🚗 Veículos Leves Utilizados</div>
+      <button class="icon-btn" onclick="abrirAbaVeiculosLeves()" title="Selecionar veículos">➕</button>
+    </div>
+    <div id="veiculosLevesList"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">🔴 Veículos/Equipamentos Parados</div>
+    </div>
+    <p style="font-size:12px;color:var(--ink-faint);margin-bottom:10px;font-style:italic">
+      Equipamentos e veículos leves cadastrados que não foram selecionados para uso hoje. Informe a justificativa de cada um.
+    </p>
+    <div id="veiculosParadosList"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">🛠️ Atividades do Dia</div>
+      <button class="icon-btn" onclick="abrirAbaAtividades()" title="Selecionar atividades">➕</button>
+    </div>
+    <div id="atividadesList"></div>
+  </div>
+  
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">📝 Observações do Dia</div>
+    </div>
+    <textarea id="observacoesDia" placeholder="Registre aqui informações importantes do dia: ocorrências, decisões, visitas, pendências, condições especiais..." style="min-height:140px;resize:vertical"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">🦺 Eventos de Segurança</div>
+      <button class="icon-btn" onclick="abrirModalEventoDia('seguranca')" title="Adicionar">➕</button>
+    </div>
+    <div id="evSegList"></div>
+    <button class="add-btn-full" onclick="abrirModalEventoAvulso('seguranca')">+ Registrar evento avulso</button>
+  </div>
+  
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">🌱 Eventos de Meio Ambiente</div>
+      <button class="icon-btn" onclick="abrirModalEventoDia('meio_ambiente')" title="Adicionar">➕</button>
+    </div>
+    <div id="evAmbList"></div>
+    <button class="add-btn-full" onclick="abrirModalEventoAvulso('meio_ambiente')">+ Registrar evento avulso</button>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">📷 Fotos do Dia</div>
+      <span id="fotosContador" style="font-size:12px;font-weight:700;color:var(--ink-soft)">0/6</span>
+    </div>
+    <div id="fotosGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px"></div>
+    <button class="add-btn-full" onclick="document.getElementById('fotoInput').click()">📷 Adicionar foto</button>
+    <input type="file" id="fotoInput" accept="image/*" style="display:none" onchange="adicionarFotoDia(event)">
+    <div id="fotoStatus" style="display:none;font-size:12px;color:var(--ink-soft);margin-top:6px">⏳ Enviando foto ao Google Drive...</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <div class="section-title-text">✍️ Apontador Responsável</div>
+    </div>
+    <select id="apontadorSelect" style="width:100%;padding:10px 8px;border:2px solid var(--line);border-radius:6px;background:var(--bg-card);font-family:var(--sans);font-size:14px;color:var(--ink);margin-top:4px" onchange="selecionarApontadorDireto(this.value)">
+      <option value="">— Selecionar Apontador —</option>
+    </select>
+  </div>
+
+  <button class="btn btn-primary" onclick="salvarDiarioDia(true)" style="margin-top:8px">💾 Salvar Diário no Histórico</button>
+</main>
+
+<!-- ============ GERAR ============ -->
+<main id="view-gerar" class="view">
+  <div class="section">
+    <div class="section-title"><div class="section-title-text">📤 Texto para WhatsApp</div></div>
+    <div class="output-box" id="output">Toque em "Gerar Relatório" abaixo.</div>
+    <div class="btn-stack">
+      <button class="btn btn-primary" onclick="gerarRelatorio()">🔄 Gerar / Atualizar Relatório</button>
+      <button class="btn btn-whatsapp" onclick="copiarRelatorio()">📋 Copiar Texto</button>
+      <button class="btn btn-secondary" onclick="enviarWhatsApp()">💬 Abrir WhatsApp</button>
+      <button class="btn btn-ghost" onclick="limparDiarioAtual()">🗑️ Limpar Diário Atual</button>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title"><div class="section-title-text">📊 Acumulado de Serviços</div></div>
+    <p style="font-size:12px;color:var(--ink-faint);margin-bottom:10px;font-style:italic">
+      Soma das quantidades registradas diariamente por atividade.
+    </p>
+    <div class="grid-2" style="gap:8px;margin-bottom:10px">
+      <button class="btn btn-primary" onclick="gerarAcumulado('semana')" style="font-size:13px">📅 Semana Atual</button>
+      <button class="btn btn-primary" onclick="gerarAcumulado('mes')" style="font-size:13px">📆 Mês Atual</button>
+    </div>
+    <div class="output-box" id="outputAcumulado" style="display:none;margin-top:8px;white-space:pre-wrap"></div>
+    <div id="btnAcumuladoAcoes" style="display:none;margin-top:8px">
+      <div class="btn-stack">
+        <button class="btn btn-whatsapp" onclick="copiarAcumulado()">📋 Copiar Acumulado</button>
+        <button class="btn btn-secondary" onclick="enviarAcumuladoWhatsApp()">💬 WhatsApp Acumulado</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ============ RESUMO ============ -->
+<main id="view-resumo" class="view">
+
+  <!-- seletor semana / mês -->
+  <div class="resumo-periodo-tabs">
+    <button class="resumo-ptab active" id="rtabSemana" onclick="setResumoPeriodo('semana')">📅 Semana</button>
+    <button class="resumo-ptab" id="rtabMes" onclick="setResumoPeriodo('mes')">📆 Mês</button>
+  </div>
+
+  <!-- navegação período -->
+  <div class="resumo-nav-semana">
+    <button class="resumo-nav-btn" onclick="navegarResumoPeriodo(-1)">◀</button>
+    <div class="resumo-nav-label" id="resumoNavLabel">—</div>
+    <button class="resumo-nav-btn" onclick="navegarResumoPeriodo(1)">▶</button>
+  </div>
+
+  <!-- stats rápidos -->
+  <div class="resumo-stat-row">
+    <div class="resumo-stat">
+      <div class="resumo-stat-num" id="resumoStatDias">0</div>
+      <div class="resumo-stat-label">Dias com reg.</div>
+    </div>
+    <div class="resumo-stat">
+      <div class="resumo-stat-num" id="resumoStatAtivs">0</div>
+      <div class="resumo-stat-label">Atividades</div>
+    </div>
+    <div class="resumo-stat">
+      <div class="resumo-stat-num" id="resumoStatEfetivo">—</div>
+      <div class="resumo-stat-label">Méd. efetivo/dia</div>
+    </div>
+  </div>
+
+  <!-- atividades acumuladas -->
+  <div class="section">
+    <div class="section-title"><div class="section-title-text">🛠️ Serviços Executados</div></div>
+    <div id="resumoAtivList"></div>
+  </div>
+
+  <!-- efetivo por categoria -->
+  <div class="section">
+    <div class="section-title"><div class="section-title-text">👷 Efetivo do Período</div></div>
+    <div id="resumoEfetivoList"></div>
+  </div>
+
+  <!-- botões exportar -->
+  <div class="section">
+    <div class="btn-stack">
+      <button class="btn btn-primary" onclick="copiarResumo()">📋 Copiar Resumo</button>
+      <button class="btn btn-secondary" onclick="enviarResumoWhatsAppPeriodo()">💬 Enviar WhatsApp</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ============ CALENDÁRIO ============ -->
+<main id="view-calendario" class="view">
+  <div class="section">
+    <div class="cal-header">
+      <button class="cal-nav-btn" onclick="navegarMes(-1)">◀</button>
+      <div class="cal-title" id="calTitle">—</div>
+      <button class="cal-nav-btn" onclick="navegarMes(1)">▶</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <p style="font-size:11px;color:var(--ink-faint);margin-top:12px;text-align:center;font-style:italic">
+      Toque numa data com marca dourada para ver/editar o diário.
+    </p>
+  </div>
+</main>
+
+<!-- ============ CONFIG ============ -->
+<main id="view-config" class="view">
+  <div class="subtabs">
+    <button class="subtab active" data-pane="obra">🏗️ Obra</button>
+    <button class="subtab" data-pane="colaboradores">👷 Equipe</button>
+    <button class="subtab" data-pane="equipamentos">🚜 Equip.</button>
+    <button class="subtab" data-pane="atividades">🛠️ Ativ.</button>
+  </div>
+  <div class="subtabs">
+    <button class="subtab" data-pane="seguranca">🦺 Seg.</button>
+    <button class="subtab" data-pane="meio_ambiente">🌱 M.A.</button>
+    <button class="subtab" data-pane="backup">💾 Backup</button>
+  </div>
+  
+  <!-- OBRA / EMPRESA -->
+  <div class="config-pane active" id="pane-obra">
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">🏗️ Identificação</div></div>
+      <label>Nome da Obra</label>
+      <input type="text" id="cfgObra" placeholder="Ex.: Obra Beira-Mar Norte">
+      <label>Empresa</label>
+      <input type="text" id="cfgEmpresa" placeholder="Ex.: Construtora XYZ">
+      <label>Cidade - UN</label>
+      <input type="text" id="cfgLocal" placeholder="Ex.: Florianópolis - SC">
+      <label>Descrição da Obra</label>
+      <input type="text" id="cfgDescricao" list="descricaoObraSugestoes" placeholder="Ex.: Construção de galpão industrial">
+      <datalist id="descricaoObraSugestoes"></datalist>
+      <label>Contrato / Código (opcional)</label>
+      <input type="text" id="cfgContrato" placeholder="Ex.: CT-2026-001">
+    </div>
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">🖼️ Logo da Empresa</div></div>
+      <div class="logo-preview">
+        <div class="logo-preview-box" id="logoPrev">LOGO</div>
+        <div class="logo-preview-text">
+          Toque em "Selecionar imagem" para enviar o logo da empresa (PNG ou JPG). O logo aparecerá no topo do app.
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:10px" onclick="document.getElementById('logoInput').click()">
+        📤 Selecionar Imagem
+      </button>
+      <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="uploadLogo(event)">
+      <button class="btn btn-ghost" style="margin-top:8px;color:var(--red);border-color:var(--red)" onclick="removerLogo()">
+        🗑️ Remover Logo
+      </button>
+    </div>
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">⏰ Jornada Padrão</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:10px;font-style:italic">
+        Define horários automaticamente conforme o dia da semana. Sextas e sábados: encerramento mais cedo.
+      </p>
+      <label>Encerramento padrão (seg - qui)</label>
+      <input type="time" id="cfgEncerramentoNormal" value="17:00">
+      <label>Encerramento sexta-feira</label>
+      <input type="time" id="cfgEncerramentoSexta" value="16:00">
+      <label>Encerramento sábado</label>
+      <input type="time" id="cfgEncerramentoSabado" value="16:00">
+      <button class="btn btn-primary" style="margin-top:14px" onclick="salvarConfigObra()">💾 Salvar Configurações</button>
+    </div>
+  </div>
+  
+  <!-- COLABORADORES -->
+  <div class="config-pane" id="pane-colaboradores">
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">👷 Colaboradores Presentes Hoje</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:10px;font-style:italic">
+        Marque os colaboradores presentes neste dia. Eles aparecerão resumidos na aba Diário.
+      </p>
+      <div id="configEfetivoDiaList"></div>
+      <button class="btn btn-primary btn-full" style="margin-top:14px" onclick="salvarEfetivoDia()">💾 Salvar Efetivo do Dia</button>
+      <hr class="divider" style="margin-top:20px;margin-bottom:20px">
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">⚙️ Gerenciar Colaboradores</div></div>
+      <button class="add-btn-full" onclick="abrirModalCategoria()">+ Adicionar Categoria</button>
+      <hr class="divider">
+      <div id="configColabList"></div>
+    </div>
+  </div>
+  
+  <!-- EQUIPAMENTOS -->
+  <div class="config-pane" id="pane-equipamentos">
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">🚜 Equipamentos Utilizados Hoje</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:10px;font-style:italic">
+        Marque os equipamentos utilizados neste dia. Eles aparecerão resumidos na aba Diário.
+      </p>
+      <div id="configEquipDiaList"></div>
+      <button class="btn btn-primary btn-full" style="margin-top:14px" onclick="salvarEquipDia()">💾 Salvar Equipamentos do Dia</button>
+      <hr class="divider" style="margin-top:20px;margin-bottom:20px">
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">⚙️ Equipamentos Cadastrados</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:10px;font-style:italic">
+        Marque "É caminhão / motorista?" para que o app sugira da lista de Motoristas ao selecionar operador no diário.
+      </p>
+      <button class="add-btn-full" onclick="abrirModalEquipamento()">+ Adicionar Equipamento</button>
+      <hr class="divider">
+      <div id="configEquipList"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">🚗 Veículos Leves Utilizados Hoje</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:10px;font-style:italic">
+        Marque os veículos leves utilizados neste dia. Eles aparecerão resumidos na aba Diário.
+      </p>
+      <div id="configVLDiaList"></div>
+      <button class="btn btn-primary btn-full" style="margin-top:14px" onclick="salvarVLDia()">💾 Salvar Veículos do Dia</button>
+      <hr class="divider" style="margin-top:20px;margin-bottom:20px">
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">📋 Frota de Veículos Leves</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:10px;font-style:italic">
+        Cadastre veículos leves da frota (pickups, vans, utilitários). O uso diário é registrado na aba Diário.
+      </p>
+      <button class="add-btn-full" onclick="abrirModalVeiculoFrota()">+ Adicionar Veículo Leve</button>
+      <hr class="divider">
+      <div id="configVLList"></div>
+    </div>
+  </div>
+  
+  <!-- ATIVIDADES -->
+  <div class="config-pane" id="pane-atividades">
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">🛠️ Atividades Cadastradas</div></div>
+      <button class="add-btn-full" onclick="abrirModalAtividade()">+ Adicionar Atividade Padrão</button>
+      <hr class="divider">
+      <div id="configAtivList"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">✓ Atividades do Dia</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:14px;font-style:italic">
+        Marque as atividades realizadas hoje. Você pode ajustar a quantidade e o local de execução para cada uma.
+      </p>
+      <div class="quick-actions" style="margin-bottom:14px">
+        <button class="quick-btn" onclick="marcarTodasAtividadesCheckbox(true)">✓ Marcar Todas</button>
+        <button class="quick-btn" onclick="marcarTodasAtividadesCheckbox(false)">✗ Desmarcar</button>
+      </div>
+      <div id="atividadesCheckboxList"></div>
+      <button class="btn btn-primary" style="margin-top:16px;width:100%" onclick="salvarAtividadesDodia()">💾 Salvar Atividades do Dia</button>
+    </div>
+  </div>
+  
+  <!-- SEGURANÇA -->
+  <div class="config-pane" id="pane-seguranca">
+    <div class="section">
+      <button class="add-btn-full" onclick="abrirModalEventoCadastro('seguranca')">+ Adicionar Tipo</button>
+      <hr class="divider">
+      <div id="configSegList"></div>
+    </div>
+  </div>
+  
+  <!-- MEIO AMBIENTE -->
+  <div class="config-pane" id="pane-meio_ambiente">
+    <div class="section">
+      <button class="add-btn-full" onclick="abrirModalEventoCadastro('meio_ambiente')">+ Adicionar Tipo</button>
+      <hr class="divider">
+      <div id="configAmbList"></div>
+    </div>
+  </div>
+  
+  <!-- BACKUP -->
+  <div class="config-pane" id="pane-backup">
+
+    <!-- Card backup automático -->
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">🔄 Backup Automático</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:12px;line-height:1.5">
+        Salvo automaticamente no dispositivo a cada relatório gerado ou diário salvo manualmente.
+      </p>
+      <div id="autoBackupInfo" style="background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:12px;margin-bottom:12px;min-height:44px">
+        <span style="color:var(--ink-faint);font-size:12px">Nenhum backup automático ainda.</span>
+      </div>
+      <div class="btn-stack">
+        <button class="btn btn-primary" onclick="backupAutomatico()">💾 Fazer Backup Agora</button>
+        <button class="btn btn-ghost" onclick="restaurarAutoBackup()">♻️ Restaurar Backup Automático</button>
+      </div>
+    </div>
+
+    <!-- Backup manual em arquivo -->
+    <div class="section">
+      <div class="section-title"><div class="section-title-text">📁 Backup em Arquivo</div></div>
+      <p style="font-size:12px;color:var(--ink-faint);margin-bottom:12px;line-height:1.5">
+        Exporta um arquivo <strong>.json</strong> para salvar no celular, e-mail ou Google Drive. Recomendado semanalmente.
+      </p>
+      <div class="btn-stack">
+        <button class="btn btn-ghost" onclick="exportarBackup()">⬇️ Exportar Arquivo (.json)</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('importInput').click()">⬆️ Importar Arquivo</button>
+        <input type="file" id="importInput" accept=".json" style="display:none" onchange="importarBackup(event)">
+      </div>
+      <hr class="divider">
+      <p style="font-size:12px;color:var(--ink-faint);text-align:center">
+        Histórico: <strong id="histCount">0</strong> diários salvos
+      </p>
+    </div>
+
+    <!-- Reset -->
+    <div class="section">
+      <div class="section-title"><div class="section-title-text" style="color:var(--red)">⚠️ Zona de Perigo</div></div>
+      <button class="btn btn-ghost" style="color:var(--red);border-color:var(--red)" onclick="resetarApp()">🗑️ Restaurar Padrão de Fábrica</button>
+    </div>
+
+  </div>
+</main>
+
+<!-- ============ MODAIS ============ -->
+
+<!-- Categoria -->
+<div class="modal-overlay" id="modalCategoria">
+  <div class="modal">
+    <div class="modal-title" id="modalCatTitle">Nova Categoria</div>
+    <label>Ícone (emoji)</label>
+    <input type="text" id="modalCatIcon" maxlength="2" placeholder="Ex.: 👷">
+    <label>Nome da Categoria</label>
+    <input type="text" id="modalCatNome" placeholder="Ex.: Engenharia / Supervisão">
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalCategoria')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarCategoria()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Colaborador -->
+<div class="modal-overlay" id="modalColab">
+  <div class="modal">
+    <div class="modal-title" id="modalColabTitle">Novo Colaborador</div>
+    <label>Matrícula</label>
+    <input type="text" id="modalColabMat" placeholder="Ex.: 241">
+    <label>Nome</label>
+    <input type="text" id="modalColabNome" placeholder="Ex.: Nivaldo Gomes">
+    <label>Função</label>
+    <input type="text" id="modalColabFunc" placeholder="Ex.: Líder">
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalColab')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarColaborador()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Equipamento (cadastro) -->
+<div class="modal-overlay" id="modalEquip">
+  <div class="modal">
+    <div class="modal-title" id="modalEquipTitle">Novo Equipamento</div>
+    <label>Número / Frota</label>
+    <input type="text" id="modalEquipNum" placeholder="Ex.: ESC-001">
+    <label>Descrição</label>
+    <input type="text" id="modalEquipDesc" list="equipDescSugestoes" placeholder="Ex.: Escavadeira Hidráulica CAT 320" autocomplete="off">
+    <datalist id="equipDescSugestoes"></datalist>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:14px;padding:8px 12px;background:var(--bg-card);border:1px solid var(--line);border-radius:6px">
+      <input type="checkbox" id="modalEquipMotorista" style="width:18px;height:18px;accent-color:var(--accent)">
+      <label for="modalEquipMotorista" style="margin:0;text-transform:none;letter-spacing:normal;font-size:14px;color:var(--ink);cursor:pointer;flex:1;font-weight:500">🚛 É caminhão / requer motorista?</label>
+    </div>
+    <p style="font-size:11px;color:var(--ink-faint);margin-top:6px;font-style:italic">
+      Marcado: lista de motoristas será sugerida.<br>
+      Desmarcado: lista de operacionais será sugerida.
+    </p>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalEquip')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarEquipamento()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Status Equipamento (diário) - NOVO com seletor de operador -->
+<div class="modal-overlay" id="modalEquipStatus">
+  <div class="modal">
+    <div class="modal-title" id="equipStatusName">—</div>
+    
+    <label>Operador do dia</label>
+    <div class="op-tabs" id="opTabs">
+      <button class="op-tab active" data-source="default">Sugerido</button>
+      <button class="op-tab" data-source="other">Outras Equipes</button>
+      <button class="op-tab" data-source="custom">Digitar Manual</button>
+    </div>
+    
+    <input type="text" id="opSearch" class="op-search" placeholder="🔍 Buscar por nome ou matrícula..." style="display:block">
+    
+    <div class="op-list" id="opList"></div>
+    
+    <input type="text" id="opCustom" placeholder="Digite nome do operador" style="display:none;margin-top:6px">
+    
+    <label style="margin-top:14px">Status</label>
+    <select id="equipStatusStatus">
+      <option value="Operando">Operando</option>
+      <option value="Parado">Parado</option>
+      <option value="Manutenção">Em Manutenção</option>
+    </select>
+    
+    <label style="margin-top:12px">⏱️ Horímetro final da jornada</label>
+    <input type="number" step="0.1" min="0" id="equipHorimetro" placeholder="Ex.: 4523.5">
+    
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalEquipStatus')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarEquipStatus()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Veículo Frota (cadastro) -->
+<div class="modal-overlay" id="modalVeiculoFrota">
+  <div class="modal">
+    <div class="modal-title" id="modalVeiculoFrotaTitle">Novo Veículo Leve</div>
+    <label>Número / Frota</label>
+    <input type="text" id="modalVFNumero" placeholder="Ex.: VL-001">
+    <label>Descrição / Modelo</label>
+    <input type="text" id="modalVFDesc" list="vlDescSugestoes" placeholder="Ex.: Toyota Hilux 2023" autocomplete="off">
+    <datalist id="vlDescSugestoes"></datalist>
+    <label>Placa</label>
+    <input type="text" id="modalVFPlaca" placeholder="Ex.: SCR-2E45">
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalVeiculoFrota')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarVeiculoFrota()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Atividade cadastro -->
+<div class="modal-overlay" id="modalAtividade">
+  <div class="modal">
+    <div class="modal-title" id="modalAtivTitle">Nova Atividade Padrão</div>
+    <label>Descrição</label>
+    <input type="text" id="modalAtivDesc" placeholder="Ex.: Concretagem de laje">
+    <label>Local / Frente (opcional)</label>
+    <input type="text" id="modalAtivLocal" placeholder="Ex.: Bloco A - Pav. 3">
+    <label>Unidade de Medida</label>
+    <input type="text" id="modalAtivUnidade" placeholder="Ex.: m³, m², ml, und, kg, t...">
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalAtividade')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarAtividade()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Apontador Responsável -->
+<div class="modal-overlay" id="modalApontador">
+  <div class="modal">
+    <div class="modal-title">✍️ Apontador Responsável</div>
+    <label>Nome / Matrícula</label>
+    <select id="modalApontadorInput">
+      <option value="">— Selecionar —</option>
+    </select>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalApontador')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarApontador()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Atividade avulsa -->
+<div class="modal-overlay" id="modalAtivExtra">
+  <div class="modal">
+    <div class="modal-title">Atividade Avulsa do Dia</div>
+    <label>Descrição</label>
+    <input type="text" id="modalAtivExtraDesc" placeholder="Ex.: Atendimento de fiscalização">
+    <label>Local / Frente</label>
+    <input type="text" id="modalAtivExtraLocal" placeholder="Opcional">
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalAtivExtra')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarAtivExtra()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Evento cadastro -->
+<div class="modal-overlay" id="modalEventoCad">
+  <div class="modal">
+    <div class="modal-title" id="modalEventoCadTitle">Novo Tipo</div>
+    <label>Descrição do tipo</label>
+    <input type="text" id="modalEventoCadDesc" placeholder="Ex.: Quase-acidente">
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalEventoCad')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarEventoCadastro()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Evento do dia -->
+<div class="modal-overlay" id="modalEventoDia">
+  <div class="modal">
+    <div class="modal-title" id="modalEventoDiaTitle">Registrar Evento</div>
+    <label>Tipo (do cadastro)</label>
+    <select id="modalEventoDiaTipo"></select>
+    <label>Descrição detalhada</label>
+    <textarea id="modalEventoDiaDesc" placeholder="O que aconteceu, onde, quando..."></textarea>
+    <label>Gravidade</label>
+    <select id="modalEventoDiaGrav">
+      <option value="leve">Leve</option>
+      <option value="media">Média</option>
+      <option value="grave">Grave</option>
+    </select>
+    <label>Ação tomada</label>
+    <textarea id="modalEventoDiaAcao" placeholder="Medidas adotadas, responsáveis, prazos..."></textarea>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalEventoDia')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarEventoDia()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Veículo Leve - Seletor de Motorista -->
+<div class="modal-overlay" id="modalVeiculoLeve">
+  <div class="modal">
+    <div class="modal-title" id="modalVLTitle">🚗 Veículo</div>
+    <label>Motorista do dia</label>
+    <input type="text" id="modalVLSearch" class="op-search" placeholder="🔍 Buscar por nome ou matrícula...">
+    <div class="op-list" id="modalVLColabList"></div>
+    <label style="margin-top:10px">Ou digitar nome manualmente</label>
+    <input type="text" id="modalVLCustomNome" placeholder="Nome do motorista">
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalVeiculoLeve')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarVeiculoLeve()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Evento avulso -->
+<div class="modal-overlay" id="modalEventoAvulso">
+  <div class="modal">
+    <div class="modal-title" id="modalEventoAvulsoTitle">Evento Avulso</div>
+    <label>Tipo / Título</label>
+    <input type="text" id="modalEventoAvulsoTipo" placeholder="Ex.: Pequeno corte em mão">
+    <label>Descrição detalhada</label>
+    <textarea id="modalEventoAvulsoDesc"></textarea>
+    <label>Gravidade</label>
+    <select id="modalEventoAvulsoGrav">
+      <option value="leve">Leve</option>
+      <option value="media">Média</option>
+      <option value="grave">Grave</option>
+    </select>
+    <label>Ação tomada</label>
+    <textarea id="modalEventoAvulsoAcao"></textarea>
+    <div class="btn-row" style="margin-top:14px">
+      <button class="btn btn-ghost" onclick="fecharModal('modalEventoAvulso')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarEventoAvulso()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Resumo calendário -->
+<div class="modal-overlay" id="modalResumo">
+  <div class="modal">
+    <div class="modal-title" id="modalResumoTitle">Resumo</div>
+    <div class="output-box" id="modalResumoTexto" style="max-height:55vh"></div>
+    <div class="btn-stack">
+      <button class="btn btn-primary" onclick="editarDiarioPassado()">✏️ Editar este Diário</button>
+      <button class="btn btn-whatsapp" onclick="copiarResumoModal()">📋 Copiar Texto</button>
+      <button class="btn btn-secondary" onclick="enviarResumoWhatsApp()">💬 Abrir WhatsApp</button>
+      <button class="btn btn-ghost" onclick="fecharModal('modalResumo')">Fechar</button>
+      <button class="btn btn-ghost" style="color:var(--red);border-color:var(--red)" onclick="excluirDiarioPassado()">🗑️ Excluir este Diário</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Confirmação Customizado -->
+<div class="modal-overlay" id="modalConfirm">
+  <div class="modal" style="max-width:320px">
+    <div class="modal-title" id="modalConfirmTitle" style="font-size:16px">Confirmar</div>
+    <p id="modalConfirmMsg" style="font-size:14px;color:var(--ink-soft);margin:8px 0 16px;text-align:center;line-height:1.5"></p>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="modalConfirmNo">Cancelar</button>
+      <button class="btn btn-primary" id="modalConfirmYes" style="background:var(--red);border-color:var(--red)">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Salvo</div>
+
+<script>
+// 🔗 Google Apps Script API
+const APPS_SCRIPT_URL_DIARIO = 'https://script.google.com/macros/s/AKfycbwa_TMG_RFnsFPE1-Q-gmYN9nPAv6QLy4A5N5B_z8VNK31N7R_-J_rPJtkErhJMLfMzeA/exec';
+
+// ============================================================
+// CONSTANTES E ESTADO
+// ============================================================
+const STORAGE_KEY = 'diario_obras_v3_state';
+const HISTORY_KEY = 'diario_obras_v3_history';
+
+const DIAS_SEMANA = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+const DIAS_SEMANA_CURTO = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
+
+// localStorage helper
+const S = {
+  get(k) { try { return JSON.parse(localStorage.getItem('diario_' + k)); } catch(e) { return null; } },
+  set(k, v) { localStorage.setItem('diario_' + k, JSON.stringify(v)); }
+};
+
+const DEFAULT_DATA = {
+  obra: {
+    nome: '',
+    empresa: '',
+    local: '',
+    contrato: '',
+    logo: '', // base64
+    encerramentoNormal: '17:00',
+    encerramentoSexta: '16:00',
+    encerramentoSabado: '16:00'
+  },
+  colaboradores: {
+    categorias: [
+      { id: 'c1', icon: '👷', nome: 'Engenharia / Supervisão', itens: [
+        { id: 'p1', mat: '101', nome: 'Carlos Mendes', funcao: 'Engenheiro Residente' },
+        { id: 'p2', mat: '102', nome: 'Roberto Silva', funcao: 'Supervisor de Obra' },
+        { id: 'p3', mat: '241', nome: 'Nivaldo Gomes', funcao: 'Líder' }
+      ]},
+      { id: 'c2', icon: '⚙️', nome: 'Operacional', itens: [
+        { id: 'p4', mat: '201', nome: 'José Pereira', funcao: 'Operador' },
+        { id: 'p5', mat: '202', nome: 'Antônio Lima', funcao: 'Operador' },
+        { id: 'p6', mat: '203', nome: 'Marcos Souza', funcao: 'Auxiliar' }
+      ]},
+      { id: 'c3', icon: '🔧', nome: 'Montadores', itens: [
+        { id: 'p7', mat: '301', nome: 'Paulo Ferreira', funcao: 'Montador' },
+        { id: 'p8', mat: '302', nome: 'Lucas Oliveira', funcao: 'Montador' },
+        { id: 'p9', mat: '303', nome: 'André Santos', funcao: 'Montador' },
+        { id: 'p10', mat: '304', nome: 'Diego Rocha', funcao: 'Montador' }
+      ]},
+      { id: 'c4', icon: '🧱', nome: 'Produção / Apoio', itens: [
+        { id: 'p11', mat: '401', nome: 'Rafael Costa', funcao: 'Produção' },
+        { id: 'p12', mat: '402', nome: 'Bruno Alves', funcao: 'Produção' },
+        { id: 'p13', mat: '403', nome: 'Felipe Martins', funcao: 'Apoio' },
+        { id: 'p14', mat: '404', nome: 'Tiago Ramos', funcao: 'Apoio' }
+      ]},
+      { id: 'c5', icon: '🔍', nome: 'Qualidade / Apontamento', itens: [
+        { id: 'p15', mat: '501', nome: 'Marcelo Dias', funcao: 'Apontador' },
+        { id: 'p16', mat: '502', nome: 'Eduardo Pinto', funcao: 'Qualidade' }
+      ]},
+      { id: 'c6', icon: '🚧', nome: 'Sinaleiros', itens: [
+        { id: 'p17', mat: '601', nome: 'Wagner Cardoso', funcao: 'Sinaleiro' },
+        { id: 'p18', mat: '602', nome: 'Roberto Tavares', funcao: 'Sinaleiro' },
+        { id: 'p19', mat: '603', nome: 'Sérgio Barros', funcao: 'Sinaleiro' }
+      ]},
+      { id: 'c7', icon: '⚡', nome: 'Elétrica', itens: [
+        { id: 'p20', mat: '701', nome: 'Fernando Castro', funcao: 'Eletricista' },
+        { id: 'p21', mat: '702', nome: 'Cláudio Moreira', funcao: 'Eletricista' }
+      ]},
+      { id: 'c8', icon: '🚛', nome: 'Motoristas', itens: [
+        { id: 'p22', mat: '801', nome: 'João Batista', funcao: 'Motorista' },
+        { id: 'p23', mat: '802', nome: 'Mauro Lopes', funcao: 'Motorista' },
+        { id: 'p24', mat: '803', nome: 'Vinícius Reis', funcao: 'Motorista' },
+        { id: 'p25', mat: '804', nome: 'Adilson Cruz', funcao: 'Motorista' },
+        { id: 'p26', mat: '805', nome: 'Hélio Vieira', funcao: 'Motorista' },
+        { id: 'p27', mat: '806', nome: 'Otávio Nunes', funcao: 'Motorista' }
+      ]}
+    ]
+  },
+  equipamentos: [
+    { id: 'e1', numero: 'ESC-001', desc: 'Escavadeira CAT 320', isMotorista: false },
+    { id: 'e2', numero: 'RET-002', desc: 'Retroescavadeira JCB 3CX', isMotorista: false },
+    { id: 'e3', numero: 'GUI-003', desc: 'Guindaste Liebherr 50T', isMotorista: false },
+    { id: 'e4', numero: 'CAM-004', desc: 'Caminhão Basculante', isMotorista: true },
+    { id: 'e5', numero: 'BET-005', desc: 'Betoneira 400L', isMotorista: false }
+  ],
+  atividades: [
+    { id: 'a1', desc: 'Concretagem de laje', local: '', unidade: 'm³' },
+    { id: 'a2', desc: 'Montagem de fôrmas', local: '', unidade: 'm²' },
+    { id: 'a3', desc: 'Armação de aço', local: '', unidade: 'kg' },
+    { id: 'a4', desc: 'Escavação', local: '', unidade: 'm³' },
+    { id: 'a5', desc: 'Acompanhamento de fiscalização', local: '', unidade: '' }
+  ],
+  veiculosFrota: [],
+  seguranca: [
+    { id: 's1', desc: 'Acidente sem afastamento' },
+    { id: 's2', desc: 'Quase-acidente' },
+    { id: 's3', desc: 'Ato inseguro observado' },
+    { id: 's4', desc: 'Condição insegura observada' }
+  ],
+  meio_ambiente: [
+    { id: 'm1', desc: 'Derramamento de óleo/combustível' },
+    { id: 'm2', desc: 'Descarte irregular de resíduo' },
+    { id: 'm3', desc: 'Emissão de poeira excessiva' },
+    { id: 'm4', desc: 'Ruído acima do permitido' }
+  ]
+};
+
+const EMPTY_DAY = () => ({
+  data: '',
+  tempoManha: '',
+  chuvaManhaQtd: '',
+  tempoTarde: '',
+  chuvaTardeQtd: '',
+  cafeInicio: '06:30', cafeFim: '07:00',
+  almocoInicio: '12:00', almocoFim: '13:00',
+  encerramento: '17:00',
+  dssTema: '',
+  dssHorario: '',
+  dssMinistrou: '',
+  atividadesExtra: '',
+  atividadesMarcadas: {},
+  atividadesQtd: {},  // id -> quantidade executada
+  atividadesAvulsas: [],
+  efetivo: {},
+  equipamentos: {},  // id -> {ativo, operadorMat, operadorNome, status, horimetro}
+  veiculosLeves: [],  // [{id, desc, placa, motorista}]
+  eventosSeguranca: [],
+  eventosAmbiente: [],
+  apontador: '',
+  localObra: '',
+  descricaoLocal: '',
+  veiculosParados: {},  // id -> justificativa (para equips e VLs não selecionados)
+  fotos: []  // [{fileId, url}] — arquivos no Google Drive, app guarda só links
+});
+
+let state = loadState();
+let history = loadHistory();
+let currentDay = null;
+let editingDate = null;
+let editingCat = { type: null, id: null };
+let editingItem = { type: null, parentId: null, id: null };
+let cal = { year: 0, month: 0 };
+let activeEventoTipo = null;
+let activeEquipId = null;
+let activeResumoData = null;
+let activeEventoEditIdx = null;
+let opSelectedSource = 'default';
+let opSelectedMat = null;
+let opSelectedNome = null;
+
+function loadState() {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY);
+    if (s) return mergeDefaults(JSON.parse(s));
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+function mergeDefaults(d) {
+  const base = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  // deep-ish merge: garante chaves principais
+  Object.keys(base).forEach(k => {
+    if (d[k] !== undefined) base[k] = d[k];
+  });
+  // garante todas as subchaves de obra
+  if (!base.obra) base.obra = JSON.parse(JSON.stringify(DEFAULT_DATA.obra));
+  Object.keys(DEFAULT_DATA.obra).forEach(k => {
+    if (base.obra[k] === undefined) base.obra[k] = DEFAULT_DATA.obra[k];
+  });
+  return base;
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function loadHistory() {
+  try {
+    const h = localStorage.getItem(HISTORY_KEY);
+    if (h) return JSON.parse(h);
+  } catch(e) {}
+  return {};
+}
+function saveHistory() { localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }
+
+// ============================================================
+// UTILS
+// ============================================================
+function todayISO() {
+  const d = new Date();
+  const tz = d.getTimezoneOffset() * 60000;
+  return new Date(d - tz).toISOString().slice(0,10);
+}
+function dataAtiva() {
+  // Data do diário em edição (hoje ou dia passado sendo corrigido)
+  return (typeof currentDay !== 'undefined' && currentDay && currentDay.data) ? currentDay.data : todayISO();
+}
+function qtdAtividadeDia(day, atId) {
+  // Lê quantidade de atividadesQtd com fallback em atividadesMarcadas[id].qty; aceita vírgula decimal
+  let v = day && day.atividadesQtd ? day.atividadesQtd[atId] : undefined;
+  if (v === undefined || v === null || v === '') {
+    const m = day && day.atividadesMarcadas ? day.atividadesMarcadas[atId] : null;
+    if (m && typeof m === 'object') v = m.qty;
+  }
+  if (v === undefined || v === null || v === '') return 0;
+  const n = parseFloat(String(v).replace(',', '.'));
+  return isNaN(n) ? 0 : n;
+}
+function parseISO(iso) {
+  const [y,m,d] = iso.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function formatDateBR(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+function diaDaSemana(iso) {
+  return DIAS_SEMANA[parseISO(iso).getDay()];
+}
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastT);
+  window._toastT = setTimeout(() => t.classList.remove('show'), 2200);
+}
+function uid(p) { return p + Date.now() + Math.floor(Math.random()*1000); }
+
+function gravBadge(g) {
+  if (g === 'leve') return '<span class="badge badge-leve">Leve</span>';
+  if (g === 'media') return '<span class="badge badge-med">Média</span>';
+  if (g === 'grave') return '<span class="badge badge-grave">Grave</span>';
+  return '';
+}
+
+function tempoLabel(day) {
+  const map = { sol: '☀️ Sol', nublado: '⛅ Nublado', chuva: '🌧️ Chuva' };
+  const manha = map[day.tempoManha] || '—';
+  const manhaChuva = (day.tempoManha === 'chuva' && day.chuvaManhaQtd) ? ` (${day.chuvaManhaQtd}mm)` : '';
+  const tarde = map[day.tempoTarde] || '—';
+  const tardeChuva = (day.tempoTarde === 'chuva' && day.chuvaTardeQtd) ? ` (${day.chuvaTardeQtd}mm)` : '';
+  return `Manhã: ${manha}${manhaChuva} | Tarde: ${tarde}${tardeChuva}`;
+}
+
+function jornadaPadraoPorDia(iso) {
+  const d = parseISO(iso).getDay(); // 0=dom, 5=sex, 6=sab
+  if (d === 5) return state.obra.encerramentoSexta || '16:00';
+  if (d === 6) return state.obra.encerramentoSabado || '16:00';
+  return state.obra.encerramentoNormal || '17:00';
+}
+
+// ============================================================
+// NAVEGAÇÃO
+// ============================================================
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-' + btn.dataset.view).classList.add('active');
+    const v = btn.dataset.view;
+    if (v === 'diario') renderDiario();
+    if (v === 'gerar') gerarRelatorio();
+    if (v === 'calendario') renderCalendario();
+    if (v === 'config') renderConfig();
+    if (v === 'resumo') { salvarDiarioDia(false); renderResumo(); }
+    // Ao trocar de aba, sempre salvar o dia corrente
+    salvarDiarioDia(false);
+  });
+});
+document.querySelectorAll('.subtab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const pane = btn.dataset.pane;
+    document.querySelectorAll('.subtab').forEach(t => {
+      if (t.dataset.pane === pane) t.classList.add('active');
+      else t.classList.remove('active');
+    });
+    document.querySelectorAll('.config-pane').forEach(p => p.classList.remove('active'));
+    document.getElementById('pane-' + pane).classList.add('active');
+    renderConfig();
+  });
+});
+
+// ============================================================
+// HEADER
+// ============================================================
+function atualizarHeader() {
+  document.getElementById('hdrEmpresa').textContent = state.obra.empresa || 'EMPRESA';
+  document.getElementById('hdrObra').textContent = state.obra.nome || 'Configure em ⚙️ Cadastro';
+  const logoEl = document.getElementById('hdrLogo');
+  if (state.obra.logo) {
+    logoEl.innerHTML = `<img src="${state.obra.logo}" alt="logo">`;
+  } else {
+    const sigla = (state.obra.empresa || 'LOGO').substring(0,3).toUpperCase();
+    logoEl.innerHTML = sigla;
+  }
+}
+
+// ============================================================
+// CURRENT DAY
+// ============================================================
+function initCurrentDay(data) {
+  // Salvar o dia atual ANTES de trocar, para não perder dados
+  if (currentDay && currentDay.data && currentDay.data !== data) {
+    salvarDiarioDia(false);
+  }
+  data = data || todayISO();
+  if (history[data]) {
+    currentDay = JSON.parse(JSON.stringify(history[data]));
+  } else {
+    currentDay = EMPTY_DAY();
+    currentDay.data = data;
+    currentDay.encerramento = jornadaPadraoPorDia(data);
+  }
+  editingDate = (data === todayISO()) ? null : data;
+  atualizarHeaderEdicao();
+  preencherCampos();
+  renderDiario();
+  _atualizarResumoObraNosDiario();
+}
+
+function atualizarHeaderEdicao() {
+  const card = document.getElementById('editingCard');
+  if (editingDate) {
+    card.style.display = 'flex';
+    card.classList.add('editing');
+    document.getElementById('editingDate').textContent = formatDateBR(editingDate);
+  } else {
+    card.style.display = 'none';
+  }
+  document.getElementById('hdrDate').textContent = 
+    `${DIAS_SEMANA_CURTO[parseISO(currentDay.data).getDay()]} · ${formatDateBR(currentDay.data)}`;
+  document.getElementById('diaSemana').textContent = diaDaSemana(currentDay.data);
+  
+  // info jornada (avisa sextas/sábados)
+  const dow = parseISO(currentDay.data).getDay();
+  const info = document.getElementById('jornadaInfo');
+  const infoTxt = document.getElementById('jornadaInfoText');
+  if (dow === 5) {
+    info.style.display = 'flex';
+    infoTxt.textContent = `Sexta-feira: encerramento padrão ${state.obra.encerramentoSexta}`;
+  } else if (dow === 6) {
+    info.style.display = 'flex';
+    infoTxt.textContent = `Sábado: encerramento padrão ${state.obra.encerramentoSabado}`;
+  } else {
+    info.style.display = 'none';
+  }
+}
+
+function voltarParaHoje() {
+  salvarDiarioDia(false);
+  initCurrentDay(todayISO());
+  toast('Voltou para hoje');
+}
+
+function preencherCampos() {
+  ['cafeInicio','cafeFim','almocoInicio','almocoFim','encerramento','dssTema','dssHorario','atividadesExtra','observacoesDia','localObra','descricaoLocal'].forEach(k => {
+    const el = document.getElementById(k);
+    if (el) el.value = currentDay[k] || '';
+  });
+  renderApontadorDia();
+  _atualizarLocalObraDatalist();
+  // DSS Ministrou
+  const dssMin = document.getElementById('dssMinistrou');
+  if (dssMin) {
+    // Popular opções da lista de colaboradores
+    const opts = ['<option value="">— Selecionar —</option>'];
+    state.colaboradores.categorias.forEach(cat => {
+      cat.itens.forEach(c => opts.push(`<option value="${escapeHtml(c.mat+'|'+c.nome)}" ${currentDay.dssMinistrou===c.mat+'|'+c.nome?'selected':''}>${escapeHtml(c.nome)} (${escapeHtml(c.mat)})</option>`));
+    });
+    dssMin.innerHTML = opts.join('');
+  }
+  document.getElementById('dataDiario').value = currentDay.data;
+  // tempo — manhã
+  document.querySelectorAll('#tempoChipsManha .tempo-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.tempo === currentDay.tempoManha);
+  });
+  document.getElementById('chuvaManhaBox').style.display = currentDay.tempoManha === 'chuva' ? 'block' : 'none';
+  const chuvaManhaEl = document.getElementById('chuvaManhaQtd');
+  if (chuvaManhaEl) chuvaManhaEl.value = currentDay.chuvaManhaQtd || '';
+  // tempo — tarde
+  document.querySelectorAll('#tempoChipsTarde .tempo-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.tempo === currentDay.tempoTarde);
+  });
+  document.getElementById('chuvaTardeBox').style.display = currentDay.tempoTarde === 'chuva' ? 'block' : 'none';
+  const chuvaTardeEl = document.getElementById('chuvaTardeQtd');
+  if (chuvaTardeEl) chuvaTardeEl.value = currentDay.chuvaTardeQtd || '';
+  renderFotosDia();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  ['cafeInicio','cafeFim','almocoInicio','almocoFim','encerramento','dssTema','dssHorario','atividadesExtra','observacoesDia','localObra','descricaoLocal'].forEach(k => {
+    const el = document.getElementById(k);
+    if (el) el.addEventListener('input', () => {
+      currentDay[k] = el.value;
+      salvarDiarioDia(false);
+    });
+  });
+  // DSS ministrou
+  const dssMinEl = document.getElementById('dssMinistrou');
+  if (dssMinEl) dssMinEl.addEventListener('change', () => { currentDay.dssMinistrou = dssMinEl.value; salvarDiarioDia(false); });
+  document.getElementById('dataDiario').addEventListener('input', e => {
+    const novaData = e.target.value;
+    if (!novaData) return;
+    salvarDiarioDia(false);
+    initCurrentDay(novaData);
+  });
+  document.querySelectorAll('.tempo-chip').forEach(c => {
+    c.addEventListener('click', () => {
+      const periodo = c.dataset.periodo; // 'manha' ou 'tarde'
+      const val = c.dataset.tempo;
+      const chipsId = periodo === 'manha' ? '#tempoChipsManha .tempo-chip' : '#tempoChipsTarde .tempo-chip';
+      const boxId   = periodo === 'manha' ? 'chuvaManhaBox' : 'chuvaTardeBox';
+      const field   = periodo === 'manha' ? 'tempoManha' : 'tempoTarde';
+      const already = currentDay[field] === val;
+      document.querySelectorAll(chipsId).forEach(x => x.classList.remove('active'));
+      if (!already) {
+        c.classList.add('active');
+        currentDay[field] = val;
+      } else {
+        currentDay[field] = '';
+      }
+      document.getElementById(boxId).style.display = currentDay[field] === 'chuva' ? 'block' : 'none';
+      salvarDiarioDia(false);
+    });
+  });
+  // quantidade de chuva
+  ['chuvaManhaQtd', 'chuvaTardeQtd'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => {
+      currentDay[id] = el.value;
+      salvarDiarioDia(false);
+    });
+  });
+  // op tabs no modal de equipamento
+  document.querySelectorAll('.op-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.op-tab').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      opSelectedSource = t.dataset.source;
+      atualizarSeletorOperador();
+    });
+  });
+});
+
+// ============================================================
+// FOTOS DO DIA — upload ao Google Drive via Apps Script
+// ============================================================
+const MAX_FOTOS_DIA = 6;
+
+function renderFotosDia() {
+  const grid = document.getElementById('fotosGrid');
+  const cont = document.getElementById('fotosContador');
+  if (!grid) return;
+  const fotos = currentDay.fotos || [];
+  if (cont) cont.textContent = `${fotos.length}/${MAX_FOTOS_DIA}`;
+  grid.innerHTML = fotos.map((f, i) => `
+    <div style="position:relative">
+      <a href="${f.url}" target="_blank" rel="noopener">
+        <img src="https://drive.google.com/thumbnail?id=${f.fileId}&sz=w400" alt="Foto ${i + 1}"
+          style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;border:1.5px solid var(--line);display:block">
+      </a>
+      <button onclick="removerFotoDia(${i})" title="Remover"
+        style="position:absolute;top:4px;right:4px;width:22px;height:22px;border:none;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;font-size:12px;line-height:1;cursor:pointer">✕</button>
+    </div>`).join('');
+}
+
+function comprimirFoto(file, maxDim, qualidade) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxDim || h > maxDim) {
+          const r = Math.min(maxDim / w, maxDim / h);
+          w = Math.round(w * r);
+          h = Math.round(h * r);
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', qualidade).split(',')[1]);
+      };
+      img.onerror = () => reject(new Error('Imagem inválida'));
+      img.src = reader.result;
+    };
+    reader.onerror = () => reject(new Error('Falha ao ler arquivo'));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function adicionarFotoDia(ev) {
+  const file = ev.target.files[0];
+  ev.target.value = '';
+  if (!file) return;
+  if (!APPS_SCRIPT_URL_DIARIO) { toast('❌ URL do Apps Script não configurada'); return; }
+  currentDay.fotos = currentDay.fotos || [];
+  if (currentDay.fotos.length >= MAX_FOTOS_DIA) {
+    toast(`❌ Limite de ${MAX_FOTOS_DIA} fotos por diário`);
+    return;
+  }
+  const status = document.getElementById('fotoStatus');
+  if (status) status.style.display = 'block';
+  try {
+    const base64 = await comprimirFoto(file, 1280, 0.72);
+    const resp = await fetch(APPS_SCRIPT_URL_DIARIO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        path: 'foto',
+        data: currentDay.data,
+        obra: state.obra.nome || 'Obra',
+        base64: base64
+      })
+    });
+    const json = await resp.json();
+    if (!json || !json.fileId) throw new Error((json && json.erro) || 'Resposta inválida do Apps Script');
+    currentDay.fotos.push({ fileId: json.fileId, url: json.url });
+    salvarDiarioDia(false);
+    renderFotosDia();
+    toast('✅ Foto enviada ao Google Drive');
+  } catch (err) {
+    console.error('Erro upload foto:', err);
+    toast('❌ Falha no envio: ' + (err && err.message ? err.message : 'erro desconhecido'));
+  } finally {
+    if (status) status.style.display = 'none';
+  }
+}
+
+function removerFotoDia(idx) {
+  if (!confirm('Remover esta foto do diário? O arquivo permanece no Google Drive.')) return;
+  currentDay.fotos = currentDay.fotos || [];
+  currentDay.fotos.splice(idx, 1);
+  salvarDiarioDia(false);
+  renderFotosDia();
+}
+
+// ============================================================
+// INTEGRAÇÃO COM GOOGLE SHEETS
+// ============================================================
+
+function buildPayloadGoogle(diarioData) {
+  const day = diarioData;
+
+  // Jornada
+  const jornada = `Café: ${day.cafeInicio||'--'}–${day.cafeFim||'--'} | Almoço: ${day.almocoInicio||'--'}–${day.almocoFim||'--'} | Enc.: ${day.encerramento||'--'}`;
+
+  // DSS
+  const dssMin = day.dssMinistrou ? (day.dssMinistrou.includes('|') ? day.dssMinistrou.split('|')[1] : day.dssMinistrou) : '';
+
+  // Atividades
+  const ativsTexto = [
+    ...state.atividades.filter(a => day.atividadesMarcadas[a.id]).map(a => {
+      const qtd = day.atividadesQtd && day.atividadesQtd[a.id];
+      return `${a.desc}${a.local ? ' – ' + a.local : ''}${qtd ? ' (' + qtd + ' ' + (a.unidade||'') + ')' : ''}`;
+    }),
+    ...(day.atividadesAvulsas || []).map(a => `${a.desc}${a.local ? ' – ' + a.local : ''}`),
+    ...(day.atividadesExtra ? day.atividadesExtra.split('\n').filter(x => x.trim()) : [])
+  ].join('\n');
+
+  // Efetivo — resolver IDs para nomes
+  const efetivoPorFuncao = [];
+  const colaboradoresPresentes = [];
+  let totalEfetivo = 0;
+  state.colaboradores.categorias.forEach(cat => {
+    const presentes = cat.itens.filter(c => day.efetivo[c.id]);
+    if (presentes.length === 0) return;
+    totalEfetivo += presentes.length;
+    efetivoPorFuncao.push(`${cat.nome}: ${presentes.length}`);
+    presentes.forEach(c => colaboradoresPresentes.push(`${c.mat} – ${c.nome} (${cat.nome})`));
+  });
+
+  // Equipamentos — novo sistema localStorage
+  const savedEquip = S.get(`equipDia_${day.data}`) || {};
+  const equipsAtivos = state.equipamentos.filter(e => savedEquip[e.id]);
+  const gruposEquip = {};
+  equipsAtivos.forEach(e => {
+    const k = e.desc.trim();
+    if (!gruposEquip[k]) gruposEquip[k] = 0;
+    gruposEquip[k]++;
+  });
+  const equipamentosTexto = Object.entries(gruposEquip)
+    .sort(([a],[b]) => a.localeCompare(b,'pt-BR'))
+    .map(([desc, n]) => `${desc}: ${n} un.`).join('\n');
+
+  // Veículos Leves — novo sistema localStorage
+  const savedVL = S.get(`vlDia_${day.data}`) || {};
+  const vlAtivos = (state.veiculosFrota || []).filter(v => savedVL[v.id]);
+  const savedEquipBP = S.get(`equipDia_${day.data}`) || {};
+  const equipsParadosBP = state.equipamentos.filter(e => !savedEquipBP[e.id]);
+  const vlParadosBP = (state.veiculosFrota || []).filter(v => !savedVL[v.id]);
+  const parados = day.veiculosParados || {};
+  const paradosTexto = [
+    ...equipsParadosBP.map(e => {
+      const just = parados[e.id] ? `: ${parados[e.id]}` : '';
+      return `${e.isMotorista ? '🚛' : '🚜'} ${e.numero} — ${e.desc}${just}`;
+    }),
+    ...vlParadosBP.map(v => {
+      const just = parados[v.id] ? `: ${parados[v.id]}` : '';
+      return `🚗 ${v.desc}${v.placa ? ' ('+v.placa+')' : ''}${just}`;
+    })
+  ].join('\n');
+  const gruposVL = {};
+  vlAtivos.forEach(v => {
+    const k = v.desc.trim();
+    if (!gruposVL[k]) gruposVL[k] = 0;
+    gruposVL[k]++;
+  });
+  const veiculosTexto = Object.entries(gruposVL)
+    .sort(([a],[b]) => a.localeCompare(b,'pt-BR'))
+    .map(([desc, n]) => `${desc}: ${n} un.`).join('\n');
+
+  // Eventos
+  const segTexto = (day.eventosSeguranca||[]).map(ev =>
+    `${ev.tipo} (${ev.gravidade})${ev.desc ? ': ' + ev.desc : ''}${ev.acao ? ' | Ação: ' + ev.acao : ''}`
+  ).join('\n');
+  const ambTexto = (day.eventosAmbiente||[]).map(ev =>
+    `${ev.tipo} (${ev.gravidade})${ev.desc ? ': ' + ev.desc : ''}${ev.acao ? ' | Ação: ' + ev.acao : ''}`
+  ).join('\n');
+
+  return {
+    data:                 day.data,
+    diaSemana:            diaDaSemana(day.data),
+    obra:                 state.obra.nome || '',
+    empresa:              state.obra.empresa || '',
+    local:                state.obra.local || '',
+    descricaoObra:        state.obra.descricao || '',
+    tempo:                tempoLabel(day),
+    jornada,
+    dssHorario:           day.dssHorario || '',
+    dssMinistrou:         dssMin,
+    dssTema:              day.dssTema || '',
+    atividades:           ativsTexto,
+    efetivoTotal:         totalEfetivo,
+    efetivoPorFuncao:     efetivoPorFuncao.join('\n'),
+    colaboradoresPresentes: colaboradoresPresentes.join('\n'),
+    equipamentos:         equipamentosTexto,
+    veiculosLeves:        veiculosTexto,
+    veiculosParados:      paradosTexto,
+    eventosSeguranca:     segTexto,
+    eventosMeioAmbiente:  ambTexto,
+    observacoes:          day.observacoesDia || '',
+    apontador:            day.apontador || '',
+    localObra:            day.localObra || '',
+    descricaoLocal:       day.descricaoLocal || '',
+    fotos:                (day.fotos || []).map(f => f.url).join('\n')
+  };
+}
+
+// IMPORTANTE: O Apps Script implantado deve ser a versão de 23 colunas
+// (com coluna S = Veículos/Equip. Parados). Reimplantar DiarioObras.gs se houver
+// descasamento de colunas na planilha.
+async function salvarDiarioGoogle(diarioData) {
+  if (!APPS_SCRIPT_URL_DIARIO) return;
+  try {
+    const payload = buildPayloadGoogle(diarioData);
+    // Usa GET com dados na URL para evitar o problema de redirect POST→GET do Apps Script
+    const dados = encodeURIComponent(JSON.stringify(payload));
+    await fetch(`${APPS_SCRIPT_URL_DIARIO}?path=diario&action=salvar&dados=${dados}`);
+    console.log('✅ Diário enviado ao Google Sheets');
+  } catch (err) {
+    console.error('Erro salvar diário no Google Sheets:', err);
+  }
+}
+
+function salvarDiarioDia(notificar) {
+  if (!currentDay || !currentDay.data) return;
+  if (notificar && !(currentDay.apontador || '').trim()) {
+    toast('❌ Selecione o Apontador Responsável antes de salvar');
+    const sel = document.getElementById('apontadorSelect');
+    if (sel) { sel.scrollIntoView({ behavior: 'smooth', block: 'center' }); sel.focus(); }
+    return;
+  }
+  const temDado = currentDay.dssTema || currentDay.dssHorario || currentDay.atividadesExtra || currentDay.observacoesDia || currentDay.tempoManha || currentDay.tempoTarde ||
+    Object.keys(currentDay.efetivo).length > 0 ||
+    Object.keys(currentDay.atividadesMarcadas).length > 0 ||
+    Object.keys(currentDay.atividadesQtd || {}).length > 0 ||
+    currentDay.atividadesAvulsas.length > 0 ||
+    Object.keys(currentDay.equipamentos).length > 0 ||
+    (currentDay.veiculosLeves || []).length > 0 ||
+    currentDay.eventosSeguranca.length > 0 ||
+    currentDay.eventosAmbiente.length > 0 ||
+    (currentDay.fotos || []).length > 0;
+  if (temDado) {
+    history[currentDay.data] = JSON.parse(JSON.stringify(currentDay));
+    saveHistory();
+  } else if (history[currentDay.data]) {
+    delete history[currentDay.data];
+    saveHistory();
+  }
+  if (notificar) {
+    // Guardar local da obra no histórico de sugestões
+    const loc = (currentDay.localObra || '').trim();
+    if (loc) {
+      const hist = state.localObraHistorico || [];
+      if (!hist.includes(loc)) hist.unshift(loc);
+      state.localObraHistorico = hist.slice(0, 30);
+      saveState();
+    }
+    const localEl = document.getElementById('localObra');
+    const descEl  = document.getElementById('descricaoLocal');
+    if (localEl) currentDay.localObra    = localEl.value;
+    if (descEl)  currentDay.descricaoLocal = descEl.value;
+    salvarDiarioGoogle(currentDay);
+    toast('Diário salvo no histórico');
+    backupAutomatico();
+  }
+}
+
+// ============================================================
+// RENDER DIÁRIO
+// ============================================================
+function renderDiario() {
+  renderAtividadesDia();
+  renderEfetivoDia();
+  renderEquipDia();
+  renderVeiculosLevesDia();
+  renderVeiculosParados();
+  renderEventosDia('seguranca');
+  renderEventosDia('meio_ambiente');
+  renderApontadorDia();
+}
+
+function marcarTodosTipo(tipo, valor) {
+  if (tipo === 'efetivo') {
+    state.colaboradores.categorias.forEach(cat => {
+      cat.itens.forEach(c => {
+        if (valor) currentDay.efetivo[c.id] = true;
+        else delete currentDay.efetivo[c.id];
+      });
+    });
+    renderEfetivoDia();
+  } else if (tipo === 'atividades') {
+    state.atividades.forEach(a => {
+      if (valor) currentDay.atividadesMarcadas[a.id] = true;
+      else delete currentDay.atividadesMarcadas[a.id];
+    });
+    renderAtividadesDia();
+  } else if (tipo === 'equipamentos') {
+    state.equipamentos.forEach(e => {
+      if (valor) {
+        currentDay.equipamentos[e.id] = currentDay.equipamentos[e.id] || { ativo: true, operadorMat: '', operadorNome: '', status: 'Operando' };
+        currentDay.equipamentos[e.id].ativo = true;
+      } else {
+        delete currentDay.equipamentos[e.id];
+      }
+    });
+    renderEquipDia();
+  }
+  salvarDiarioDia(false);
+}
+
+function renderAtividadesDia() {
+  const cont = document.getElementById('atividadesList');
+  cont.innerHTML = '';
+  const selecionadas = state.atividades.filter(a => !!currentDay.atividadesMarcadas[a.id]);
+
+  if (selecionadas.length === 0) {
+    cont.innerHTML = '<div class="empty">Nenhuma atividade selecionada. Clique ➕ para adicionar.</div>';
+    return;
+  }
+
+  selecionadas.forEach(a => {
+    const ativData = currentDay.atividadesMarcadas[a.id];
+    const qtd = (currentDay.atividadesQtd && currentDay.atividadesQtd[a.id]) || (ativData && ativData.qty) || '';
+    const local = (ativData && ativData.local) || a.local || '';
+    const unid = a.unidade || '';
+    const row = document.createElement('div');
+    row.className = 'item-row checked';
+    row.innerHTML = `
+      <div class="checkbox"></div>
+      <div class="item-info">
+        <div class="item-name">${escapeHtml(a.desc)}</div>
+        ${local ? `<div class="item-meta">${escapeHtml(local)}</div>` : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;min-width:90px">
+        <input type="number" step="any" min="0" placeholder="Qtd" value="${qtd}"
+          style="width:60px;padding:5px 6px;font-size:13px;border:1px solid var(--line);border-radius:5px;background:var(--bg-card);color:var(--ink)"
+          onclick="event.stopPropagation()"
+          oninput="event.stopPropagation();salvarQtdAtividade('${a.id}',this.value)"
+          onchange="event.stopPropagation();salvarQtdAtividade('${a.id}',this.value)"
+          onblur="event.stopPropagation();salvarQtdAtividade('${a.id}',this.value)">
+        ${unid ? `<span style="font-size:11px;color:var(--ink-faint);white-space:nowrap">${escapeHtml(unid)}</span>` : ''}
+      </div>
+    `;
+    cont.appendChild(row);
+  });
+}
+
+function salvarQtdAtividade(atId, valor) {
+  if (!currentDay.atividadesQtd) currentDay.atividadesQtd = {};
+  if (valor === '' || valor === null) delete currentDay.atividadesQtd[atId];
+  else currentDay.atividadesQtd[atId] = valor;
+  if (currentDay.atividadesMarcadas && currentDay.atividadesMarcadas[atId] && typeof currentDay.atividadesMarcadas[atId] === 'object') {
+    currentDay.atividadesMarcadas[atId].qty = (valor === null) ? '' : valor;
+  }
+  salvarDiarioDia(false);
+}
+
+function removerAtivAvulsa(idx) {
+  currentDay.atividadesAvulsas.splice(idx, 1);
+  salvarDiarioDia(false);
+  renderAtividadesDia();
+}
+
+function abrirModalAtivExtra() {
+  document.getElementById('modalAtivExtraDesc').value = '';
+  document.getElementById('modalAtivExtraLocal').value = '';
+  abrirModal('modalAtivExtra');
+}
+function salvarAtivExtra() {
+  const desc = document.getElementById('modalAtivExtraDesc').value.trim();
+  const local = document.getElementById('modalAtivExtraLocal').value.trim();
+  if (!desc) { toast('Descreva a atividade'); return; }
+  currentDay.atividadesAvulsas.push({ id: uid('av'), desc, local });
+  salvarDiarioDia(false);
+  fecharModal('modalAtivExtra');
+  renderAtividadesDia();
+  toast('Atividade adicionada');
+}
+
+function renderEfetivoDia() {
+  const cont = document.getElementById('efetivoList');
+  cont.innerHTML = '';
+  const dia = dataAtiva();
+  const savedEfetivo = S.get(`efetivoDia_${dia}`) || {};
+
+  let totalP = 0, totalC = 0;
+  let html = '<div style="padding:12px 0">';
+
+  state.colaboradores.categorias.forEach(cat => {
+    const presentes = cat.itens.filter(c => savedEfetivo[c.id]);
+    totalP += presentes.length;
+    totalC += cat.itens.length;
+
+    if (presentes.length > 0) {
+      html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft)">
+        <div style="font-weight:600;color:var(--ink)">${cat.icon} ${escapeHtml(cat.nome)}</div>
+        <div style="font-size:15px;font-weight:700;color:var(--accent)">${presentes.length}</div>
+      </div>`;
+    }
+  });
+
+  if (totalP === 0) {
+    html += '<p style="color:var(--ink-faint);text-align:center;padding:20px">Nenhum colaborador selecionado</p>';
+  }
+
+  html += '</div>';
+  cont.innerHTML = html;
+
+  document.getElementById('statPresentes').textContent = totalP;
+  document.getElementById('statAusentes').textContent = totalC - totalP;
+  document.getElementById('statTotal').textContent = totalC;
+}
+
+function renderEquipDia() {
+  const cont = document.getElementById('equipList');
+  cont.innerHTML = '';
+  const dia = dataAtiva();
+  const savedEquip = S.get(`equipDia_${dia}`) || {};
+  const selecionados = state.equipamentos.filter(eq => savedEquip[eq.id]);
+
+  if (state.equipamentos.length === 0) {
+    cont.innerHTML = '<div class="empty">Cadastre equipamentos em ⚙️ Cadastro</div>';
+    return;
+  }
+  if (selecionados.length === 0) {
+    cont.innerHTML = '<div class="empty">Nenhum equipamento selecionado para este dia</div>';
+    return;
+  }
+  // Agrupar por descrição e contar
+  const grupos = {};
+  selecionados.forEach(eq => {
+    const key = eq.desc.trim();
+    if (!grupos[key]) grupos[key] = { desc: key, isMotorista: eq.isMotorista, count: 0 };
+    grupos[key].count++;
+  });
+  const ordenados = Object.values(grupos).sort((a, b) => a.desc.localeCompare(b.desc, 'pt-BR'));
+
+  let html = '<div style="padding:4px 0">';
+  ordenados.forEach(g => {
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft)">
+      <div style="font-weight:600">${g.isMotorista ? '🚛' : '🚜'} ${escapeHtml(g.desc)}</div>
+      <div style="font-size:15px;font-weight:700;color:var(--accent);white-space:nowrap;margin-left:8px">${g.count} un.</div>
+    </div>`;
+  });
+  html += '</div>';
+  cont.innerHTML = html;
+  renderVeiculosParados();
+}
+
+function abrirSeletorEquip(equipId) {
+  activeEquipId = equipId;
+  const eq = state.equipamentos.find(e => e.id === equipId);
+  const dado = currentDay.equipamentos[equipId] || {};
+  
+  document.getElementById('equipStatusName').textContent = `${eq.numero} — ${eq.desc}`;
+  document.getElementById('equipStatusStatus').value = dado.status || 'Operando';
+  document.getElementById('equipHorimetro').value = dado.horimetro || '';
+  
+  // tab default
+  opSelectedSource = 'default';
+  opSelectedMat = dado.operadorMat || '';
+  opSelectedNome = dado.operadorNome || '';
+  document.querySelectorAll('.op-tab').forEach((t, i) => {
+    if (i === 0) t.classList.add('active');
+    else t.classList.remove('active');
+  });
+  document.getElementById('opCustom').value = '';
+  document.getElementById('opSearch').value = '';
+  atualizarSeletorOperador();
+  
+  abrirModal('modalEquipStatus');
+}
+
+function atualizarSeletorOperador() {
+  const list = document.getElementById('opList');
+  const customInput = document.getElementById('opCustom');
+  const search = document.getElementById('opSearch');
+  
+  if (opSelectedSource === 'custom') {
+    list.style.display = 'none';
+    search.style.display = 'none';
+    customInput.style.display = 'block';
+    customInput.value = opSelectedNome || '';
+    return;
+  }
+  
+  list.style.display = 'block';
+  search.style.display = 'block';
+  customInput.style.display = 'none';
+  
+  const eq = state.equipamentos.find(e => e.id === activeEquipId);
+  const isMot = eq.isMotorista;
+  const searchTerm = (search.value || '').toLowerCase().trim();
+  
+  let categorias = [];
+  // Termos de busca para cada tipo de equipe sugerida
+  const termosOperador = ['operad']; // cobre "Operadores", "Operacional", "Operação"
+  const termosMotorista = ['motorist']; // cobre "Motoristas", "Motorista"
+  const termosSugeridos = isMot ? termosMotorista : termosOperador;
+
+  const catSugerida = state.colaboradores.categorias.find(c =>
+    termosSugeridos.some(t => c.nome.toLowerCase().includes(t))
+  );
+
+  if (opSelectedSource === 'default') {
+    // Aba sugerida: Operadores (equipamentos) ou Motoristas (caminhões)
+    if (catSugerida) {
+      categorias = [catSugerida];
+    } else {
+      // Se não achar categoria específica, mostra todas
+      categorias = state.colaboradores.categorias;
+    }
+  } else {
+    // Outras equipes: todas exceto a sugerida
+    categorias = catSugerida
+      ? state.colaboradores.categorias.filter(c => c.id !== catSugerida.id)
+      : state.colaboradores.categorias;
+  }
+  
+  list.innerHTML = '';
+  let temItem = false;
+  categorias.forEach(cat => {
+    const filtrados = cat.itens.filter(c => {
+      if (!searchTerm) return true;
+      return c.nome.toLowerCase().includes(searchTerm) || 
+             c.mat.toLowerCase().includes(searchTerm) ||
+             (c.funcao || '').toLowerCase().includes(searchTerm);
+    });
+    if (filtrados.length === 0) return;
+    temItem = true;
+    const label = document.createElement('div');
+    label.className = 'op-cat-label';
+    label.textContent = `${cat.icon || ''} ${cat.nome}`;
+    list.appendChild(label);
+    filtrados.forEach(c => {
+      const item = document.createElement('div');
+      item.className = 'op-item' + (opSelectedMat === c.mat ? ' selected' : '');
+      item.innerHTML = `
+        <div class="op-item-name">${escapeHtml(c.nome)}</div>
+        <div class="op-item-meta"><span class="mat">${escapeHtml(c.mat)}</span> · ${escapeHtml(c.funcao || '')}</div>
+      `;
+      item.onclick = () => {
+        opSelectedMat = c.mat;
+        opSelectedNome = c.nome;
+        atualizarSeletorOperador();
+      };
+      list.appendChild(item);
+    });
+  });
+  if (!temItem) {
+    list.innerHTML = '<div class="empty">Nenhum colaborador encontrado</div>';
+  }
+}
+
+// pesquisa
+document.addEventListener('DOMContentLoaded', () => {
+  const s = document.getElementById('opSearch');
+  if (s) s.addEventListener('input', atualizarSeletorOperador);
+});
+
+function salvarEquipStatus() {
+  if (!activeEquipId) return;
+  let nome = '', mat = '';
+  if (opSelectedSource === 'custom') {
+    nome = document.getElementById('opCustom').value.trim();
+    mat = '';
+  } else {
+    nome = opSelectedNome || '';
+    mat = opSelectedMat || '';
+  }
+  currentDay.equipamentos[activeEquipId] = {
+    ativo: true,
+    operadorMat: mat,
+    operadorNome: nome,
+    status: document.getElementById('equipStatusStatus').value,
+    horimetro: document.getElementById('equipHorimetro').value || ''
+  };
+  salvarDiarioDia(false);
+  fecharModal('modalEquipStatus');
+  renderEquipDia();
+  toast(nome ? 'Operador: ' + nome : 'Equipamento ativado');
+}
+
+// VEÍCULOS LEVES NO DIÁRIO (lógica igual a equipamentos)
+let activeVLId = null;
+
+function marcarTodosVL(valor) {
+  const frota = state.veiculosFrota || [];
+  frota.forEach(v => {
+    if (valor) {
+      if (!currentDay.veiculosLeves) currentDay.veiculosLeves = [];
+      const jaExiste = currentDay.veiculosLeves.find(x => x.frotaId === v.id);
+      if (!jaExiste) currentDay.veiculosLeves.push({ frotaId: v.id, motoristaNome: '', motoristaMat: '' });
+    } else {
+      if (currentDay.veiculosLeves) currentDay.veiculosLeves = [];
+    }
+  });
+  salvarDiarioDia(false);
+  renderVeiculosLevesDia();
+}
+
+function renderVeiculosLevesDia() {
+  const cont = document.getElementById('veiculosLevesList');
+  if (!cont) return;
+  cont.innerHTML = '';
+  const frota = state.veiculosFrota || [];
+  const dia = dataAtiva();
+  const savedVL = S.get(`vlDia_${dia}`) || {};
+  const selecionados = frota.filter(v => savedVL[v.id]);
+
+  if (frota.length === 0) {
+    cont.innerHTML = '<div class="empty">Cadastre veículos leves em ⚙️ Cadastro > Equip.</div>';
+    return;
+  }
+  if (selecionados.length === 0) {
+    cont.innerHTML = '<div class="empty">Nenhum veículo selecionado para este dia</div>';
+    return;
+  }
+  // Agrupar por descrição (tipo de veículo) e contar
+  const grupos = {};
+  selecionados.forEach(v => {
+    const key = v.desc.trim();
+    if (!grupos[key]) grupos[key] = { desc: key, count: 0 };
+    grupos[key].count++;
+  });
+  const ordenados = Object.values(grupos).sort((a, b) => a.desc.localeCompare(b.desc, 'pt-BR'));
+
+  let html = '<div style="padding:4px 0">';
+  ordenados.forEach(g => {
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft)">
+      <div style="font-weight:600">🚗 ${escapeHtml(g.desc)}</div>
+      <div style="font-size:15px;font-weight:700;color:var(--accent);white-space:nowrap;margin-left:8px">${g.count} un.</div>
+    </div>`;
+  });
+  html += '</div>';
+  cont.innerHTML = html;
+  renderVeiculosParados();
+}
+
+function renderVeiculosParados() {
+  const cont = document.getElementById('veiculosParadosList');
+  if (!cont) return;
+  const data = currentDay ? currentDay.data : '';
+  const savedEquip = S.get(`equipDia_${data}`) || {};
+  const savedVL    = S.get(`vlDia_${data}`) || {};
+
+  // Equipamentos não selecionados
+  const equipsParados = state.equipamentos.filter(e => !savedEquip[e.id]);
+  // Veículos leves não selecionados
+  const vlParados = (state.veiculosFrota || []).filter(v => !savedVL[v.id]);
+
+  if (equipsParados.length === 0 && vlParados.length === 0) {
+    cont.innerHTML = '<div class="empty">Todos os equipamentos e veículos estão em uso hoje</div>';
+    return;
+  }
+
+  const parados = currentDay.veiculosParados || {};
+  let html = '<div style="display:flex;flex-direction:column;gap:10px">';
+
+  equipsParados.forEach(eq => {
+    const just = parados[eq.id] || '';
+    html += `<div style="border:1px solid var(--line-soft);border-radius:8px;padding:10px">
+      <div style="font-weight:600;margin-bottom:6px">${eq.isMotorista ? '🚛' : '🚜'} ${escapeHtml(eq.numero)} — ${escapeHtml(eq.desc)}</div>
+      <input type="text" placeholder="Justificativa (manutenção, aguardando peça, parado por efetivo...)"
+        value="${escapeHtml(just)}"
+        style="width:100%;box-sizing:border-box"
+        oninput="salvarJustParado('${eq.id}', this.value)">
+    </div>`;
+  });
+
+  vlParados.forEach(v => {
+    const just = parados[v.id] || '';
+    const placa = v.placa ? ` (${v.placa})` : '';
+    html += `<div style="border:1px solid var(--line-soft);border-radius:8px;padding:10px">
+      <div style="font-weight:600;margin-bottom:6px">🚗 ${escapeHtml(v.desc)}${escapeHtml(placa)}</div>
+      <input type="text" placeholder="Justificativa (manutenção, aguardando peça, parado por efetivo...)"
+        value="${escapeHtml(just)}"
+        style="width:100%;box-sizing:border-box"
+        oninput="salvarJustParado('${v.id}', this.value)">
+    </div>`;
+  });
+
+  html += '</div>';
+  cont.innerHTML = html;
+}
+
+function salvarJustParado(id, valor) {
+  if (!currentDay.veiculosParados) currentDay.veiculosParados = {};
+  if (valor.trim()) {
+    currentDay.veiculosParados[id] = valor;
+  } else {
+    delete currentDay.veiculosParados[id];
+  }
+  salvarDiarioDia(false);
+}
+
+function abrirSeletorVL(vlId) {
+  activeVLId = vlId;
+  const v = (state.veiculosFrota || []).find(x => x.id === vlId);
+  const dado = (currentDay.veiculosLeves || []).find(x => x.frotaId === vlId) || {};
+  document.getElementById('modalVLTitle').textContent = `🚗 ${v.desc} ${v.placa ? '('+v.placa+')' : ''}`;
+  // popular lista de colaboradores
+  const list = document.getElementById('modalVLColabList');
+  list.innerHTML = '';
+  const searchEl = document.getElementById('modalVLSearch');
+  searchEl.value = '';
+  // Separar categoria Motoristas das demais
+  const catMotoristas = state.colaboradores.categorias.find(c => c.nome.toLowerCase().includes('motorist'));
+  const outrasCateg = state.colaboradores.categorias.filter(c => !c.nome.toLowerCase().includes('motorist'));
+
+  const renderVLList = (term) => {
+    list.innerHTML = '';
+    // Mostrar motoristas primeiro (destaque)
+    const categsParaMostrar = catMotoristas
+      ? [catMotoristas, ...outrasCateg]
+      : state.colaboradores.categorias;
+    let temItem = false;
+    categsParaMostrar.forEach(cat => {
+      const filtrados = cat.itens.filter(c =>
+        !term || c.nome.toLowerCase().includes(term) || c.mat.toLowerCase().includes(term)
+      );
+      if (!filtrados.length) return;
+      temItem = true;
+      const lbl = document.createElement('div');
+      lbl.className = 'op-cat-label';
+      lbl.textContent = (cat.icon||'') + ' ' + cat.nome + (cat === catMotoristas ? ' ★' : '');
+      list.appendChild(lbl);
+      filtrados.forEach(c => {
+        const item = document.createElement('div');
+        item.className = 'op-item' + (dado.motoristaMat === c.mat ? ' selected' : '');
+        item.innerHTML = `<div class="op-item-name">${escapeHtml(c.nome)}</div><div class="op-item-meta"><span class="mat">${escapeHtml(c.mat)}</span> · ${escapeHtml(c.funcao||'')}</div>`;
+        item.onclick = () => {
+          list.querySelectorAll('.op-item').forEach(x => x.classList.remove('selected'));
+          item.classList.add('selected');
+          dado.motoristaMat = c.mat;
+          dado.motoristaNome = c.nome;
+        };
+        list.appendChild(item);
+      });
+    });
+    if (!temItem) list.innerHTML = '<div class="empty">Nenhum encontrado</div>';
+  };
+  searchEl.oninput = () => renderVLList(searchEl.value.toLowerCase().trim());
+  renderVLList('');
+  document.getElementById('modalVLCustomNome').value = dado.motoristaNome || '';
+  abrirModal('modalVeiculoLeve');
+}
+
+function salvarVeiculoLeve() {
+  if (!activeVLId) return;
+  if (!currentDay.veiculosLeves) currentDay.veiculosLeves = [];
+  let dado = currentDay.veiculosLeves.find(x => x.frotaId === activeVLId);
+  if (!dado) { dado = { frotaId: activeVLId, motoristaNome: '', motoristaMat: '' }; currentDay.veiculosLeves.push(dado); }
+  // verificar se tem selecionado na lista
+  const selected = document.getElementById('modalVLColabList').querySelector('.op-item.selected');
+  if (selected) {
+    // já foi salvo via onclick, só confirmar
+  } else {
+    // usar campo manual
+    const custom = document.getElementById('modalVLCustomNome').value.trim();
+    dado.motoristaNome = custom;
+    dado.motoristaMat = '';
+  }
+  salvarDiarioDia(false);
+  fecharModal('modalVeiculoLeve');
+  renderVeiculosLevesDia();
+  toast(dado.motoristaNome ? 'Motorista: ' + dado.motoristaNome : 'Veículo ativado');
+}
+
+function removerVeiculoLeve(idx) {
+  confirmar('Remover este veículo do diário?', () => {
+    currentDay.veiculosLeves.splice(idx, 1);
+    salvarDiarioDia(false);
+    renderVeiculosLevesDia();
+  });
+}
+
+// APONTADOR
+function _todosColaboradores() {
+  const lista = [];
+  (state.colaboradores.categorias || []).forEach(cat => {
+    (cat.itens || []).forEach(c => lista.push(`${c.mat} – ${c.nome} (${cat.nome})`));
+  });
+  return lista;
+}
+
+function _apontadoresFiltrados() {
+  const lista = [];
+  (state.colaboradores.categorias || []).forEach(cat => {
+    const catIsApontador = cat.nome.toLowerCase().includes('apontador');
+    (cat.itens || []).forEach(c => {
+      if (catIsApontador || (c.funcao || '').toLowerCase().includes('apontador')) {
+        lista.push(`${c.mat} – ${c.nome} (${cat.nome})`);
+      }
+    });
+  });
+  return lista;
+}
+
+function renderApontadorDia() {
+  // Atualiza o select inline na aba Diário
+  const sel = document.getElementById('apontadorSelect');
+  if (sel) {
+    const current = currentDay.apontador || '';
+    sel.innerHTML = '<option value="">— Selecionar Apontador —</option>';
+    _apontadoresFiltrados().forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s;
+      if (s === current) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    // Atualiza select do modal também (se ainda existir)
+    const selModal = document.getElementById('modalApontadorInput');
+    if (selModal) {
+      selModal.innerHTML = sel.innerHTML;
+      selModal.value = current;
+    }
+  }
+}
+
+function selecionarApontadorDireto(val) {
+  currentDay.apontador = val;
+  salvarDiarioDia(false);
+}
+
+function selecionarApontador() {
+  renderApontadorDia();
+  abrirModal('modalApontador');
+}
+
+function confirmarApontador() {
+  const val = (document.getElementById('modalApontadorInput').value || '').trim();
+  currentDay.apontador = val;
+  renderApontadorDia();
+  salvarDiarioDia();
+  fecharModal('modalApontador');
+}
+
+// EVENTOS
+function renderEventosDia(tipo) {
+  const lista = tipo === 'seguranca' ? currentDay.eventosSeguranca : currentDay.eventosAmbiente;
+  const cont = document.getElementById(tipo === 'seguranca' ? 'evSegList' : 'evAmbList');
+  cont.innerHTML = '';
+  if (lista.length === 0) {
+    cont.innerHTML = '<div class="empty">Nenhum evento registrado</div>';
+    return;
+  }
+  lista.forEach((ev, idx) => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    row.innerHTML = `
+      <div class="item-info">
+        <div class="item-name">${escapeHtml(ev.tipo)} ${gravBadge(ev.gravidade)}</div>
+        ${ev.desc ? `<div class="item-meta">${escapeHtml(ev.desc)}</div>` : ''}
+        ${ev.acao ? `<div class="item-extra">Ação: ${escapeHtml(ev.acao)}</div>` : ''}
+      </div>
+      <div class="item-actions">
+        <button class="icon-btn" data-edit="${idx}">✏️</button>
+        <button class="icon-btn" data-del="${idx}">🗑️</button>
+      </div>
+    `;
+    row.querySelector('[data-edit]').onclick = () => editarEventoDia(tipo, idx);
+    row.querySelector('[data-del]').onclick = () => removerEventoDia(tipo, idx);
+    cont.appendChild(row);
+  });
+}
+
+function abrirModalEventoDia(tipo) {
+  activeEventoTipo = tipo;
+  activeEventoEditIdx = null;
+  const cadastro = state[tipo];
+  if (cadastro.length === 0) {
+    toast('Cadastre tipos em ⚙️ ' + (tipo === 'seguranca' ? 'Segurança' : 'Meio Ambiente'));
+    return;
+  }
+  document.getElementById('modalEventoDiaTitle').textContent = 
+    tipo === 'seguranca' ? '🦺 Evento de Segurança' : '🌱 Evento de Meio Ambiente';
+  const sel = document.getElementById('modalEventoDiaTipo');
+  sel.innerHTML = cadastro.map(c => `<option value="${c.id}">${escapeHtml(c.desc)}</option>`).join('');
+  document.getElementById('modalEventoDiaDesc').value = '';
+  document.getElementById('modalEventoDiaGrav').value = 'leve';
+  document.getElementById('modalEventoDiaAcao').value = '';
+  abrirModal('modalEventoDia');
+}
+function salvarEventoDia() {
+  const tipoId = document.getElementById('modalEventoDiaTipo').value;
+  const cadastro = state[activeEventoTipo];
+  const tipoObj = cadastro.find(c => c.id === tipoId);
+  if (!tipoObj) return;
+  const evento = {
+    id: uid('ev'),
+    tipoId: tipoObj.id,
+    tipo: tipoObj.desc,
+    desc: document.getElementById('modalEventoDiaDesc').value.trim(),
+    gravidade: document.getElementById('modalEventoDiaGrav').value,
+    acao: document.getElementById('modalEventoDiaAcao').value.trim(),
+    custom: false
+  };
+  const arr = activeEventoTipo === 'seguranca' ? currentDay.eventosSeguranca : currentDay.eventosAmbiente;
+  if (activeEventoEditIdx !== null) arr[activeEventoEditIdx] = evento;
+  else arr.push(evento);
+  salvarDiarioDia(false);
+  fecharModal('modalEventoDia');
+  renderEventosDia(activeEventoTipo);
+  toast('Evento registrado');
+}
+function abrirModalEventoAvulso(tipo) {
+  activeEventoTipo = tipo;
+  activeEventoEditIdx = null;
+  document.getElementById('modalEventoAvulsoTitle').textContent = 
+    tipo === 'seguranca' ? '🦺 Evento Avulso de Segurança' : '🌱 Evento Avulso de Meio Ambiente';
+  document.getElementById('modalEventoAvulsoTipo').value = '';
+  document.getElementById('modalEventoAvulsoDesc').value = '';
+  document.getElementById('modalEventoAvulsoGrav').value = 'leve';
+  document.getElementById('modalEventoAvulsoAcao').value = '';
+  abrirModal('modalEventoAvulso');
+}
+function salvarEventoAvulso() {
+  const tipoTxt = document.getElementById('modalEventoAvulsoTipo').value.trim();
+  if (!tipoTxt) { toast('Informe o tipo'); return; }
+  const evento = {
+    id: uid('ev'),
+    tipoId: null,
+    tipo: tipoTxt,
+    desc: document.getElementById('modalEventoAvulsoDesc').value.trim(),
+    gravidade: document.getElementById('modalEventoAvulsoGrav').value,
+    acao: document.getElementById('modalEventoAvulsoAcao').value.trim(),
+    custom: true
+  };
+  const arr = activeEventoTipo === 'seguranca' ? currentDay.eventosSeguranca : currentDay.eventosAmbiente;
+  if (activeEventoEditIdx !== null) arr[activeEventoEditIdx] = evento;
+  else arr.push(evento);
+  salvarDiarioDia(false);
+  fecharModal('modalEventoAvulso');
+  renderEventosDia(activeEventoTipo);
+  toast('Evento registrado');
+}
+function editarEventoDia(tipo, idx) {
+  activeEventoTipo = tipo;
+  activeEventoEditIdx = idx;
+  const arr = tipo === 'seguranca' ? currentDay.eventosSeguranca : currentDay.eventosAmbiente;
+  const ev = arr[idx];
+  if (ev.custom) {
+    document.getElementById('modalEventoAvulsoTitle').textContent = '✏️ Editar Evento';
+    document.getElementById('modalEventoAvulsoTipo').value = ev.tipo;
+    document.getElementById('modalEventoAvulsoDesc').value = ev.desc;
+    document.getElementById('modalEventoAvulsoGrav').value = ev.gravidade;
+    document.getElementById('modalEventoAvulsoAcao').value = ev.acao;
+    abrirModal('modalEventoAvulso');
+  } else {
+    document.getElementById('modalEventoDiaTitle').textContent = '✏️ Editar Evento';
+    const sel = document.getElementById('modalEventoDiaTipo');
+    sel.innerHTML = state[tipo].map(c => `<option value="${c.id}">${escapeHtml(c.desc)}</option>`).join('');
+    sel.value = ev.tipoId;
+    document.getElementById('modalEventoDiaDesc').value = ev.desc;
+    document.getElementById('modalEventoDiaGrav').value = ev.gravidade;
+    document.getElementById('modalEventoDiaAcao').value = ev.acao;
+    abrirModal('modalEventoDia');
+  }
+}
+function removerEventoDia(tipo, idx) {
+  confirmar('Remover este evento?', () => {
+    const arr = tipo === 'seguranca' ? currentDay.eventosSeguranca : currentDay.eventosAmbiente;
+    arr.splice(idx, 1);
+    salvarDiarioDia(false);
+    renderEventosDia(tipo);
+  });
+}
+
+// ============================================================
+// CONFIG - OBRA / LOGO
+// ============================================================
+function salvarConfigObra() {
+  state.obra.nome = document.getElementById('cfgObra').value.trim();
+  state.obra.empresa = document.getElementById('cfgEmpresa').value.trim();
+  state.obra.local = document.getElementById('cfgLocal').value.trim();
+  state.obra.descricao = document.getElementById('cfgDescricao').value.trim();
+  // guarda descrições anteriores como sugestões
+  if (state.obra.descricao) {
+    const hist = state.obra.descricaoHistorico || [];
+    if (!hist.includes(state.obra.descricao)) hist.unshift(state.obra.descricao);
+    state.obra.descricaoHistorico = hist.slice(0, 20);
+  }
+  state.obra.contrato = document.getElementById('cfgContrato').value.trim();
+  state.obra.encerramentoNormal = document.getElementById('cfgEncerramentoNormal').value || '17:00';
+  state.obra.encerramentoSexta = document.getElementById('cfgEncerramentoSexta').value || '16:00';
+  state.obra.encerramentoSabado = document.getElementById('cfgEncerramentoSabado').value || '16:00';
+  saveState();
+  atualizarHeader();
+  atualizarHeaderEdicao();
+  _atualizarResumoObraNosDiario();
+  toast('Configurações salvas');
+}
+
+function uploadLogo(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 500 * 1024) {
+    toast('Imagem grande. Use até 500 KB.');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    // redimensiona para 200x200 max
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const maxSize = 200;
+      let w = img.width, h = img.height;
+      if (w > h && w > maxSize) { h = h * (maxSize/w); w = maxSize; }
+      else if (h > maxSize) { w = w * (maxSize/h); h = maxSize; }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0,0,w,h);
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/png');
+      state.obra.logo = dataUrl;
+      saveState();
+      renderLogoPreview();
+      atualizarHeader();
+      toast('Logo carregado');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removerLogo() {
+  confirmar('Remover o logo da empresa?', () => {
+    state.obra.logo = '';
+    saveState();
+    renderLogoPreview();
+    atualizarHeader();
+    toast('Logo removido');
+  }, '🖼️ Remover Logo');
+}
+
+function renderLogoPreview() {
+  const el = document.getElementById('logoPrev');
+  if (state.obra.logo) {
+    el.innerHTML = `<img src="${state.obra.logo}" alt="logo">`;
+  } else {
+    el.innerHTML = 'LOGO';
+  }
+}
+
+// ============================================================
+// CONFIG - render
+// ============================================================
+function renderConfig() {
+  // obra
+  document.getElementById('cfgObra').value = state.obra.nome || '';
+  document.getElementById('cfgEmpresa').value = state.obra.empresa || '';
+  document.getElementById('cfgLocal').value = state.obra.local || '';
+  document.getElementById('cfgDescricao').value = state.obra.descricao || '';
+  // atualiza datalist de descrições anteriores
+  const dlDesc = document.getElementById('descricaoObraSugestoes');
+  if (dlDesc) {
+    dlDesc.innerHTML = (state.obra.descricaoHistorico || []).map(d => `<option value="${escapeHtml(d)}">`).join('');
+  }
+  document.getElementById('cfgContrato').value = state.obra.contrato || '';
+  // exibe resumo na aba Diário
+  _atualizarResumoObraNosDiario();
+  document.getElementById('cfgEncerramentoNormal').value = state.obra.encerramentoNormal || '17:00';
+  document.getElementById('cfgEncerramentoSexta').value = state.obra.encerramentoSexta || '16:00';
+  document.getElementById('cfgEncerramentoSabado').value = state.obra.encerramentoSabado || '16:00';
+  renderLogoPreview();
+  
+  renderConfigColab();
+  renderConfigEfetivoDia();
+  renderConfigEquip();
+  renderConfigEquipDia();
+  renderConfigVL();
+  renderConfigVLDia();
+  renderConfigAtiv();
+  renderAtividadesDodiaCadastro();
+  renderConfigEventos('seguranca');
+  renderConfigEventos('meio_ambiente');
+  document.getElementById('histCount').textContent = Object.keys(history).length;
+  atualizarInfoAutoBackup();
+}
+
+function renderConfigColab() {
+  const cont = document.getElementById('configColabList');
+  cont.innerHTML = '';
+
+  const categoriasColab = [...state.colaboradores.categorias].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  categoriasColab.forEach(cat => {
+    // — bloco da categoria —
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+
+    // cabeçalho
+    const header = document.createElement('div');
+    header.className = 'cat-header';
+
+    const headerLeft = document.createElement('div');
+    headerLeft.className = 'cat-header-left';
+    headerLeft.innerHTML = `<span class="cat-icon">${cat.icon || '📁'}</span><span class="cat-name">${escapeHtml(cat.nome)}</span>`;
+
+    const count = document.createElement('span');
+    count.className = 'cat-count';
+    count.textContent = cat.itens.length;
+
+    const actions = document.createElement('div');
+    actions.className = 'item-actions';
+    actions.style.marginLeft = '6px';
+
+    const btnEditCat = document.createElement('button');
+    btnEditCat.className = 'icon-btn';
+    btnEditCat.textContent = '✏️';
+    btnEditCat.addEventListener('click', (e) => { e.stopPropagation(); editarCategoria(cat.id); });
+
+    const btnDelCat = document.createElement('button');
+    btnDelCat.className = 'icon-btn';
+    btnDelCat.textContent = '🗑️';
+    btnDelCat.addEventListener('click', (e) => { e.stopPropagation(); removerCategoria(cat.id); });
+
+    const toggle = document.createElement('span');
+    toggle.className = 'cat-toggle';
+    toggle.textContent = '▼';
+
+    actions.appendChild(btnEditCat);
+    actions.appendChild(btnDelCat);
+    actions.appendChild(toggle);
+
+    header.appendChild(headerLeft);
+    header.appendChild(count);
+    header.appendChild(actions);
+    header.onclick = (e) => { if (e.target.closest('button')) return; block.classList.toggle('collapsed'); };
+
+    // corpo
+    const body = document.createElement('div');
+    body.className = 'cat-body';
+
+    if (cat.itens.length === 0) {
+      body.innerHTML = '<div class="empty">Sem colaboradores</div>';
+    } else {
+      const itensColab = [...cat.itens].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+      itensColab.forEach(c => {
+        const row = document.createElement('div');
+        row.className = 'item-row';
+
+        const info = document.createElement('div');
+        info.className = 'item-info';
+        info.innerHTML = `<div class="item-name">${escapeHtml(c.nome)}</div><div class="item-meta"><span class="mat">${escapeHtml(c.mat)}</span> · ${escapeHtml(c.funcao)}</div>`;
+
+        const rowActions = document.createElement('div');
+        rowActions.className = 'item-actions';
+
+        const btnEdit = document.createElement('button');
+        btnEdit.className = 'icon-btn';
+        btnEdit.textContent = '✏️';
+        btnEdit.addEventListener('click', (e) => { e.stopPropagation(); editarColaborador(cat.id, c.id); });
+
+        const btnDel = document.createElement('button');
+        btnDel.className = 'icon-btn';
+        btnDel.textContent = '🗑️';
+        btnDel.addEventListener('click', (e) => { e.stopPropagation(); removerColaborador(cat.id, c.id); });
+
+        rowActions.appendChild(btnEdit);
+        rowActions.appendChild(btnDel);
+        row.appendChild(info);
+        row.appendChild(rowActions);
+        body.appendChild(row);
+      });
+    }
+
+    // botão adicionar colaborador
+    const addWrap = document.createElement('div');
+    addWrap.style.padding = '8px 12px';
+    const btnAdd = document.createElement('button');
+    btnAdd.className = 'add-btn-full';
+    btnAdd.textContent = '+ Colaborador';
+    btnAdd.addEventListener('click', () => abrirModalColaborador(cat.id));
+    addWrap.appendChild(btnAdd);
+    body.appendChild(addWrap);
+
+    block.appendChild(header);
+    block.appendChild(body);
+    cont.appendChild(block);
+  });
+}
+
+function renderConfigEquipDia() {
+  const cont = document.getElementById('configEquipDiaList');
+  if (!cont) return;
+  cont.innerHTML = '';
+  const dia = dataAtiva();
+  const savedEquip = S.get(`equipDia_${dia}`) || {};
+
+  if (state.equipamentos.length === 0) {
+    cont.innerHTML = '<div class="empty">Nenhum equipamento cadastrado</div>';
+    return;
+  }
+  state.equipamentos.forEach(eq => {
+    const checked = !!savedEquip[eq.id];
+    const row = document.createElement('div');
+    row.className = 'item-row' + (checked ? ' checked' : '');
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = checked;
+    checkbox.style.marginRight = '10px';
+    checkbox.style.cursor = 'pointer';
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) savedEquip[eq.id] = true;
+      else delete savedEquip[eq.id];
+      S.set(`equipDia_${dia}`, savedEquip);
+      renderConfigEquipDia();
+    });
+
+    const info = document.createElement('div');
+    info.className = 'item-info';
+    info.innerHTML = `<div class="item-name">${escapeHtml(eq.desc)} ${eq.isMotorista ? '🚛' : '🚜'}</div><div class="item-meta"><span class="num">${escapeHtml(eq.numero)}</span></div>`;
+
+    row.appendChild(checkbox);
+    row.appendChild(info);
+    cont.appendChild(row);
+  });
+}
+
+function renderConfigVLDia() {
+  const cont = document.getElementById('configVLDiaList');
+  if (!cont) return;
+  cont.innerHTML = '';
+  const dia = dataAtiva();
+  const savedVL = S.get(`vlDia_${dia}`) || {};
+  const frota = state.veiculosFrota || [];
+
+  if (frota.length === 0) {
+    cont.innerHTML = '<div class="empty">Nenhum veículo leve cadastrado</div>';
+    return;
+  }
+  frota.forEach(v => {
+    const checked = !!savedVL[v.id];
+    const row = document.createElement('div');
+    row.className = 'item-row' + (checked ? ' checked' : '');
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = checked;
+    checkbox.style.marginRight = '10px';
+    checkbox.style.cursor = 'pointer';
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) savedVL[v.id] = true;
+      else delete savedVL[v.id];
+      S.set(`vlDia_${dia}`, savedVL);
+      renderConfigVLDia();
+    });
+
+    const info = document.createElement('div');
+    info.className = 'item-info';
+    info.innerHTML = `<div class="item-name">🚗 ${escapeHtml(v.desc)}</div><div class="item-meta">${v.tipo ? escapeHtml(v.tipo) + ' · ' : ''}${v.placa ? escapeHtml(v.placa) : ''}</div>`;
+
+    row.appendChild(checkbox);
+    row.appendChild(info);
+    cont.appendChild(row);
+  });
+}
+
+function renderConfigEquip() {
+  const cont = document.getElementById('configEquipList');
+  cont.innerHTML = '';
+  if (state.equipamentos.length === 0) {
+    cont.innerHTML = '<div class="empty">Nenhum equipamento</div>';
+    return;
+  }
+  state.equipamentos.forEach(eq => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+
+    const info = document.createElement('div');
+    info.className = 'item-info';
+    const nome = document.createElement('div');
+    nome.className = 'item-name';
+    nome.textContent = eq.desc + (eq.isMotorista ? ' 🚛' : '');
+    const meta = document.createElement('div');
+    meta.className = 'item-meta';
+    const num = document.createElement('span');
+    num.className = 'num';
+    num.textContent = eq.numero;
+    meta.appendChild(num);
+    const extra = document.createElement('div');
+    extra.className = 'item-extra';
+    extra.textContent = eq.isMotorista ? 'Usa lista de Motoristas' : 'Usa lista Operacional';
+    info.appendChild(nome);
+    info.appendChild(meta);
+    info.appendChild(extra);
+
+    const acts = document.createElement('div');
+    acts.className = 'item-actions';
+    const btnEdit = document.createElement('button');
+    btnEdit.className = 'icon-btn';
+    btnEdit.textContent = '✏️';
+    btnEdit.addEventListener('click', () => editarEquipamento(eq.id));
+    const btnDel = document.createElement('button');
+    btnDel.className = 'icon-btn';
+    btnDel.textContent = '🗑️';
+    btnDel.addEventListener('click', () => removerEquipamento(eq.id));
+    acts.appendChild(btnEdit);
+    acts.appendChild(btnDel);
+
+    row.appendChild(info);
+    row.appendChild(acts);
+    cont.appendChild(row);
+  });
+}
+
+function renderConfigAtiv() {
+  const cont = document.getElementById('configAtivList');
+  cont.innerHTML = '';
+  if (state.atividades.length === 0) {
+    cont.innerHTML = '<div class="empty">Nenhuma atividade</div>';
+    return;
+  }
+  const dia = dataAtiva();
+  const savedAtiv = S.get(`ativDia_${dia}`) || {};
+  state.atividades.forEach(a => {
+    const checked = !!savedAtiv[a.id];
+    const row = document.createElement('div');
+    row.className = 'item-row' + (checked ? ' checked' : '');
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = checked;
+    checkbox.style.marginRight = '10px';
+    checkbox.style.cursor = 'pointer';
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        savedAtiv[a.id] = { qty: '', local: '' };
+      } else {
+        delete savedAtiv[a.id];
+      }
+      S.set(`ativDia_${dia}`, savedAtiv);
+      renderConfigAtiv();
+      renderAtividadesDodiaCadastro();
+    });
+
+    const info = document.createElement('div');
+    info.className = 'item-info';
+    const nome = document.createElement('div');
+    nome.className = 'item-name';
+    nome.textContent = a.desc;
+    const meta = document.createElement('div');
+    meta.className = 'item-meta';
+    if (a.local) meta.appendChild(document.createTextNode(a.local));
+    if (a.local && a.unidade) meta.appendChild(document.createTextNode(' · '));
+    if (a.unidade) {
+      const strong = document.createElement('strong');
+      strong.textContent = a.unidade;
+      meta.appendChild(strong);
+    }
+    info.appendChild(nome);
+    info.appendChild(meta);
+
+    const acts = document.createElement('div');
+    acts.className = 'item-actions';
+    const btnEdit = document.createElement('button');
+    btnEdit.className = 'icon-btn';
+    btnEdit.textContent = '✏️';
+    btnEdit.addEventListener('click', () => editarAtividade(a.id));
+    const btnDel = document.createElement('button');
+    btnDel.className = 'icon-btn';
+    btnDel.textContent = '🗑️';
+    btnDel.addEventListener('click', () => removerAtividade(a.id));
+    acts.appendChild(btnEdit);
+    acts.appendChild(btnDel);
+
+    row.appendChild(checkbox);
+    row.appendChild(info);
+    row.appendChild(acts);
+    cont.appendChild(row);
+  });
+}
+
+function renderConfigEfetivoDia() {
+  const cont = document.getElementById('configEfetivoDiaList');
+  const dia = dataAtiva();
+  const savedEfetivo = S.get(`efetivoDia_${dia}`) || {};
+
+  cont.innerHTML = '';
+
+  const categorias = [...state.colaboradores.categorias].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+  categorias.forEach(cat => {
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+
+    const header = document.createElement('div');
+    header.className = 'cat-header';
+    header.innerHTML = `<span class="cat-icon">${cat.icon || '📁'}</span><span class="cat-name">${escapeHtml(cat.nome)}</span>`;
+    header.onclick = () => block.classList.toggle('collapsed');
+
+    const body = document.createElement('div');
+    body.className = 'cat-body';
+
+    if (cat.itens.length === 0) {
+      body.innerHTML = '<div class="empty">Sem colaboradores</div>';
+    } else {
+      const itens = [...cat.itens].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+      itens.forEach(c => {
+        const checked = !!savedEfetivo[c.id];
+        const row = document.createElement('div');
+        row.className = 'item-row' + (checked ? ' checked' : '');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = checked;
+        checkbox.style.marginRight = '10px';
+        checkbox.style.cursor = 'pointer';
+        checkbox.addEventListener('change', () => {
+          if (checkbox.checked) {
+            savedEfetivo[c.id] = true;
+          } else {
+            delete savedEfetivo[c.id];
+          }
+          S.set(`efetivoDia_${dia}`, savedEfetivo);
+          renderConfigEfetivoDia();
+        });
+
+        const info = document.createElement('div');
+        info.className = 'item-info';
+        info.innerHTML = `<div class="item-name">${escapeHtml(c.nome)}</div><div class="item-meta"><span class="mat">${escapeHtml(c.mat)}</span> · ${escapeHtml(c.funcao)}</div>`;
+
+        row.appendChild(checkbox);
+        row.appendChild(info);
+        body.appendChild(row);
+      });
+    }
+
+    block.appendChild(header);
+    block.appendChild(body);
+    cont.appendChild(block);
+  });
+}
+
+function renderConfigEventos(tipo) {
+  const cont = document.getElementById(tipo === 'seguranca' ? 'configSegList' : 'configAmbList');
+  cont.innerHTML = '';
+  const lista = state[tipo];
+  if (lista.length === 0) { cont.innerHTML = '<div class="empty">Nenhum tipo</div>'; return; }
+  lista.forEach(e => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+
+    const info = document.createElement('div');
+    info.className = 'item-info';
+    const nome = document.createElement('div');
+    nome.className = 'item-name';
+    nome.textContent = e.desc;
+    info.appendChild(nome);
+
+    const acts = document.createElement('div');
+    acts.className = 'item-actions';
+    const btnEdit = document.createElement('button');
+    btnEdit.className = 'icon-btn';
+    btnEdit.textContent = '✏️';
+    btnEdit.addEventListener('click', () => editarEventoCadastro(tipo, e.id));
+    const btnDel = document.createElement('button');
+    btnDel.className = 'icon-btn';
+    btnDel.textContent = '🗑️';
+    btnDel.addEventListener('click', () => removerEventoCadastro(tipo, e.id));
+    acts.appendChild(btnEdit);
+    acts.appendChild(btnDel);
+
+    row.appendChild(info);
+    row.appendChild(acts);
+    cont.appendChild(row);
+  });
+}
+
+// ============================================================
+// CRUD
+// ============================================================
+function abrirModalCategoria() {
+  editingCat = { type: 'colab_cat', id: null };
+  document.getElementById('modalCatTitle').textContent = 'Nova Categoria';
+  document.getElementById('modalCatIcon').value = '';
+  document.getElementById('modalCatNome').value = '';
+  abrirModal('modalCategoria');
+}
+function editarCategoria(id) {
+  const cat = state.colaboradores.categorias.find(c => c.id === id);
+  editingCat = { type: 'colab_cat', id };
+  document.getElementById('modalCatTitle').textContent = 'Editar Categoria';
+  document.getElementById('modalCatIcon').value = cat.icon || '';
+  document.getElementById('modalCatNome').value = cat.nome;
+  abrirModal('modalCategoria');
+}
+function salvarCategoria() {
+  const icon = document.getElementById('modalCatIcon').value.trim();
+  const nome = document.getElementById('modalCatNome').value.trim();
+  if (!nome) { toast('Nome obrigatório'); return; }
+  if (editingCat.id) {
+    const cat = state.colaboradores.categorias.find(c => c.id === editingCat.id);
+    cat.icon = icon; cat.nome = nome;
+  } else {
+    state.colaboradores.categorias.push({ id: uid('cat'), icon, nome, itens: [] });
+  }
+  saveState();
+  fecharModal('modalCategoria');
+  renderConfigColab();
+  renderConfigEfetivoDia();
+  toast('Salvo');
+}
+function removerCategoria(id) {
+  confirmar('Remover esta categoria e todos os colaboradores vinculados?', () => {
+    state.colaboradores.categorias = state.colaboradores.categorias.filter(c => c.id !== id);
+    saveState();
+    renderConfigColab();
+    renderConfigEfetivoDia();
+    toast('Removido');
+  });
+}
+function abrirModalColaborador(catId) {
+  editingItem = { type: 'colab', parentId: catId, id: null };
+  document.getElementById('modalColabTitle').textContent = 'Novo Colaborador';
+  document.getElementById('modalColabMat').value = '';
+  document.getElementById('modalColabNome').value = '';
+  document.getElementById('modalColabFunc').value = '';
+  abrirModal('modalColab');
+}
+function editarColaborador(catId, id) {
+  const cat = state.colaboradores.categorias.find(c => c.id === catId);
+  const c = cat.itens.find(x => x.id === id);
+  editingItem = { type: 'colab', parentId: catId, id };
+  document.getElementById('modalColabTitle').textContent = 'Editar Colaborador';
+  document.getElementById('modalColabMat').value = c.mat;
+  document.getElementById('modalColabNome').value = c.nome;
+  document.getElementById('modalColabFunc').value = c.funcao;
+  abrirModal('modalColab');
+}
+function salvarColaborador() {
+  const mat = document.getElementById('modalColabMat').value.trim();
+  const nome = document.getElementById('modalColabNome').value.trim();
+  const funcao = document.getElementById('modalColabFunc').value.trim();
+  if (!mat || !nome) { toast('Matrícula e nome obrigatórios'); return; }
+  const cat = state.colaboradores.categorias.find(c => c.id === editingItem.parentId);
+  if (editingItem.id) {
+    const c = cat.itens.find(x => x.id === editingItem.id);
+    c.mat = mat; c.nome = nome; c.funcao = funcao;
+  } else {
+    cat.itens.push({ id: uid('p'), mat, nome, funcao });
+  }
+  saveState();
+  fecharModal('modalColab');
+  renderConfigColab();
+  renderConfigEfetivoDia();
+  toast('Salvo');
+}
+function removerColaborador(catId, id) {
+  confirmar('Remover este colaborador?', () => {
+    const cat = state.colaboradores.categorias.find(c => c.id === catId);
+    cat.itens = cat.itens.filter(c => c.id !== id);
+    saveState();
+    renderConfigColab();
+    renderConfigEfetivoDia();
+    toast('Removido');
+  });
+}
+
+// FROTA VEÍCULOS LEVES (cadastro)
+function renderConfigVL() {
+  const cont = document.getElementById('configVLList');
+  if (!cont) return;
+  cont.innerHTML = '';
+  const frota = state.veiculosFrota || [];
+  if (frota.length === 0) { cont.innerHTML = '<div class="empty">Nenhum veículo leve cadastrado</div>'; return; }
+  frota.forEach(v => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+
+    const info = document.createElement('div');
+    info.className = 'item-info';
+    const nome = document.createElement('div');
+    nome.className = 'item-name';
+    nome.textContent = '🚗 ' + v.desc;
+    const meta = document.createElement('div');
+    meta.className = 'item-meta';
+    const num = document.createElement('span');
+    num.className = 'num';
+    num.textContent = v.placa;
+    meta.appendChild(num);
+    if (v.tipo) meta.appendChild(document.createTextNode(' · ' + v.tipo));
+    info.appendChild(nome);
+    info.appendChild(meta);
+
+    const acts = document.createElement('div');
+    acts.className = 'item-actions';
+    const btnEdit = document.createElement('button');
+    btnEdit.className = 'icon-btn';
+    btnEdit.textContent = '✏️';
+    btnEdit.addEventListener('click', () => editarVeiculoFrota(v.id));
+    const btnDel = document.createElement('button');
+    btnDel.className = 'icon-btn';
+    btnDel.textContent = '🗑️';
+    btnDel.addEventListener('click', () => removerVeiculoFrota(v.id));
+    acts.appendChild(btnEdit);
+    acts.appendChild(btnDel);
+
+    row.appendChild(info);
+    row.appendChild(acts);
+    cont.appendChild(row);
+  });
+}
+function _atualizarVLDescDatalist() {
+  const dl = document.getElementById('vlDescSugestoes');
+  if (!dl) return;
+  const nomes = [...new Set((state.veiculosFrota || []).map(v => v.desc.trim()))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  dl.innerHTML = nomes.map(n => `<option value="${escapeHtml(n)}">`).join('');
+}
+function abrirModalVeiculoFrota() {
+  editingItem = { type: 'vl', id: null };
+  document.getElementById('modalVeiculoFrotaTitle').textContent = 'Novo Veículo Leve';
+  document.getElementById('modalVFNumero').value = '';
+  document.getElementById('modalVFDesc').value = '';
+  document.getElementById('modalVFPlaca').value = '';
+  _atualizarVLDescDatalist();
+  abrirModal('modalVeiculoFrota');
+}
+function editarVeiculoFrota(id) {
+  const v = (state.veiculosFrota || []).find(x => x.id === id);
+  editingItem = { type: 'vl', id };
+  document.getElementById('modalVeiculoFrotaTitle').textContent = 'Editar Veículo Leve';
+  document.getElementById('modalVFNumero').value = v.numero || '';
+  document.getElementById('modalVFDesc').value = v.desc;
+  document.getElementById('modalVFPlaca').value = v.placa;
+  _atualizarVLDescDatalist();
+  abrirModal('modalVeiculoFrota');
+}
+function salvarVeiculoFrota() {
+  const numero = document.getElementById('modalVFNumero').value.trim();
+  const desc = document.getElementById('modalVFDesc').value.trim();
+  const placa = document.getElementById('modalVFPlaca').value.trim();
+  if (!desc || !placa) { toast('Descrição e placa obrigatórios'); return; }
+  if (!state.veiculosFrota) state.veiculosFrota = [];
+  if (editingItem.id) {
+    const v = state.veiculosFrota.find(x => x.id === editingItem.id);
+    v.numero = numero; v.desc = desc; v.placa = placa;
+  } else {
+    state.veiculosFrota.push({ id: uid('vf'), numero, desc, placa });
+  }
+  saveState(); fecharModal('modalVeiculoFrota'); renderConfigVL(); renderConfigVLDia(); toast('Salvo');
+}
+function removerVeiculoFrota(id) {
+  confirmar('Remover este veículo da frota?', () => {
+    state.veiculosFrota = (state.veiculosFrota || []).filter(v => v.id !== id);
+    saveState(); renderConfigVL(); renderConfigVLDia(); toast('Removido');
+  });
+}
+
+function abrirModalEquipamento() {
+  editingItem = { type: 'equip', id: null };
+  document.getElementById('modalEquipTitle').textContent = 'Novo Equipamento';
+  document.getElementById('modalEquipNum').value = '';
+  document.getElementById('modalEquipDesc').value = '';
+  document.getElementById('modalEquipMotorista').checked = false;
+  _atualizarEquipDescDatalist();
+  abrirModal('modalEquip');
+}
+function _atualizarResumoObraNosDiario() {
+  const el = document.getElementById('hdrCidade');
+  if (!el) return;
+  const cidade = state.obra.local || '';
+  if (cidade) {
+    el.textContent = cidade;
+    el.style.display = '';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function _atualizarLocalObraDatalist() {
+  const dl = document.getElementById('localObraList');
+  if (!dl) return;
+  const hist = state.localObraHistorico || [];
+  dl.innerHTML = hist.map(l => `<option value="${escapeHtml(l)}">`).join('');
+}
+
+function _atualizarEquipDescDatalist() {
+  const dl = document.getElementById('equipDescSugestoes');
+  if (!dl) return;
+  const nomes = [...new Set(state.equipamentos.map(e => e.desc.trim()))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  dl.innerHTML = nomes.map(n => `<option value="${escapeHtml(n)}">`).join('');
+}
+function editarEquipamento(id) {
+  const eq = state.equipamentos.find(e => e.id === id);
+  editingItem = { type: 'equip', id };
+  document.getElementById('modalEquipTitle').textContent = 'Editar Equipamento';
+  document.getElementById('modalEquipNum').value = eq.numero;
+  document.getElementById('modalEquipDesc').value = eq.desc;
+  document.getElementById('modalEquipMotorista').checked = !!eq.isMotorista;
+  _atualizarEquipDescDatalist();
+  abrirModal('modalEquip');
+}
+function salvarEquipamento() {
+  const numero = document.getElementById('modalEquipNum').value.trim();
+  const desc = document.getElementById('modalEquipDesc').value.trim();
+  const isMotorista = document.getElementById('modalEquipMotorista').checked;
+  if (!numero || !desc) { toast('Número e descrição obrigatórios'); return; }
+  if (editingItem.id) {
+    const eq = state.equipamentos.find(e => e.id === editingItem.id);
+    eq.numero = numero; eq.desc = desc; eq.isMotorista = isMotorista;
+  } else {
+    state.equipamentos.push({ id: uid('eq'), numero, desc, isMotorista });
+  }
+  saveState();
+  fecharModal('modalEquip');
+  renderConfigEquip();
+  renderConfigEquipDia();
+  toast('Salvo');
+}
+function removerEquipamento(id) {
+  confirmar('Remover este equipamento?', () => {
+    state.equipamentos = state.equipamentos.filter(e => e.id !== id);
+    saveState();
+    renderConfigEquip();
+    renderConfigEquipDia();
+    toast('Removido');
+  });
+}
+
+function renderAtividadesDodiaCadastro(){
+  const cont = document.getElementById('atividadesCheckboxList');
+  const dia = dataAtiva();
+  const savedAtiv = S.get(`ativDia_${dia}`) || {};
+  const selecionadas = state.atividades.filter(a => savedAtiv[a.id]);
+
+  if (selecionadas.length === 0) {
+    cont.innerHTML = '<p style="color:var(--ink-faint);text-align:center;padding:20px">Marque atividades acima para aparecerem aqui</p>';
+    return;
+  }
+
+  cont.innerHTML = selecionadas.map(a => `
+    <div style="border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px;background:var(--bg-card)">
+      <div style="font-weight:700;margin-bottom:10px">${a.desc}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <label style="font-size:11px;color:var(--ink-faint);display:block;margin-bottom:4px">Quantidade</label>
+          <input type="text" value="${savedAtiv[a.id]?.qty || ''}" placeholder="Ex: 10"
+            onchange="atualizarQtyLocalAtiv('${a.id}', 'qty', this.value);renderAtividadesDodiaCadastro()">
+        </div>
+        <div>
+          <label style="font-size:11px;color:var(--ink-faint);display:block;margin-bottom:4px">Local de Execução</label>
+          <input type="text" value="${savedAtiv[a.id]?.local || ''}" placeholder="Ex: Bloco A"
+            onchange="atualizarQtyLocalAtiv('${a.id}', 'local', this.value);renderAtividadesDodiaCadastro()">
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function atualizarQtyLocalAtiv(atId, tipo, valor) {
+  const dia = dataAtiva();
+  let savedAtiv = S.get(`ativDia_${dia}`) || {};
+  if (!savedAtiv[atId]) savedAtiv[atId] = { qty: '', local: '' };
+  savedAtiv[atId][tipo] = valor;
+  S.set(`ativDia_${dia}`, savedAtiv);
+  // Sincronizar quantidade no diário ativo (usada pelo Resumo/Acumulado)
+  if (tipo === 'qty' && typeof currentDay !== 'undefined' && currentDay && currentDay.data === dia) {
+    if (!currentDay.atividadesQtd) currentDay.atividadesQtd = {};
+    if (valor === '' || valor === null) delete currentDay.atividadesQtd[atId];
+    else currentDay.atividadesQtd[atId] = valor;
+    if (currentDay.atividadesMarcadas && currentDay.atividadesMarcadas[atId] && typeof currentDay.atividadesMarcadas[atId] === 'object') {
+      currentDay.atividadesMarcadas[atId].qty = valor;
+    }
+    salvarDiarioDia(false);
+  }
+}
+
+function marcarTodasAtividadesCheckbox(marcar){
+  const dia = dataAtiva();
+  let savedAtiv = S.get(`ativDia_${dia}`) || {};
+  state.atividades.forEach(a => {
+    if (marcar) {
+      savedAtiv[a.id] = { qty: '', local: '' };
+    } else {
+      delete savedAtiv[a.id];
+    }
+  });
+  S.set(`ativDia_${dia}`, savedAtiv);
+  renderConfigAtiv();
+  renderAtividadesDodiaCadastro();
+}
+
+function abrirAbaAtividades(){
+  const t = document.querySelector('.tab[data-view="config"]');
+  if (t) t.click();
+  setTimeout(() => {
+    const st = document.querySelector('.subtab[data-pane="atividades"]');
+    if (st) st.click();
+  }, 200);
+}
+
+function salvarAtividadesDodia(){
+  const hoje = new Date().toISOString().slice(0, 10);
+
+  // Se não tem currentDay inicializado, inicializa com hoje
+  if (!currentDay || !currentDay.data) {
+    initCurrentDay(hoje);
+  }
+
+  const dataDiario = currentDay.data || hoje;
+
+  // Copiar atividades selecionadas para o dia atual (chave do dia em edição)
+  currentDay.atividadesMarcadas = {};
+  if (!currentDay.atividadesQtd) currentDay.atividadesQtd = {};
+  const savedAtiv = S.get(`ativDia_${dataDiario}`) || {};
+
+  Object.keys(savedAtiv).forEach(atId => {
+    currentDay.atividadesMarcadas[atId] = { ...savedAtiv[atId] };
+    const q = savedAtiv[atId] && savedAtiv[atId].qty;
+    if (q !== undefined && q !== null && q !== '') currentDay.atividadesQtd[atId] = q;
+  });
+  // Remover quantidades de atividades desmarcadas
+  Object.keys(currentDay.atividadesQtd).forEach(atId => {
+    if (!savedAtiv[atId]) delete currentDay.atividadesQtd[atId];
+  });
+
+  // Salvar e renderizar
+  salvarDiarioDia();
+  renderDiario();
+  renderAtividadesDia();
+
+  toast('✓ Atividades salvas e adicionadas ao Diário!');
+
+  // Redirecionar para Diário
+  setTimeout(() => {
+    const t = document.querySelector('.tab[data-view="diario"]');
+    if (t) {
+      t.click();
+      setTimeout(() => {
+        initCurrentDay(dataDiario);
+      }, 200);
+    }
+  }, 300);
+}
+
+function abrirAbaEfetivo(){
+  const t = document.querySelector('.tab[data-view="config"]');
+  if (t) t.click();
+  setTimeout(() => {
+    const st = document.querySelector('.subtab[data-pane="colaboradores"]');
+    if (st) st.click();
+  }, 200);
+}
+
+function salvarEfetivoDia(){
+  const hoje = new Date().toISOString().slice(0, 10);
+
+  if (!currentDay || !currentDay.data) {
+    initCurrentDay(hoje);
+  }
+
+  const dataDiario = currentDay.data || hoje;
+  const savedEfetivo = S.get(`efetivoDia_${dataDiario}`) || {};
+
+  currentDay.efetivo = { ...savedEfetivo };
+  salvarDiarioDia();
+  renderDiario();
+  renderEfetivoDia();
+
+  toast('✓ Efetivo do dia salvo!');
+
+  setTimeout(() => {
+    const t = document.querySelector('.tab[data-view="diario"]');
+    if (t) {
+      t.click();
+      setTimeout(() => {
+        initCurrentDay(dataDiario);
+      }, 200);
+    }
+  }, 300);
+}
+
+function abrirAbaEquipamentos(){
+  const t = document.querySelector('.tab[data-view="config"]');
+  if (t) t.click();
+  setTimeout(() => {
+    const st = document.querySelector('.subtab[data-pane="equipamentos"]');
+    if (st) st.click();
+  }, 200);
+}
+
+function salvarEquipDia(){
+  const hoje = new Date().toISOString().slice(0, 10);
+  if (!currentDay || !currentDay.data) initCurrentDay(hoje);
+  const dataDiario = currentDay.data || hoje;
+  salvarDiarioDia();
+  renderEquipDia();
+  toast('✓ Equipamentos do dia salvos!');
+  setTimeout(() => {
+    const t = document.querySelector('.tab[data-view="diario"]');
+    if (t) {
+      t.click();
+      setTimeout(() => initCurrentDay(dataDiario), 200);
+    }
+  }, 300);
+}
+
+function abrirAbaVeiculosLeves(){
+  const t = document.querySelector('.tab[data-view="config"]');
+  if (t) t.click();
+  setTimeout(() => {
+    const st = document.querySelector('.subtab[data-pane="equipamentos"]');
+    if (st) st.click();
+  }, 200);
+}
+
+function salvarVLDia(){
+  const hoje = new Date().toISOString().slice(0, 10);
+  if (!currentDay || !currentDay.data) initCurrentDay(hoje);
+  const dataDiario = currentDay.data || hoje;
+  salvarDiarioDia();
+  renderVeiculosLevesDia();
+  toast('✓ Veículos do dia salvos!');
+  setTimeout(() => {
+    const t = document.querySelector('.tab[data-view="diario"]');
+    if (t) {
+      t.click();
+      setTimeout(() => initCurrentDay(dataDiario), 200);
+    }
+  }, 300);
+}
+
+function abrirModalAtividade() {
+  editingItem = { type: 'ativ', id: null };
+  document.getElementById('modalAtivTitle').textContent = 'Nova Atividade Padrão';
+  document.getElementById('modalAtivDesc').value = '';
+  document.getElementById('modalAtivLocal').value = '';
+  document.getElementById('modalAtivUnidade').value = '';
+  abrirModal('modalAtividade');
+}
+function editarAtividade(id) {
+  const a = state.atividades.find(x => x.id === id);
+  editingItem = { type: 'ativ', id };
+  document.getElementById('modalAtivTitle').textContent = 'Editar Atividade';
+  document.getElementById('modalAtivDesc').value = a.desc;
+  document.getElementById('modalAtivLocal').value = a.local || '';
+  document.getElementById('modalAtivUnidade').value = a.unidade || '';
+  abrirModal('modalAtividade');
+}
+function salvarAtividade() {
+  const desc = document.getElementById('modalAtivDesc').value.trim();
+  const local = document.getElementById('modalAtivLocal').value.trim();
+  const unidade = document.getElementById('modalAtivUnidade').value.trim();
+
+  if (!desc) {
+    toast('Descrição é obrigatória', 'var(--red)');
+    return;
+  }
+
+  try {
+    if (editingItem && editingItem.id) {
+      // Editar existente
+      const idx = state.atividades.findIndex(x => x.id === editingItem.id);
+      if (idx >= 0) {
+        state.atividades[idx] = { id: editingItem.id, desc, local, unidade };
+      }
+    } else {
+      // Criar nova
+      const newId = uid('a');
+      state.atividades.push({ id: newId, desc, local, unidade });
+    }
+
+    saveState();
+    fecharModal('modalAtividade');
+    renderConfigAtiv();
+    renderAtividadesDodiaCadastro();
+    toast('✓ Atividade salva');
+  } catch (e) {
+    toast('Erro ao salvar: ' + e.message, 'var(--red)');
+  }
+}
+function removerAtividade(id) {
+  confirmar('Remover esta atividade?', () => {
+    state.atividades = state.atividades.filter(a => a.id !== id);
+    const dia = dataAtiva();
+    let savedAtiv = S.get(`ativDia_${dia}`) || {};
+    delete savedAtiv[id];
+    S.set(`ativDia_${dia}`, savedAtiv);
+    saveState();
+    renderConfigAtiv();
+    renderAtividadesDodiaCadastro();
+    toast('Removido');
+  });
+}
+
+function abrirModalEventoCadastro(tipo) {
+  activeEventoTipo = tipo;
+  editingItem = { type: 'evcad', id: null };
+  document.getElementById('modalEventoCadTitle').textContent = 'Novo Tipo';
+  document.getElementById('modalEventoCadDesc').value = '';
+  abrirModal('modalEventoCad');
+}
+function editarEventoCadastro(tipo, id) {
+  activeEventoTipo = tipo;
+  editingItem = { type: 'evcad', id };
+  const e = state[tipo].find(x => x.id === id);
+  document.getElementById('modalEventoCadTitle').textContent = 'Editar Tipo';
+  document.getElementById('modalEventoCadDesc').value = e.desc;
+  abrirModal('modalEventoCad');
+}
+function salvarEventoCadastro() {
+  const desc = document.getElementById('modalEventoCadDesc').value.trim();
+  if (!desc) { toast('Descrição obrigatória'); return; }
+  if (editingItem.id) {
+    const e = state[activeEventoTipo].find(x => x.id === editingItem.id);
+    e.desc = desc;
+  } else {
+    state[activeEventoTipo].push({ id: uid('ec'), desc });
+  }
+  saveState();
+  fecharModal('modalEventoCad');
+  renderConfigEventos(activeEventoTipo);
+  toast('Salvo');
+}
+function removerEventoCadastro(tipo, id) {
+  confirmar('Remover este tipo?', () => {
+    state[tipo] = state[tipo].filter(e => e.id !== id);
+    saveState();
+    renderConfigEventos(tipo);
+    toast('Removido');
+  });
+}
+
+// ============================================================
+// MODAL UTIL
+// ============================================================
+function abrirModal(id) { document.getElementById(id).classList.add('show'); }
+function fecharModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// Substituição do confirm() nativo (bloqueado no iOS em file://)
+function confirmar(msg, onSim, titulo) {
+  document.getElementById('modalConfirmMsg').textContent = msg;
+  document.getElementById('modalConfirmTitle').textContent = titulo || '⚠️ Confirmar exclusão';
+  abrirModal('modalConfirm');
+  const btnSim = document.getElementById('modalConfirmYes');
+  const btnNao = document.getElementById('modalConfirmNo');
+  const clone = (btn) => { const n = btn.cloneNode(true); btn.parentNode.replaceChild(n, btn); return n; };
+  clone(btnSim).addEventListener('click', () => { fecharModal('modalConfirm'); onSim(); });
+  clone(btnNao).addEventListener('click', () => fecharModal('modalConfirm'));
+}
+
+// ============================================================
+// RELATÓRIO
+// ============================================================
+function buildRelatorio(day) {
+  const dataBR = formatDateBR(day.data);
+  const dSemana = diaDaSemana(day.data);
+  const divisor = '⸻—————————————————';
+  
+  let txt = '';
+  // Cabeçalho
+  if (state.obra.empresa) txt += `*${state.obra.empresa.toUpperCase()}*\n`;
+  txt += `*Relatório de Obra – ${dataBR}*`;
+  if (state.obra.nome) txt += `\n_${state.obra.nome}_`;
+  if (state.obra.local) txt += `\n📍 ${state.obra.local}`;
+  if (state.obra.contrato) txt += `\n🗂️ ${state.obra.contrato}`;
+  txt += `\n📆 ${dSemana}`;
+  txt += '\n\n';
+  
+  // Tempo
+  if (day.tempoManha || day.tempoTarde) {
+    txt += `*🌤️ Condições do Tempo*\n• ${tempoLabel(day)}\n\n`;
+    txt += `${divisor}\n\n`;
+  }
+  
+  // Jornada
+  txt += `*⏰ Jornada de Trabalho*\n`;
+  txt += `• Café: ${day.cafeInicio || '--:--'} às ${day.cafeFim || '--:--'}\n`;
+  txt += `• Almoço: ${day.almocoInicio || '--:--'} às ${day.almocoFim || '--:--'}\n`;
+  txt += `• Encerramento: ${day.encerramento || '--:--'}\n\n`;
+  txt += `${divisor}\n\n`;
+  
+  // DSS
+  txt += `*📋 DSS – Diálogo de Segurança*\n`;
+  if (day.dssHorario) txt += `• Horário: ${day.dssHorario}\n`;
+  if (day.dssMinistrou) {
+    const nomeDss = day.dssMinistrou.includes('|') ? day.dssMinistrou.split('|')[1] : day.dssMinistrou;
+    txt += `• Ministrado por: ${nomeDss}\n`;
+  }
+  txt += `• Tema: ${day.dssTema || '—'}\n\n`;
+  txt += `${divisor}\n\n`;
+  
+  // Atividades
+  txt += `*🛠️ Atividades do Dia*\n`;
+  const ativsMarc = state.atividades.filter(a => day.atividadesMarcadas[a.id]);
+  if (ativsMarc.length === 0 && day.atividadesAvulsas.length === 0 && !day.atividadesExtra) {
+    txt += `• —\n`;
+  } else {
+    ativsMarc.forEach(a => {
+      const qtdNum = qtdAtividadeDia(day, a.id);
+      const qtd = qtdNum > 0 ? qtdNum.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : '';
+      const unid = a.unidade || '';
+      txt += `• ${a.desc}${a.local ? ' — ' + a.local : ''}`;
+      if (qtd) txt += ` ▸ *${qtd} ${unid}*`;
+      txt += '\n';
+    });
+    day.atividadesAvulsas.forEach(a => txt += `• ${a.desc}${a.local ? ' — ' + a.local : ''}\n`);
+    if (day.atividadesExtra) {
+      day.atividadesExtra.split('\n').filter(x => x.trim()).forEach(l => txt += `• ${l}\n`);
+    }
+  }
+  txt += `\n${divisor}\n\n`;
+  
+  // Equipamentos (novo sistema: localStorage equipDia_data)
+  const savedEquip = S.get(`equipDia_${day.data}`) || {};
+  const equipsAtivos = state.equipamentos.filter(e => savedEquip[e.id]);
+  if (equipsAtivos.length > 0) {
+    const gruposEquip = {};
+    equipsAtivos.forEach(e => {
+      const k = e.desc.trim();
+      if (!gruposEquip[k]) gruposEquip[k] = { desc: k, isMotorista: e.isMotorista, count: 0 };
+      gruposEquip[k].count++;
+    });
+    const ordenadosEquip = Object.values(gruposEquip).sort((a, b) => a.desc.localeCompare(b.desc, 'pt-BR'));
+    txt += `*🚜 Equipamentos Utilizados — ${equipsAtivos.length}*\n`;
+    ordenadosEquip.forEach(g => {
+      txt += `• ${g.isMotorista ? '🚛' : '🚜'} ${g.desc} — ${g.count} un.\n`;
+    });
+    txt += `\n${divisor}\n\n`;
+  }
+
+  // Veículos Leves (novo sistema: localStorage vlDia_data)
+  const savedVL = S.get(`vlDia_${day.data}`) || {};
+  const vlAtivos = (state.veiculosFrota || []).filter(v => savedVL[v.id]);
+  if (vlAtivos.length > 0) {
+    const gruposVL = {};
+    vlAtivos.forEach(v => {
+      const k = v.desc.trim();
+      if (!gruposVL[k]) gruposVL[k] = { desc: k, count: 0 };
+      gruposVL[k].count++;
+    });
+    const ordenadosVL = Object.values(gruposVL).sort((a, b) => a.desc.localeCompare(b.desc, 'pt-BR'));
+    txt += `*🚗 Veículos Leves — ${vlAtivos.length}*\n`;
+    ordenadosVL.forEach(g => {
+      txt += `• ${g.desc} — ${g.count} un.\n`;
+    });
+    txt += `\n${divisor}\n\n`;
+  }
+  
+  // Veículos/Equipamentos Parados
+  const savedEquipWA = S.get(`equipDia_${day.data}`) || {};
+  const equipsParadosWA = state.equipamentos.filter(e => !savedEquipWA[e.id]);
+  const vlParadosWA = (state.veiculosFrota || []).filter(v => !savedVL[v.id]);
+  if (equipsParadosWA.length > 0 || vlParadosWA.length > 0) {
+    const paradosDay = day.veiculosParados || {};
+    txt += `*🔴 Veículos/Equipamentos Parados*\n`;
+    equipsParadosWA.forEach(e => {
+      const just = paradosDay[e.id] ? ` — ${paradosDay[e.id]}` : ' — (sem justificativa)';
+      txt += `• ${e.isMotorista ? '🚛' : '🚜'} ${e.numero} – ${e.desc}${just}\n`;
+    });
+    vlParadosWA.forEach(v => {
+      const just = paradosDay[v.id] ? ` — ${paradosDay[v.id]}` : ' — (sem justificativa)';
+      txt += `• 🚗 ${v.desc}${v.placa ? ' ('+v.placa+')' : ''}${just}\n`;
+    });
+    txt += `\n${divisor}\n\n`;
+  }
+
+  // Efetivo
+  txt += `*📋 Efetivo – ${dataBR}*\n\n`;
+  let total = 0;
+  state.colaboradores.categorias.forEach(cat => {
+    const presentes = cat.itens.filter(c => day.efetivo[c.id]);
+    if (presentes.length === 0) return;
+    total += presentes.length;
+    txt += `*${cat.icon || ''} ${cat.nome} — ${presentes.length}*\n`;
+    presentes.forEach(c => txt += `• ${c.mat} – ${c.nome} – ${c.funcao}\n`);
+    txt += `\n${divisor}\n\n`;
+  });
+  txt += `*✅ Total Geral: ${total} colaboradores*\n`;
+  
+  // Eventos Segurança
+  if (day.eventosSeguranca && day.eventosSeguranca.length > 0) {
+    txt += `\n${divisor}\n\n`;
+    txt += `*🦺 Eventos de Segurança — ${day.eventosSeguranca.length}*\n`;
+    day.eventosSeguranca.forEach((ev, i) => {
+      txt += `\n${i+1}. *${ev.tipo}* (${ev.gravidade})\n`;
+      if (ev.desc) txt += `   Desc.: ${ev.desc}\n`;
+      if (ev.acao) txt += `   Ação: ${ev.acao}\n`;
+    });
+  }
+  
+  // Eventos Meio Ambiente
+  if (day.eventosAmbiente && day.eventosAmbiente.length > 0) {
+    txt += `\n${divisor}\n\n`;
+    txt += `*🌱 Eventos de Meio Ambiente — ${day.eventosAmbiente.length}*\n`;
+    day.eventosAmbiente.forEach((ev, i) => {
+      txt += `\n${i+1}. *${ev.tipo}* (${ev.gravidade})\n`;
+      if (ev.desc) txt += `   Desc.: ${ev.desc}\n`;
+      if (ev.acao) txt += `   Ação: ${ev.acao}\n`;
+    });
+  }
+
+  // Fotos do Dia
+  if ((day.fotos || []).length > 0) {
+    txt += `\n${divisor}\n\n`;
+    txt += `*📷 Fotos do Dia — ${day.fotos.length}*\n`;
+    day.fotos.forEach((f, i) => { txt += `${i + 1}. ${f.url}\n`; });
+  }
+
+  // Observações do Dia
+  if (day.observacoesDia && day.observacoesDia.trim()) {
+    txt += `\n${divisor}\n\n`;
+    txt += `*📝 Observações do Dia*\n${day.observacoesDia.trim()}\n`;
+  }
+
+  return txt;
+}
+
+// ============================================================
+// ABA RESUMO — Semanal / Mensal
+// ============================================================
+let resumoPeriodo = 'semana'; // 'semana' | 'mes'
+let resumoOffset = 0; // 0 = atual, -1 = anterior, etc.
+
+function setResumoPeriodo(p) {
+  resumoPeriodo = p;
+  resumoOffset = 0;
+  document.getElementById('rtabSemana').classList.toggle('active', p === 'semana');
+  document.getElementById('rtabMes').classList.toggle('active', p === 'mes');
+  renderResumo();
+}
+
+function navegarResumoPeriodo(delta) {
+  resumoOffset += delta;
+  renderResumo();
+}
+
+function getResumoDatas() {
+  const hoje = new Date();
+  let inicio, fim;
+  if (resumoPeriodo === 'semana') {
+    // Semana: Segunda (dia 1) → Sábado (dia 6)
+    // dow: 0=dom,1=seg,2=ter,3=qua,4=qui,5=sex,6=sab
+    const dow = hoje.getDay();
+    // Se domingo (0): pertence à semana anterior, volta 6 dias para segunda
+    // Senão: volta (dow-1) dias para chegar na segunda
+    const diffSeg = (dow === 0) ? -6 : 1 - dow;
+    inicio = new Date(hoje);
+    inicio.setDate(hoje.getDate() + diffSeg + resumoOffset * 7);
+    fim = new Date(inicio);
+    fim.setDate(inicio.getDate() + 5); // segunda + 5 = sábado
+  } else {
+    const mesBase = hoje.getMonth() + resumoOffset;
+    const anoBase = hoje.getFullYear() + Math.floor(mesBase / 12);
+    const mesReal = ((mesBase % 12) + 12) % 12;
+    inicio = new Date(anoBase, mesReal, 1);
+    fim = new Date(anoBase, mesReal + 1, 0);
+  }
+  // Usar formatação local para evitar problema de fuso horário UTC
+  const fmtISO = (d) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  };
+  return {
+    inicio,
+    fim,
+    isoInicio: fmtISO(inicio),
+    isoFim: fmtISO(fim)
+  };
+}
+
+function renderResumo() {
+  const { inicio, fim, isoInicio, isoFim } = getResumoDatas();
+
+  // Label de navegação
+  if (resumoPeriodo === 'semana') {
+    const label = resumoOffset === 0 ? 'Semana Atual' : resumoOffset === -1 ? 'Semana Passada' : '';
+    document.getElementById('resumoNavLabel').innerHTML =
+      `${label ? label + '<br>' : ''}<span style="font-weight:400;font-size:12px;color:var(--ink-faint)">${formatDateBR(isoInicio)} → ${formatDateBR(isoFim)}</span>`;
+  } else {
+    const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    const label = resumoOffset === 0 ? 'Mês Atual' : resumoOffset === -1 ? 'Mês Passado' : '';
+    document.getElementById('resumoNavLabel').innerHTML =
+      `${label ? label + ' — ' : ''}<strong>${meses[inicio.getMonth()]} ${inicio.getFullYear()}</strong>`;
+  }
+
+  // Coletar dias com histórico no período
+  const diasPeriodo = Object.keys(history).filter(d => d >= isoInicio && d <= isoFim).sort();
+
+  // Stats
+  document.getElementById('resumoStatDias').textContent = diasPeriodo.length;
+
+  // Acumular quantidades por atividade + detalhamento por dia
+  const acum = {}; // atId -> { total, dias: [{data, qtd}] }
+  diasPeriodo.forEach(data => {
+    const day = history[data];
+    const idsQtd = new Set([
+      ...Object.keys(day.atividadesQtd || {}),
+      ...Object.keys(day.atividadesMarcadas || {})
+    ]);
+    idsQtd.forEach(atId => {
+      const val = qtdAtividadeDia(day, atId);
+      if (val <= 0) return;
+      if (!acum[atId]) acum[atId] = { total: 0, dias: [] };
+      acum[atId].total += val;
+      acum[atId].dias.push({ data, qtd: val });
+    });
+    // Contar também atividades marcadas sem quantidade
+    if (day.atividadesMarcadas) {
+      Object.keys(day.atividadesMarcadas).forEach(atId => {
+        if (!acum[atId]) acum[atId] = { total: 0, dias: [] };
+        const jaTemDia = acum[atId].dias.find(d => d.data === data);
+        if (!jaTemDia) acum[atId].dias.push({ data, qtd: 0 });
+      });
+    }
+  });
+
+  const ativsComDado = state.atividades.filter(a => acum[a.id]);
+  document.getElementById('resumoStatAtivs').textContent = ativsComDado.length;
+
+  // Calcular média de efetivo/dia
+  let somaEfetivo = 0, diasComEfetivo = 0;
+  diasPeriodo.forEach(data => {
+    const day = history[data];
+    if (!day.efetivo) return;
+    const n = Object.keys(day.efetivo).length;
+    if (n > 0) { somaEfetivo += n; diasComEfetivo++; }
+  });
+  document.getElementById('resumoStatEfetivo').textContent =
+    diasComEfetivo > 0 ? Math.round(somaEfetivo / diasComEfetivo) : '—';
+
+  // Renderizar lista de atividades
+  const listAtiv = document.getElementById('resumoAtivList');
+  listAtiv.innerHTML = '';
+  if (ativsComDado.length === 0) {
+    listAtiv.innerHTML = '<div class="resumo-vazio">Nenhum serviço registrado no período.<br>Preencha a quantidade das atividades na aba Diário.</div>';
+  } else {
+    const maxTotal = Math.max(...ativsComDado.map(a => acum[a.id].total || 1));
+    ativsComDado.forEach(a => {
+      const dado = acum[a.id];
+      const pct = dado.total > 0 ? Math.round((dado.total / maxTotal) * 100) : 0;
+      const unid = a.unidade || '';
+      const totalFmt = dado.total > 0
+        ? dado.total.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + (unid ? ' ' + unid : '')
+        : '—';
+
+      const el = document.createElement('div');
+      el.className = 'resumo-ativ-item';
+
+      // header
+      const hdr = document.createElement('div');
+      hdr.className = 'resumo-ativ-header';
+      const nome = document.createElement('div');
+      nome.className = 'resumo-ativ-nome';
+      nome.textContent = a.desc;
+      if (a.local) {
+        const loc = document.createElement('div');
+        loc.className = 'resumo-ativ-unid';
+        loc.textContent = '📍 ' + a.local;
+        nome.appendChild(loc);
+      }
+      const totalDiv = document.createElement('div');
+      totalDiv.style.textAlign = 'right';
+      const totalNum = document.createElement('div');
+      totalNum.className = 'resumo-ativ-total';
+      totalNum.textContent = dado.total > 0 ? dado.total.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : '—';
+      totalDiv.appendChild(totalNum);
+      if (unid) {
+        const unidDiv = document.createElement('div');
+        unidDiv.className = 'resumo-ativ-unid';
+        unidDiv.textContent = unid;
+        totalDiv.appendChild(unidDiv);
+      }
+      hdr.appendChild(nome);
+      hdr.appendChild(totalDiv);
+      el.appendChild(hdr);
+
+      // barra de progresso
+      if (dado.total > 0) {
+        const barWrap = document.createElement('div');
+        barWrap.className = 'resumo-bar-wrap';
+        const bar = document.createElement('div');
+        bar.className = 'resumo-bar';
+        bar.style.width = pct + '%';
+        barWrap.appendChild(bar);
+        el.appendChild(barWrap);
+      }
+
+      // chips por dia
+      if (dado.dias.length > 0) {
+        const det = document.createElement('div');
+        det.className = 'resumo-ativ-detalhe';
+        dado.dias.filter(d => d.qtd > 0).forEach(d => {
+          const chip = document.createElement('span');
+          chip.className = 'resumo-dia-chip';
+          const dataBR = formatDateBR(d.data);
+          chip.textContent = dataBR.slice(0, 5) + ': ' + d.qtd.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + (unid ? ' ' + unid : '');
+          det.appendChild(chip);
+        });
+        if (det.children.length > 0) el.appendChild(det);
+      }
+
+      listAtiv.appendChild(el);
+    });
+  }
+
+  // Renderizar efetivo por categoria
+  const listEf = document.getElementById('resumoEfetivoList');
+  listEf.innerHTML = '';
+  if (diasPeriodo.length === 0) {
+    listEf.innerHTML = '<div class="resumo-vazio">Sem dados no período.</div>';
+  } else {
+    // Contar presença por colaborador
+    const presencas = {}; // colabId -> count
+    diasPeriodo.forEach(data => {
+      const day = history[data];
+      if (!day.efetivo) return;
+      Object.keys(day.efetivo).forEach(id => {
+        presencas[id] = (presencas[id] || 0) + 1;
+      });
+    });
+
+    state.colaboradores.categorias.forEach(cat => {
+      const membros = cat.itens.filter(c => presencas[c.id]);
+      if (!membros.length) return;
+      const totalDias = membros.reduce((s, c) => s + presencas[c.id], 0);
+      const el = document.createElement('div');
+      el.className = 'resumo-efetivo-bloco';
+      const titulo = document.createElement('div');
+      titulo.className = 'resumo-efetivo-titulo';
+      titulo.textContent = (cat.icon || '') + ' ' + cat.nome + ' — ' + membros.length + ' pessoas';
+      const media = document.createElement('div');
+      media.style.fontSize = '12px';
+      media.style.color = 'var(--ink-soft)';
+      media.style.marginBottom = '6px';
+      media.textContent = 'Total de presenças: ' + totalDias + ' (média ' + (totalDias / diasPeriodo.length).toFixed(1) + '/dia)';
+      el.appendChild(titulo);
+      el.appendChild(media);
+      membros.forEach(c => {
+        const linha = document.createElement('div');
+        linha.style.cssText = 'font-size:12px;color:var(--ink-soft);padding:2px 0;display:flex;justify-content:space-between';
+        linha.innerHTML = `<span><span class="mat">${escapeHtml(c.mat)}</span> ${escapeHtml(c.nome)}</span><span style="color:var(--ink-faint)">${presencas[c.id]}d</span>`;
+        el.appendChild(linha);
+      });
+      listEf.appendChild(el);
+    });
+    if (!listEf.children.length) {
+      listEf.innerHTML = '<div class="resumo-vazio">Nenhum efetivo registrado no período.</div>';
+    }
+  }
+}
+
+function buildResumoTexto() {
+  const { inicio, fim, isoInicio, isoFim } = getResumoDatas();
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  // isoInicio e isoFim já são locais (vindos de getResumoDatas com fmtISO)
+  const periodoLabel = resumoPeriodo === 'semana'
+    ? `Semana ${formatDateBR(isoInicio)} a ${formatDateBR(isoFim)}`
+    : `${meses[inicio.getMonth()]} de ${inicio.getFullYear()}`;
+  const divisor = '⸻—————————————————';
+  const diasPeriodo = Object.keys(history).filter(d => d >= isoInicio && d <= isoFim).sort();
+
+  let txt = '';
+  if (state.obra.empresa) txt += `*${state.obra.empresa.toUpperCase()}*
+`;
+  txt += `*📊 Resumo de Serviços — ${periodoLabel}*
+`;
+  if (state.obra.nome) txt += `_${state.obra.nome}_
+`;
+  if (state.obra.local) txt += `📍 ${state.obra.local}
+`;
+  txt += `
+${divisor}
+
+`;
+  txt += `*Dias com registro: ${diasPeriodo.length}*
+
+`;
+
+  // Atividades
+  const acum = {};
+  diasPeriodo.forEach(data => {
+    const day = history[data];
+    const ids = new Set([
+      ...Object.keys(day.atividadesQtd || {}),
+      ...Object.keys(day.atividadesMarcadas || {})
+    ]);
+    ids.forEach(atId => {
+      const val = qtdAtividadeDia(day, atId);
+      if (val > 0) acum[atId] = (acum[atId] || 0) + val;
+    });
+  });
+
+  const ativsComDado = state.atividades.filter(a => acum[a.id]);
+  if (ativsComDado.length > 0) {
+    txt += `*🛠️ Serviços Executados*
+`;
+    ativsComDado.forEach(a => {
+      const unid = a.unidade ? ' ' + a.unidade : '';
+      txt += `• ${a.desc}: *${acum[a.id].toLocaleString('pt-BR', { maximumFractionDigits: 2 })}${unid}*
+`;
+    });
+    txt += `
+${divisor}
+
+`;
+  }
+
+  // Efetivo
+  const presencas = {};
+  diasPeriodo.forEach(data => {
+    const day = history[data];
+    if (!day.efetivo) return;
+    Object.keys(day.efetivo).forEach(id => { presencas[id] = (presencas[id] || 0) + 1; });
+  });
+  const totalPresencas = Object.values(presencas).reduce((s, v) => s + v, 0);
+  if (totalPresencas > 0) {
+    txt += `*👷 Efetivo do Período*
+`;
+    txt += `• Total de presenças: ${totalPresencas}
+`;
+    if (diasPeriodo.length > 0) txt += `• Média diária: ${(totalPresencas / diasPeriodo.length).toFixed(1)} colaboradores
+`;
+    state.colaboradores.categorias.forEach(cat => {
+      const membros = cat.itens.filter(c => presencas[c.id]);
+      if (!membros.length) return;
+      txt += `
+*${cat.icon || ''} ${cat.nome}* — ${membros.length} pessoas
+`;
+      membros.forEach(c => txt += `  · ${c.mat} ${c.nome} (${presencas[c.id]}d)
+`);
+    });
+    txt += `
+${divisor}
+
+`;
+  }
+
+  txt += `_Gerado em: ${new Date().toLocaleString('pt-BR')}_`;
+  return txt;
+}
+
+function copiarResumo() {
+  copiarTexto(buildResumoTexto());
+}
+function enviarResumoWhatsAppPeriodo() {
+  abrirWhatsApp(buildResumoTexto());
+}
+
+function gerarAcumulado(periodo) {
+  const hoje = new Date();
+  let inicio, fim;
+  if (periodo === 'semana') {
+    // Semana: Segunda → Sábado
+    const dow = hoje.getDay();
+    const diffSeg = (dow === 0) ? -6 : 1 - dow;
+    inicio = new Date(hoje); inicio.setDate(hoje.getDate() + diffSeg);
+    fim = new Date(inicio); fim.setDate(inicio.getDate() + 5); // seg+5=sab
+  } else {
+    inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+  }
+  const fmtISOlocal = (d) => {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + dd;
+  };
+  const isoInicio = fmtISOlocal(inicio);
+  const isoFim = fmtISOlocal(fim);
+  
+  // Acumular quantidades por atividade
+  const acum = {}; // atId -> total
+  Object.keys(history).forEach(data => {
+    if (data < isoInicio || data > isoFim) return;
+    const day = history[data];
+    const ids = new Set([
+      ...Object.keys(day.atividadesQtd || {}),
+      ...Object.keys(day.atividadesMarcadas || {})
+    ]);
+    ids.forEach(atId => {
+      const val = qtdAtividadeDia(day, atId);
+      if (val > 0) acum[atId] = (acum[atId] || 0) + val;
+    });
+  });
+  
+  const periodoLabel = periodo === 'semana'
+    ? `Semana ${formatDateBR(isoInicio)} a ${formatDateBR(isoFim)}`
+    : `Mês de ${inicio.toLocaleDateString('pt-BR', {month:'long', year:'numeric'})}`;
+  
+  const divisor = '⸻—————————————————';
+  let txt = `*📊 Acumulado de Serviços — ${periodoLabel}*
+`;
+  if (state.obra.nome) txt += `_${state.obra.nome}_
+`;
+  txt += `
+${divisor}
+
+`;
+  
+  const ativsComDado = state.atividades.filter(a => acum[a.id]);
+  if (ativsComDado.length === 0) {
+    txt += '• Nenhum serviço com quantidade registrada no período.\n';
+  } else {
+    ativsComDado.forEach(a => {
+      const total = acum[a.id];
+      const unid = a.unidade ? ' ' + a.unidade : '';
+      txt += `• ${a.desc}: *${total.toLocaleString('pt-BR')}${unid}*
+`;
+      if (a.local) txt += `  📍 ${a.local}
+`;
+    });
+  }
+  txt += `
+${divisor}
+`;
+  txt += `
+_Gerado em: ${new Date().toLocaleString('pt-BR')}_`;
+  
+  const box = document.getElementById('outputAcumulado');
+  box.textContent = txt;
+  box.style.display = 'block';
+  document.getElementById('btnAcumuladoAcoes').style.display = 'block';
+}
+function copiarAcumulado() {
+  const txt = document.getElementById('outputAcumulado').textContent;
+  if (txt) copiarTexto(txt);
+}
+function enviarAcumuladoWhatsApp() {
+  const txt = document.getElementById('outputAcumulado').textContent;
+  if (txt) abrirWhatsApp(txt);
+}
+
+function gerarRelatorio() {
+  const txt = buildRelatorio(currentDay);
+  document.getElementById('output').textContent = txt;
+  // Backup automático silencioso a cada geração de relatório
+  backupAutomatico();
+  return txt;
+}
+function copiarRelatorio() { copiarTexto(gerarRelatorio()); }
+function enviarWhatsApp() { abrirWhatsApp(gerarRelatorio()); }
+function copiarTexto(txt) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(() => toast('Texto copiado!')).catch(() => fallbackCopy(txt));
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt) {
+  const ta = document.createElement('textarea');
+  ta.value = txt;
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); toast('Texto copiado!'); } catch(e) { toast('Copie manualmente'); }
+  document.body.removeChild(ta);
+}
+function abrirWhatsApp(txt) {
+  window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`, '_blank');
+}
+function limparDiarioAtual() {
+  confirmar('Limpar todos os dados do diário de hoje?', () => {
+    const data = currentDay.data;
+    currentDay = EMPTY_DAY();
+    currentDay.data = data;
+    currentDay.encerramento = jornadaPadraoPorDia(data);
+    if (history[data]) { delete history[data]; saveHistory(); }
+    preencherCampos();
+    atualizarHeaderEdicao();
+    renderDiario();
+    gerarRelatorio();
+    toast('Diário limpo');
+  });
+}
+
+// ============================================================
+// CALENDÁRIO
+// ============================================================
+function renderCalendario() {
+  if (!cal.year) {
+    const t = new Date();
+    cal.year = t.getFullYear();
+    cal.month = t.getMonth();
+  }
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  document.getElementById('calTitle').textContent = `${meses[cal.month]} ${cal.year}`;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  ['D','S','T','Q','Q','S','S'].forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-day-head';
+    h.textContent = d;
+    grid.appendChild(h);
+  });
+  const primeiroDia = new Date(cal.year, cal.month, 1).getDay();
+  const ultimoDiaMes = new Date(cal.year, cal.month + 1, 0).getDate();
+  const hoje = todayISO();
+  for (let i = 0; i < primeiroDia; i++) {
+    const e = document.createElement('div');
+    e.className = 'cal-day empty';
+    grid.appendChild(e);
+  }
+  for (let d = 1; d <= ultimoDiaMes; d++) {
+    const iso = `${cal.year}-${String(cal.month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dow = new Date(cal.year, cal.month, d).getDay();
+    const div = document.createElement('div');
+    div.className = 'cal-day';
+    if (dow === 0 || dow === 6) div.classList.add('weekend');
+    if (history[iso]) div.classList.add('has-data');
+    if (iso === hoje) div.classList.add('today');
+    div.innerHTML = `${d}${history[iso] ? '<div class="cal-day-dot"></div>' : ''}`;
+    div.onclick = () => abrirResumoData(iso);
+    grid.appendChild(div);
+  }
+}
+function navegarMes(delta) {
+  cal.month += delta;
+  if (cal.month < 0) { cal.month = 11; cal.year--; }
+  if (cal.month > 11) { cal.month = 0; cal.year++; }
+  renderCalendario();
+}
+function abrirResumoData(iso) {
+  activeResumoData = iso;
+  document.getElementById('modalResumoTitle').textContent = `📅 ${DIAS_SEMANA_CURTO[parseISO(iso).getDay()]} · ${formatDateBR(iso)}`;
+  if (history[iso]) {
+    document.getElementById('modalResumoTexto').textContent = buildRelatorio(history[iso]);
+  } else {
+    document.getElementById('modalResumoTexto').textContent = 
+      'Nenhum diário registrado.\n\nToque em "Editar este Diário" para criar.';
+  }
+  abrirModal('modalResumo');
+}
+function editarDiarioPassado() {
+  if (!activeResumoData) return;
+  salvarDiarioDia(false);
+  fecharModal('modalResumo');
+  initCurrentDay(activeResumoData);
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelector('[data-view="diario"]').classList.add('active');
+  document.getElementById('view-diario').classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  toast('Editando ' + formatDateBR(activeResumoData));
+}
+function copiarResumoModal() {
+  if (!activeResumoData || !history[activeResumoData]) { toast('Nada para copiar'); return; }
+  copiarTexto(buildRelatorio(history[activeResumoData]));
+}
+function enviarResumoWhatsApp() {
+  if (!activeResumoData || !history[activeResumoData]) { toast('Nada para enviar'); return; }
+  abrirWhatsApp(buildRelatorio(history[activeResumoData]));
+}
+function excluirDiarioPassado() {
+  if (!activeResumoData || !history[activeResumoData]) return;
+  confirmar(`Excluir o diário de ${formatDateBR(activeResumoData)}?`, () => {
+    delete history[activeResumoData];
+    saveHistory();
+    fecharModal('modalResumo');
+    renderCalendario();
+    toast('Excluído');
+  });
+}
+
+// ============================================================
+// BACKUP
+// ============================================================
+// Chave do backup automático no localStorage
+const AUTOBACKUP_KEY = 'diario_obras_v3_autobackup';
+const AUTOBACKUP_META_KEY = 'diario_obras_v3_autobackup_meta';
+
+// Backup automático — silencioso, salva no localStorage sem download
+function backupAutomatico() {
+  try {
+    const payload = JSON.stringify({
+      state,
+      history,
+      exportado: new Date().toISOString(),
+      versao: 'v3',
+      tipo: 'auto'
+    });
+    localStorage.setItem(AUTOBACKUP_KEY, payload);
+    localStorage.setItem(AUTOBACKUP_META_KEY, JSON.stringify({
+      data: new Date().toISOString(),
+      diarios: Object.keys(history).length
+    }));
+    atualizarInfoAutoBackup();
+  } catch(e) {
+    // localStorage cheio ou bloqueado — tenta download como fallback
+    exportarBackup(true);
+  }
+}
+
+// Backup manual — gera download do arquivo .json
+function exportarBackup(silencioso) {
+  const data = { state, history, exportado: new Date().toISOString(), versao: 'v3', tipo: 'manual' };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `diario-obras-${(state.obra.nome || 'backup').replace(/[^a-z0-9]/gi,'-').toLowerCase()}-${todayISO()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  if (!silencioso) toast('Backup exportado ✓');
+}
+
+// Restaurar backup automático
+function restaurarAutoBackup() {
+  const raw = localStorage.getItem(AUTOBACKUP_KEY);
+  if (!raw) { toast('Nenhum backup automático encontrado'); return; }
+  confirmar('Restaurar o backup automático? Os dados atuais serão substituídos.', () => {
+    try {
+      const data = JSON.parse(raw);
+      if (data.state) state = mergeDefaults(data.state);
+      if (data.history) history = data.history;
+      saveState(); saveHistory();
+      initCurrentDay(todayISO());
+      atualizarHeader();
+      renderConfig();
+      renderCalendario();
+      toast('Backup automático restaurado ✓');
+    } catch(e) { toast('Erro ao restaurar backup'); }
+  }, '♻️ Restaurar Backup Auto');
+}
+
+// Atualiza o card de status do backup automático
+function atualizarInfoAutoBackup() {
+  const el = document.getElementById('autoBackupInfo');
+  if (!el) return;
+  const meta = localStorage.getItem(AUTOBACKUP_META_KEY);
+  if (!meta) {
+    el.innerHTML = '<span style="color:var(--ink-faint)">Nenhum backup automático ainda.</span>';
+    return;
+  }
+  try {
+    const m = JSON.parse(meta);
+    const dt = new Date(m.data);
+    const dtBR = dt.toLocaleString('pt-BR');
+    el.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="font-size:20px">✅</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink)">Backup automático salvo</div>
+          <div style="font-size:11px;color:var(--ink-faint)">${dtBR} · ${m.diarios} diário(s)</div>
+        </div>
+      </div>
+    `;
+  } catch(e) {}
+}
+function importarBackup(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  if (!confirm('Substituir dados atuais pelo backup?')) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (data.state) state = mergeDefaults(data.state);
+      if (data.history) history = data.history;
+      saveState(); saveHistory();
+      initCurrentDay(todayISO());
+      atualizarHeader();
+      renderConfig();
+      renderCalendario();
+      toast('Backup importado');
+    } catch(err) { toast('Arquivo inválido'); }
+  };
+  reader.readAsText(file);
+}
+function resetarApp() {
+  if (!confirm('ATENÇÃO: apaga TODO o cadastro e histórico. Continuar?')) return;
+  if (!confirm('Tem CERTEZA? Esta ação é irreversível.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(HISTORY_KEY);
+  state = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  history = {};
+  initCurrentDay(todayISO());
+  atualizarHeader();
+  renderConfig();
+  renderCalendario();
+  toast('App restaurado');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  atualizarHeader();
+  initCurrentDay(todayISO());
+  const t = new Date();
+  cal.year = t.getFullYear();
+  cal.month = t.getMonth();
+  atualizarInfoAutoBackup();
+
+  // Autosave local a cada 10 segundos
+  setInterval(() => salvarDiarioDia(false), 10000);
+});
+</script>
+</body>
+</html>
