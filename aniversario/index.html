@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonacir &amp; Ana — 28 Anos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --hematita:#1B1618;
+    --vinho:#6E1F2E;
+    --ouro:#C9A25E;
+    --ouro-claro:#E4CB94;
+    --marfim:#F5EFE6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden}
+  body{
+    background:var(--hematita);
+    color:var(--marfim);
+    font-family:'Jost',sans-serif;font-weight:300;
+  }
+  /* ---------- ABERTURA ---------- */
+  #abertura{
+    position:fixed;inset:0;z-index:100;
+    background:radial-gradient(ellipse at center, #322A2D 0%, var(--hematita) 75%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:24px;
+    transition:opacity 1.6s ease, visibility 1.6s;
+  }
+  #abertura.saiu{opacity:0;visibility:hidden;pointer-events:none}
+  .monograma{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(64px,18vw,120px);line-height:1;
+    color:var(--ouro-claro);letter-spacing:.04em;
+  }
+  .monograma .e{font-style:italic;font-size:.45em;color:var(--ouro);vertical-align:middle;margin:0 .15em}
+  .abertura-sub{margin-top:18px;font-size:14px;letter-spacing:.42em;text-transform:uppercase;color:var(--ouro)}
+  .abertura-anos{margin-top:6px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;opacity:.85}
+  #btnComecar{
+    margin-top:48px;background:transparent;
+    border:1px solid var(--ouro);color:var(--ouro-claro);
+    font-family:'Jost',sans-serif;font-size:15px;
+    letter-spacing:.3em;text-transform:uppercase;
+    padding:16px 38px 16px 44px;border-radius:999px;cursor:pointer;
+    transition:background .4s,color .4s;
+  }
+  #btnComecar:hover,#btnComecar:focus-visible{background:var(--ouro);color:var(--hematita);outline:none}
+  /* ---------- PALCO ---------- */
+  #palco{position:fixed;inset:0;background:#000}
+  .slide{
+    position:absolute;inset:0;
+    opacity:0;transition:opacity 2.2s ease;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .slide.ativo{opacity:1}
+  /* Slide de foto: imagem cobre a tela com movimento lento */
+  .slide-foto img{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;
+    filter:saturate(.98) brightness(.92);
+  }
+  .slide.ativo .kb-a img{animation:kbA 9s ease-out forwards}
+  .slide.ativo .kb-b img{animation:kbB 9s ease-out forwards}
+  .slide.ativo .kb-c img{animation:kbC 9s ease-out forwards}
+  .kb-a img,.kb-b img,.kb-c img{will-change:transform}
+  @keyframes kbA{from{transform:scale(1.02)}to{transform:scale(1.14)}}
+  @keyframes kbB{from{transform:scale(1.14) translateX(2%)}to{transform:scale(1.04) translateX(-1%)}}
+  @keyframes kbC{from{transform:scale(1.06) translateY(2%)}to{transform:scale(1.16) translateY(-2%)}}
+  .slide-foto::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(0,0,0,.28) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 62%, rgba(0,0,0,.55) 100%);
+  }
+  .num{
+    position:absolute;bottom:26px;left:0;right:0;z-index:2;
+    text-align:center;font-size:11px;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--ouro-claro);opacity:.85;
+  }
+  /* Slide de frase */
+  .slide-frase{
+    background:radial-gradient(ellipse at center, #2C2427 0%, var(--hematita) 78%);
+    padding:34px;text-align:center;flex-direction:column;
+  }
+  .slide-frase p{
+    max-width:560px;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(24px,6.2vw,36px);line-height:1.5;
+    color:var(--ouro-claro);
+    opacity:0;transform:translateY(18px);
+    transition:opacity 1.6s ease .6s, transform 1.6s ease .6s;
+  }
+  .slide-frase small{
+    display:block;margin-top:22px;
+    font-family:'Jost',sans-serif;font-style:normal;
+    font-size:11px;letter-spacing:.4em;text-transform:uppercase;
+    color:var(--marfim);opacity:0;
+    transition:opacity 1.6s ease 1.2s;
+  }
+  .slide-frase::before{
+    content:"";display:block;width:40px;height:1px;
+    background:var(--ouro);margin-bottom:30px;
+    opacity:0;transition:opacity 1.2s ease .3s;
+  }
+  .slide.ativo.slide-frase p{opacity:1;transform:none}
+  .slide.ativo.slide-frase small{opacity:.55}
+  .slide.ativo.slide-frase::before{opacity:.8}
+  /* Slide de título e final */
+  .slide-titulo,.slide-final{
+    background:radial-gradient(ellipse at center, #322A2D 0%, var(--hematita) 78%);
+    padding:34px;text-align:center;flex-direction:column;
+  }
+  .slide-titulo h1{
+    font-family:'Cormorant Garamond',serif;font-weight:500;
+    font-size:clamp(46px,11vw,90px);line-height:1.05;color:var(--marfim);
+    opacity:0;transform:translateY(18px);
+    transition:opacity 1.8s ease .5s, transform 1.8s ease .5s;
+  }
+  .slide-titulo h1 .e{font-style:italic;color:var(--ouro);font-size:.6em}
+  .slide-titulo .bodas{
+    margin-top:24px;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(19px,4.6vw,26px);color:var(--ouro-claro);
+    opacity:0;transition:opacity 1.8s ease 1.4s;
+  }
+  .slide.ativo.slide-titulo h1{opacity:1;transform:none}
+  .slide.ativo.slide-titulo .bodas{opacity:1}
+  .slide-final .monograma{
+    font-size:clamp(48px,13vw,84px);
+    opacity:0;transition:opacity 2s ease .5s;
+  }
+  .slide-final p{
+    max-width:540px;margin-top:30px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(19px,5vw,25px);line-height:1.6;color:var(--marfim);
+    opacity:0;transform:translateY(16px);
+    transition:opacity 1.8s ease 1.2s, transform 1.8s ease 1.2s;
+  }
+  .slide-final .assinatura{
+    margin-top:34px;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(24px,6.4vw,34px);color:var(--ouro-claro);
+    opacity:0;transition:opacity 1.8s ease 2.2s;
+  }
+  .slide-final .rever{
+    margin-top:46px;background:transparent;
+    border:1px solid var(--ouro);color:var(--ouro-claro);
+    font-family:'Jost',sans-serif;font-size:13px;
+    letter-spacing:.3em;text-transform:uppercase;
+    padding:13px 32px;border-radius:999px;cursor:pointer;
+    opacity:0;transition:opacity 1.8s ease 3s, background .4s, color .4s;
+  }
+  .slide-final .rever:hover{background:var(--ouro);color:var(--hematita)}
+  .slide.ativo.slide-final .monograma,
+  .slide.ativo.slide-final p,
+  .slide.ativo.slide-final .assinatura,
+  .slide.ativo.slide-final .rever{opacity:1;transform:none}
+  /* ---------- BARRA DE PROGRESSO ---------- */
+  #progresso{
+    position:fixed;top:0;left:0;height:2px;width:0%;
+    background:linear-gradient(90deg,var(--ouro),var(--ouro-claro));
+    z-index:60;transition:width .5s linear;
+  }
+  /* ---------- CONTROLES ---------- */
+  #btnMusica{
+    position:fixed;bottom:18px;right:18px;z-index:90;
+    width:48px;height:48px;border-radius:50%;
+    background:rgba(27,22,24,.7);border:1px solid var(--ouro);
+    color:var(--ouro-claro);font-size:18px;cursor:pointer;
+    backdrop-filter:blur(6px);display:none;
+    align-items:center;justify-content:center;
+  }
+  #btnPausa{
+    position:fixed;bottom:18px;left:18px;z-index:90;
+    width:48px;height:48px;border-radius:50%;
+    background:rgba(27,22,24,.7);border:1px solid rgba(201,162,94,.5);
+    color:var(--marfim);font-size:16px;cursor:pointer;
+    backdrop-filter:blur(6px);display:none;
+    align-items:center;justify-content:center;
+  }
+  #player{position:fixed;left:-9999px;top:-9999px;width:1px;height:1px}
+  @media (prefers-reduced-motion: reduce){
+    .kb-a img,.kb-b img,.kb-c img{animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- ABERTURA -->
+<div id="abertura">
+  <div class="monograma">J<span class="e">&amp;</span>A</div>
+  <div class="abertura-sub">Bodas de Hematita</div>
+  <div class="abertura-anos">28 anos de amor</div>
+  <button id="btnComecar">Começar ♪</button>
+</div>
+
+<div id="progresso"></div>
+<div id="palco"></div>
+
+<div id="player"></div>
+<button id="btnPausa" title="Pausar">❚❚</button>
+<button id="btnMusica" title="Som">♪</button>
+
+<script>
+/* ===== CONFIGURAÇÃO ===== */
+const VIDEO_ID = "MExRKUa3F1o";       // Eu Sei Que Vou Te Amar — Tom Jobim
+const TOTAL_FOTOS = 20;               // fotos ausentes são puladas automaticamente
+const DURACAO_FOTO = 8000;            // ms por foto
+const DURACAO_FRASE = 7500;           // ms por frase
+const EXTENSOES = ['jpeg','jpg','JPG','JPEG','png','PNG'];
+
+const FRASES = [
+  {t:"Há vinte e oito anos escolhemos um ao outro. E todos os dias, desde então, seguimos escolhendo.", a:"1998 — 2026"},
+  {t:"O amor verdadeiro não é o que resiste ao tempo. É o que o tempo torna maior.", a:""},
+  {t:"Duas vidas, uma história. Filhos, casas, sonhos — e você, sempre você, no centro de tudo.", a:"Paula & Pedro"},
+  {t:"Você é o meu lugar de chegada. Não importa a distância da estrada, é para você que eu volto.", a:""},
+  {t:"Vinte e oito anos e ainda me pego olhando para você como quem vê pela primeira vez.", a:""},
+  {t:"O que os anos nos deram não foi rotina. Foi cumplicidade — e uma certeza que só cresce.", a:""},
+];
+
+/* ===== DESCOBRE AS FOTOS DISPONÍVEIS ===== */
+function descobrirFoto(n){
+  return new Promise(resolve=>{
+    let t=0;
+    const tenta=()=>{
+      if(t>=EXTENSOES.length){resolve(null);return;}
+      const img=new Image();
+      img.onload=()=>resolve('fotos/'+n+'.'+EXTENSOES[t]);
+      img.onerror=()=>{t++;tenta();};
+      img.src='fotos/'+n+'.'+EXTENSOES[t];
+    };
+    tenta();
+  });
+}
+
+/* ===== MONTA A SEQUÊNCIA ===== */
+const palco=document.getElementById('palco');
+const kb=['kb-a','kb-b','kb-c'];
+let slides=[], idx=-1, timer=null, pausado=false;
+
+async function montar(){
+  const urls=[];
+  for(let i=1;i<=TOTAL_FOTOS;i++){
+    const u=await descobrirFoto(i);
+    if(u) urls.push(u);
+  }
+  const seq=[];
+  // Slide título
+  seq.push({dur:6500, el:criarTitulo()});
+  // Fotos com frases intercaladas (1 frase a cada 3 fotos)
+  let f=0;
+  urls.forEach((u,i)=>{
+    seq.push({dur:DURACAO_FOTO, el:criarFoto(u,i+1,urls.length)});
+    if((i+1)%3===0 && f<FRASES.length){
+      seq.push({dur:DURACAO_FRASE, el:criarFrase(FRASES[f])}); f++;
+    }
+  });
+  // Frases restantes antes do final
+  while(f<FRASES.length){seq.push({dur:DURACAO_FRASE, el:criarFrase(FRASES[f])}); f++;}
+  // Slide final
+  seq.push({dur:0, el:criarFinal()});
+  slides=seq;
+  slides.forEach(s=>palco.appendChild(s.el));
+}
+
+function criarTitulo(){
+  const d=document.createElement('div');
+  d.className='slide slide-titulo';
+  d.innerHTML='<h1>Jonacir <span class="e">&amp;</span> Ana</h1><div class="bodas">28 anos — Bodas de Hematita</div>';
+  return d;
+}
+function criarFoto(url,n,total){
+  const d=document.createElement('div');
+  d.className='slide slide-foto '+kb[n%3];
+  d.innerHTML='<img src="'+url+'" alt="Jonacir e Ana — memória '+n+'"><div class="num">'+n+' / '+total+'</div>';
+  return d;
+}
+function criarFrase(fr){
+  const d=document.createElement('div');
+  d.className='slide slide-frase';
+  d.innerHTML='<p>'+fr.t+'</p>'+(fr.a?'<small>'+fr.a+'</small>':'');
+  return d;
+}
+function criarFinal(){
+  const d=document.createElement('div');
+  d.className='slide slide-final';
+  d.innerHTML='<div class="monograma">J<span class="e">&amp;</span>A</div>'
+    +'<p>Ana, obrigado por cada ano, cada casa, cada estrada, cada recomeço. O que construímos juntos é a obra da qual mais me orgulho — e ela ainda está em andamento.</p>'
+    +'<div class="assinatura">Com todo o meu amor, Jonacir</div>'
+    +'<button class="rever" onclick="reiniciar()">Rever ♡</button>';
+  return d;
+}
+
+/* ===== AVANÇO AUTOMÁTICO ===== */
+function mostrar(n){
+  if(n>=slides.length) return;
+  if(idx>=0) slides[idx].el.classList.remove('ativo');
+  idx=n;
+  const s=slides[idx];
+  // reinicia animação Ken Burns
+  s.el.classList.remove('ativo');
+  void s.el.offsetWidth;
+  s.el.classList.add('ativo');
+  document.getElementById('progresso').style.width=((idx+1)/slides.length*100)+'%';
+  clearTimeout(timer);
+  if(s.dur>0 && !pausado) timer=setTimeout(()=>mostrar(idx+1), s.dur);
+}
+function reiniciar(){
+  if(ytPlayer&&ytPlayer.seekTo){ytPlayer.seekTo(0);ytPlayer.playVideo();}
+  mostrar(0);
+}
+/* Toque na tela: avança. Botão pausa: congela. */
+palco.addEventListener('click',()=>{ if(!pausado) mostrar(Math.min(idx+1,slides.length-1)); });
+document.getElementById('btnPausa').addEventListener('click',function(e){
+  e.stopPropagation();
+  pausado=!pausado;
+  this.textContent=pausado?'▶':'❚❚';
+  if(pausado){clearTimeout(timer);}
+  else{const s=slides[idx]; if(s.dur>0) timer=setTimeout(()=>mostrar(idx+1), s.dur);}
+});
+
+/* ===== MÚSICA ===== */
+let ytPlayer=null, tocando=false, pendentePlay=false;
+const btnMusica=document.getElementById('btnMusica');
+const tag=document.createElement('script');
+tag.src="https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+window.onYouTubeIframeAPIReady=function(){
+  ytPlayer=new YT.Player('player',{
+    videoId:VIDEO_ID,
+    playerVars:{autoplay:0,controls:0,loop:1,playlist:VIDEO_ID,playsinline:1},
+    events:{
+      onReady:function(){if(pendentePlay)iniciarMusica();},
+      onStateChange:function(ev){
+        tocando=(ev.data===YT.PlayerState.PLAYING);
+        btnMusica.textContent=tocando?'❚❚':'♪';
+      }
+    }
+  });
+};
+function iniciarMusica(){
+  if(ytPlayer&&ytPlayer.playVideo){
+    ytPlayer.setVolume(70);ytPlayer.playVideo();
+    btnMusica.style.display='flex';
+    document.getElementById('btnPausa').style.display='flex';
+  } else {pendentePlay=true;}
+}
+btnMusica.addEventListener('click',function(e){
+  e.stopPropagation();
+  if(!ytPlayer)return;
+  tocando?ytPlayer.pauseVideo():ytPlayer.playVideo();
+});
+
+/* ===== INÍCIO ===== */
+montar();
+document.getElementById('btnComecar').addEventListener('click',function(){
+  document.getElementById('abertura').classList.add('saiu');
+  iniciarMusica();
+  mostrar(0);
+});
+</script>
+</body>
+</html>
