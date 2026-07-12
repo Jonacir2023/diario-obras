@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonacir &amp; Ana — 28 Anos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --hematita:#241F21;
+    --grafite:#3A3336;
+    --vinho:#6E1F2E;
+    --ouro:#C9A25E;
+    --ouro-claro:#E4CB94;
+    --marfim:#F5EFE6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--hematita);
+    color:var(--marfim);
+    font-family:'Jost',sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  /* ---------- ABERTURA ---------- */
+  #abertura{
+    position:fixed;inset:0;z-index:100;
+    background:radial-gradient(ellipse at center, #322A2D 0%, var(--hematita) 75%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:24px;
+    transition:opacity 1.4s ease, visibility 1.4s;
+  }
+  #abertura.saiu{opacity:0;visibility:hidden;pointer-events:none}
+  .monograma{
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(64px,18vw,120px);
+    line-height:1;
+    color:var(--ouro-claro);
+    letter-spacing:.04em;
+  }
+  .monograma .e{
+    font-style:italic;
+    font-size:.45em;
+    color:var(--ouro);
+    vertical-align:middle;
+    margin:0 .15em;
+  }
+  .abertura-sub{
+    margin-top:18px;
+    font-size:14px;letter-spacing:.42em;text-transform:uppercase;
+    color:var(--ouro);
+  }
+  .abertura-anos{
+    margin-top:6px;
+    font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:22px;color:var(--marfim);
+    opacity:.85;
+  }
+  #btnComecar{
+    margin-top:48px;
+    background:transparent;
+    border:1px solid var(--ouro);
+    color:var(--ouro-claro);
+    font-family:'Jost',sans-serif;
+    font-size:15px;letter-spacing:.3em;text-transform:uppercase;
+    padding:16px 38px 16px 44px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background .4s,color .4s;
+  }
+  #btnComecar:hover,#btnComecar:focus-visible{
+    background:var(--ouro);color:var(--hematita);outline:none;
+  }
+  /* ---------- HERO ---------- */
+  header{
+    min-height:92vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:80px 24px 60px;
+    position:relative;
+  }
+  .eyebrow{
+    font-size:12px;letter-spacing:.5em;text-transform:uppercase;
+    color:var(--ouro);margin-bottom:26px;
+  }
+  h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:500;
+    font-size:clamp(44px,10vw,86px);
+    line-height:1.05;
+    color:var(--marfim);
+  }
+  h1 .e{font-style:italic;color:var(--ouro);font-size:.6em}
+  .hero-bodas{
+    margin-top:30px;
+    display:flex;align-items:center;gap:16px;
+  }
+  .hero-bodas::before,.hero-bodas::after{
+    content:"";width:56px;height:1px;background:var(--ouro);opacity:.6;
+  }
+  .hero-bodas span{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(19px,4.6vw,26px);color:var(--ouro-claro);
+  }
+  .hero-frase{
+    margin-top:40px;max-width:520px;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(19px,4.8vw,24px);line-height:1.55;
+    color:var(--marfim);opacity:.9;
+  }
+  .seta{
+    position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+    color:var(--ouro);font-size:22px;opacity:.7;
+    animation:flutua 2.6s ease-in-out infinite;
+  }
+  @keyframes flutua{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,10px)}}
+  /* ---------- GALERIA ---------- */
+  main{max-width:680px;margin:0 auto;padding:20px 22px 60px}
+  .foto{
+    margin:56px 0;
+    opacity:0;transform:translateY(28px);
+    transition:opacity 1.1s ease,transform 1.1s ease;
+  }
+  .foto.visivel{opacity:1;transform:none}
+  .moldura{
+    background:var(--grafite);
+    border:1px solid rgba(201,162,94,.35);
+    padding:12px;
+    box-shadow:0 18px 44px rgba(0,0,0,.45);
+  }
+  .moldura img{
+    display:block;width:100%;height:auto;
+    filter:saturate(.96) contrast(1.02);
+  }
+  .foto:nth-child(odd) .moldura{transform:rotate(-.6deg)}
+  .foto:nth-child(even) .moldura{transform:rotate(.6deg)}
+  .legenda{
+    margin-top:14px;text-align:center;
+    font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--ouro);opacity:.85;
+  }
+  .frase{
+    margin:88px auto;max-width:520px;text-align:center;
+    opacity:0;transform:translateY(28px);
+    transition:opacity 1.1s ease,transform 1.1s ease;
+  }
+  .frase.visivel{opacity:1;transform:none}
+  .frase p{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(21px,5.4vw,28px);line-height:1.5;
+    color:var(--ouro-claro);
+  }
+  .frase small{
+    display:block;margin-top:16px;
+    font-family:'Jost',sans-serif;font-style:normal;
+    font-size:11px;letter-spacing:.4em;text-transform:uppercase;
+    color:var(--marfim);opacity:.5;
+  }
+  .frase::before{
+    content:"";display:block;width:40px;height:1px;
+    background:var(--ouro);margin:0 auto 26px;opacity:.7;
+  }
+  /* ---------- FINAL ---------- */
+  .final{
+    text-align:center;padding:70px 26px 130px;
+    background:linear-gradient(180deg, var(--hematita) 0%, #1B1618 100%);
+  }
+  .final .monograma{font-size:clamp(48px,12vw,80px)}
+  .final p{
+    max-width:540px;margin:34px auto 0;
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(19px,4.8vw,24px);line-height:1.6;
+    color:var(--marfim);
+  }
+  .final .assinatura{
+    margin-top:44px;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:clamp(24px,6vw,32px);color:var(--ouro-claro);
+  }
+  .credito{
+    margin-top:60px;
+    font-family:'Jost',sans-serif;
+    font-size:11px;letter-spacing:.3em;text-transform:uppercase;
+    color:var(--marfim);opacity:.4;
+  }
+  /* ---------- MÚSICA ---------- */
+  #player{position:fixed;left:-9999px;top:-9999px;width:1px;height:1px}
+  #btnMusica{
+    position:fixed;bottom:20px;right:20px;z-index:90;
+    width:52px;height:52px;border-radius:50%;
+    background:rgba(36,31,33,.85);
+    border:1px solid var(--ouro);
+    color:var(--ouro-claro);
+    font-size:20px;cursor:pointer;
+    backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;
+    transition:transform .3s;
+  }
+  #btnMusica:active{transform:scale(.92)}
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
+    .foto,.frase{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ABERTURA -->
+<div id="abertura">
+  <div class="monograma">J<span class="e">&amp;</span>A</div>
+  <div class="abertura-sub">Bodas de Hematita</div>
+  <div class="abertura-anos">28 anos de amor</div>
+  <button id="btnComecar">Começar ♪</button>
+</div>
+
+<!-- HERO -->
+<header>
+  <div class="eyebrow">Nossa história</div>
+  <h1>Jonacir <span class="e">&amp;</span> Ana</h1>
+  <div class="hero-bodas"><span>28 anos — Bodas de Hematita</span></div>
+  <p class="hero-frase">A hematita é a pedra da força e da constância. Nenhum símbolo seria mais justo para vinte e oito anos construídos lado a lado.</p>
+  <div class="seta">▾</div>
+</header>
+
+<main id="galeria">
+  <!-- As fotos e frases são geradas pelo script abaixo -->
+</main>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="monograma">J<span class="e">&amp;</span>A</div>
+  <p>Ana, obrigado por cada ano, cada casa, cada estrada, cada recomeço. O que construímos juntos é a obra da qual mais me orgulho — e ela ainda está em andamento.</p>
+  <div class="assinatura">Com todo o meu amor, Jonacir</div>
+  <div class="credito">Música: Eu Sei Que Vou Te Amar — Tom Jobim &amp; Vinícius de Moraes</div>
+</section>
+
+<!-- MÚSICA -->
+<div id="player"></div>
+<button id="btnMusica" title="Pausar música">❚❚</button>
+
+<script>
+/* ===== CONFIGURAÇÃO =====
+   ID do vídeo no YouTube (áudio oficial de "Eu Sei Que Vou Te Amar" — Tom Jobim).
+   Para trocar a música, substitua apenas o código abaixo pelo código do novo vídeo
+   (é o trecho que aparece depois de "watch?v=" no link do YouTube). */
+const VIDEO_ID = "MExRKUa3F1o";
+const TOTAL_FOTOS = 20;
+
+/* Frases exibidas entre as fotos (a cada 3 fotos). Edite à vontade. */
+const FRASES = [
+  {t:"Há vinte e oito anos escolhemos um ao outro. E todos os dias, desde então, seguimos escolhendo.", a:"1998 — 2026"},
+  {t:"O amor verdadeiro não é o que resiste ao tempo. É o que o tempo torna maior.", a:""},
+  {t:"Duas vidas, uma história. Filhos, casas, sonhos — e você, sempre você, no centro de tudo.", a:"Paula & Pedro"},
+  {t:"Você é o meu lugar de chegada. Não importa a distância da estrada, é para você que eu volto.", a:""},
+  {t:"Vinte e oito anos e ainda me pego olhando para você como quem vê pela primeira vez.", a:""},
+  {t:"O que os anos nos deram não foi rotina. Foi intimidade, cumplicidade e uma certeza que só cresce.", a:""},
+];
+
+/* ---- Monta a galeria: fotos/1.jpg ... fotos/20.jpg ---- */
+const galeria = document.getElementById('galeria');
+let f = 0;
+for (let i = 1; i <= TOTAL_FOTOS; i++) {
+  const div = document.createElement('div');
+  div.className = 'foto';
+  div.innerHTML = '<div class="moldura"><img src="fotos/' + i + '.jpg" alt="Jonacir e Ana — memória ' + i + '" loading="lazy" onerror="this.closest(\'.foto\').style.display=\'none\'"></div>';
+  galeria.appendChild(div);
+  if (i % 3 === 0 && f < FRASES.length) {
+    const q = document.createElement('div');
+    q.className = 'frase';
+    q.innerHTML = '<p>' + FRASES[f].t + '</p>' + (FRASES[f].a ? '<small>' + FRASES[f].a + '</small>' : '');
+    galeria.appendChild(q);
+    f++;
+  }
+}
+
+/* ---- Revelação suave ao rolar ---- */
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visivel'); obs.unobserve(e.target); } });
+}, {threshold: 0.15});
+document.querySelectorAll('.foto,.frase').forEach(el => obs.observe(el));
+
+/* ---- Música (YouTube IFrame API) ---- */
+let ytPlayer = null, tocando = false, pendentePlay = false;
+const btnMusica = document.getElementById('btnMusica');
+
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+
+window.onYouTubeIframeAPIReady = function() {
+  ytPlayer = new YT.Player('player', {
+    videoId: VIDEO_ID,
+    playerVars: {autoplay: 0, controls: 0, loop: 1, playlist: VIDEO_ID, playsinline: 1},
+    events: {
+      onReady: function() { if (pendentePlay) iniciarMusica(); },
+      onStateChange: function(ev) {
+        tocando = (ev.data === YT.PlayerState.PLAYING);
+        btnMusica.textContent = tocando ? '❚❚' : '♪';
+      }
+    }
+  });
+};
+
+function iniciarMusica() {
+  if (ytPlayer && ytPlayer.playVideo) {
+    ytPlayer.setVolume(70);
+    ytPlayer.playVideo();
+    btnMusica.style.display = 'flex';
+  } else {
+    pendentePlay = true;
+  }
+}
+
+document.getElementById('btnComecar').addEventListener('click', function() {
+  document.getElementById('abertura').classList.add('saiu');
+  iniciarMusica();
+});
+
+btnMusica.addEventListener('click', function() {
+  if (!ytPlayer) return;
+  tocando ? ytPlayer.pauseVideo() : ytPlayer.playVideo();
+});
+</script>
+</body>
+</html>
