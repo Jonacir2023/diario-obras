@@ -1633,6 +1633,8 @@
     <input type="text" id="modalColabNome" placeholder="Ex.: Nivaldo Gomes">
     <label>Função</label>
     <input type="text" id="modalColabFunc" placeholder="Ex.: Líder">
+    <label>Empresa</label>
+    <input type="text" id="modalColabEmpresa" placeholder="Vazio = empresa própria · Ex.: Terceirizada XYZ">
     <div class="btn-row" style="margin-top:14px">
       <button class="btn btn-ghost" onclick="fecharModal('modalColab')">Cancelar</button>
       <button class="btn btn-primary" onclick="salvarColaborador()">Salvar</button>
@@ -2652,18 +2654,39 @@ function gerarPdfRDO() {
   }
 
   // Efetivo
-  let linhasEf = '', totalEf = 0;
+  // Resumo por função e por empresa (sem lista nominal)
+  const porFuncao = {};
+  const porEmpresa = {};
+  let totalEf = 0;
+  const empresaPropria = (state.obra.empresa || 'Empresa própria').trim();
   state.colaboradores.categorias.forEach(cat => {
-    const presentes = cat.itens.filter(c => day.efetivo[c.id]);
-    if (!presentes.length) return;
-    totalEf += presentes.length;
-    linhasEf += `<tr><th colspan="3">${escHtml(cat.nome)} — ${presentes.length}</th></tr>`;
-    presentes.forEach(c => {
-      linhasEf += `<tr><td style="width:15%">${escHtml(c.mat)}</td><td>${escHtml(c.nome)}</td><td style="width:30%">${escHtml(c.funcao)}</td></tr>`;
+    cat.itens.filter(c => day.efetivo[c.id]).forEach(c => {
+      totalEf++;
+      const f = (c.funcao || 'Sem função').trim();
+      porFuncao[f] = (porFuncao[f] || 0) + 1;
+      const emp = (c.empresa || '').trim() || empresaPropria;
+      porEmpresa[emp] = (porEmpresa[emp] || 0) + 1;
     });
   });
-  h += `<div class="pdf-sec"><h2>EFETIVO — TOTAL: ${totalEf}</h2>
-    <table><tr><th>Matrícula</th><th>Nome</th><th>Função</th></tr>${linhasEf || '<tr><td colspan="3">—</td></tr>'}</table></div>`;
+  const proprios = porEmpresa[empresaPropria] || 0;
+  const terceiros = totalEf - proprios;
+
+  let linhasFunc = '';
+  Object.keys(porFuncao).sort((a, b) => a.localeCompare(b, 'pt-BR')).forEach(f => {
+    linhasFunc += `<tr><td>${escHtml(f)}</td><td style="text-align:right">${porFuncao[f]}</td></tr>`;
+  });
+  let linhasEmp = '';
+  Object.keys(porEmpresa).sort((a, b) => (a === empresaPropria ? -1 : b === empresaPropria ? 1 : a.localeCompare(b, 'pt-BR'))).forEach(emp => {
+    linhasEmp += `<tr><td>${escHtml(emp)}${emp === empresaPropria ? '' : ' <em>(terceiro)</em>'}</td><td style="text-align:right">${porEmpresa[emp]}</td></tr>`;
+  });
+
+  h += `<div class="pdf-sec"><h2>EFETIVO — TOTAL: ${totalEf}${terceiros > 0 ? ` (Próprios: ${proprios} · Terceiros: ${terceiros})` : ''}</h2>
+    <table><tr><th>Função</th><th style="width:14%">Qtd</th></tr>${linhasFunc || '<tr><td colspan="2">—</td></tr>'}
+      <tr><th>Total</th><th style="text-align:right">${totalEf}</th></tr></table>`;
+  if (Object.keys(porEmpresa).length > 1) {
+    h += `<table style="margin-top:6px"><tr><th>Empresa</th><th style="width:14%">Qtd</th></tr>${linhasEmp}</table>`;
+  }
+  h += `</div>`;
 
   // Equipamentos / VL / Parados
   const savedEquip = S.get(`equipDia_${day.data}`) || {};
@@ -4378,6 +4401,7 @@ function abrirModalColaborador(catId) {
   document.getElementById('modalColabMat').value = '';
   document.getElementById('modalColabNome').value = '';
   document.getElementById('modalColabFunc').value = '';
+  document.getElementById('modalColabEmpresa').value = '';
   abrirModal('modalColab');
 }
 function editarColaborador(catId, id) {
@@ -4388,19 +4412,21 @@ function editarColaborador(catId, id) {
   document.getElementById('modalColabMat').value = c.mat;
   document.getElementById('modalColabNome').value = c.nome;
   document.getElementById('modalColabFunc').value = c.funcao;
+  document.getElementById('modalColabEmpresa').value = c.empresa || '';
   abrirModal('modalColab');
 }
 function salvarColaborador() {
   const mat = document.getElementById('modalColabMat').value.trim();
   const nome = document.getElementById('modalColabNome').value.trim();
   const funcao = document.getElementById('modalColabFunc').value.trim();
+  const empresa = document.getElementById('modalColabEmpresa').value.trim();
   if (!mat || !nome) { toast('Matrícula e nome obrigatórios'); return; }
   const cat = state.colaboradores.categorias.find(c => c.id === editingItem.parentId);
   if (editingItem.id) {
     const c = cat.itens.find(x => x.id === editingItem.id);
-    c.mat = mat; c.nome = nome; c.funcao = funcao;
+    c.mat = mat; c.nome = nome; c.funcao = funcao; c.empresa = empresa;
   } else {
-    cat.itens.push({ id: uid('p'), mat, nome, funcao });
+    cat.itens.push({ id: uid('p'), mat, nome, funcao, empresa });
   }
   saveState();
   fecharModal('modalColab');
