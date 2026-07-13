@@ -1576,6 +1576,8 @@
       </div>
       <div class="btn-stack">
         <button class="btn btn-primary" onclick="backupAutomatico()">💾 Fazer Backup Agora</button>
+        <button class="btn btn-primary" onclick="backupNuvem(true)">☁️ Backup na Nuvem (Drive)</button>
+        <div id="infoBackupNuvem" style="font-size:11px;color:var(--ink-soft);margin-top:6px"></div>
         <button class="btn btn-ghost" onclick="restaurarAutoBackup()">♻️ Restaurar Backup Automático</button>
       </div>
     </div>
@@ -2617,8 +2619,7 @@ function gerarPdfRDO() {
   if (!day.data) { toast('❌ Defina a data do diário'); return; }
   salvarDiarioDia(false); // garantir que a data conste do histórico p/ numeração
 
-  const datas = Object.keys(history).sort();
-  const num = String(datas.indexOf(day.data) + 1).padStart(3, '0');
+  const num = numeroRDO(day.data);
   const dataBR = formatDateBR(day.data);
   const dSemana = diaDaSemana(day.data);
 
@@ -2806,6 +2807,10 @@ function gerarPdfRDO() {
   h += `<div class="pdf-ass" style="margin-top:20px">
     ${caixaAss('apontador', nomeApont || 'Apontador Responsável', 'Apontador — ' + (state.obra.empresa || ''))}
     ${caixaAss('fiscal', 'Fiscalização / Cliente', ' ')}
+  </div>`;
+  h += `<div style="margin-top:26px;border-top:1px solid #ccc;padding-top:6px;font-size:9px;color:#777;display:flex;justify-content:space-between">
+    <span>RDO Nº ${num} · ${escHtml(state.obra.nome || '')}</span>
+    <span>Gerado em ${new Date().toLocaleString('pt-BR')}</span>
   </div>`;
 
   // Montar overlay
@@ -3010,6 +3015,7 @@ function buildPayloadGoogle(diarioData) {
   ).join('\n');
 
   return {
+    rdoNum:               numeroRDO(day.data),
     data:                 day.data,
     diaSemana:            diaDaSemana(day.data),
     obra:                 state.obra.nome || '',
@@ -4931,6 +4937,12 @@ function confirmar(msg, onSim, titulo) {
 // ============================================================
 // RELATÓRIO
 // ============================================================
+function numeroRDO(dataISO) {
+  const datas = Object.keys(history).sort();
+  const idx = datas.indexOf(dataISO);
+  return String((idx >= 0 ? idx : datas.length) + 1).padStart(3, '0');
+}
+
 function buildRelatorio(day) {
   const dataBR = formatDateBR(day.data);
   const dSemana = diaDaSemana(day.data);
@@ -4939,7 +4951,7 @@ function buildRelatorio(day) {
   let txt = '';
   // Cabeçalho
   if (state.obra.empresa) txt += `*${state.obra.empresa.toUpperCase()}*\n`;
-  txt += `*Relatório de Obra – ${dataBR}*`;
+  txt += `*RDO Nº ${numeroRDO(day.data)} – ${dataBR}*`;
   if (state.obra.nome) txt += `\n_${state.obra.nome}_`;
   if (state.obra.local) txt += `\n📍 ${state.obra.local}`;
   if (state.obra.contrato) txt += `\n🗂️ ${state.obra.contrato}`;
@@ -5699,6 +5711,7 @@ function backupAutomatico() {
       diarios: Object.keys(history).length
     }));
     atualizarInfoAutoBackup();
+    backupNuvem(false); // espelho diário no Google Drive (1x/dia, silencioso)
   } catch(e) {
     // localStorage cheio ou bloqueado — tenta download como fallback
     exportarBackup(true);
@@ -5706,6 +5719,40 @@ function backupAutomatico() {
 }
 
 // Backup manual — gera download do arquivo .json
+async function backupNuvem(manual) {
+  if (!APPS_SCRIPT_URL_DIARIO) { if (manual) toast('❌ URL do Apps Script não configurada'); return; }
+  const hoje = todayISO();
+  const ultimo = localStorage.getItem('ultimoBackupNuvem');
+  if (!manual && ultimo === hoje) return; // automático: no máximo 1x por dia
+  try {
+    // Snapshot completo: estado, histórico e todas as chaves diárias (efetivo, equip, VL, atividades)
+    const chavesDia = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (/^(efetivoDia_|equipDia_|vlDia_|ativDia_)/.test(k)) chavesDia[k] = localStorage.getItem(k);
+    }
+    const conteudo = JSON.stringify({
+      state, history, chavesDia,
+      exportado: new Date().toISOString(),
+      versao: 'v4', tipo: manual ? 'manual' : 'auto-nuvem'
+    });
+    const resp = await fetch(APPS_SCRIPT_URL_DIARIO, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ path: 'backup', obra: state.obra.nome || 'Obra', conteudo })
+    });
+    const json = await resp.json().catch(() => null);
+    if (!json || !json.ok) throw new Error((json && json.error) || 'Resposta inválida');
+    localStorage.setItem('ultimoBackupNuvem', hoje);
+    const el = document.getElementById('infoBackupNuvem');
+    if (el) el.textContent = '☁️ Último backup na nuvem: ' + new Date().toLocaleString('pt-BR');
+    if (manual) toast('☁️ Backup salvo no Google Drive');
+  } catch (err) {
+    console.error('Backup nuvem falhou:', err);
+    if (manual) toast('❌ Backup na nuvem falhou: ' + (err.message || 'erro'));
+  }
+}
+
 function exportarBackup(silencioso) {
   const data = { state, history, exportado: new Date().toISOString(), versao: 'v3', tipo: 'manual' };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
