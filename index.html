@@ -1628,6 +1628,7 @@
       <div class="btn-stack">
         <button class="btn btn-primary" onclick="backupAutomatico()">💾 Fazer Backup Agora</button>
         <button class="btn btn-primary" onclick="backupNuvem(true)">☁️ Backup na Nuvem (Drive)</button>
+        <button class="btn btn-secondary" onclick="if(confirm('Substituir os dados atuais pelo último backup salvo na nuvem?')) restaurarNuvem(false)">☁️ Restaurar da Nuvem</button>
         <div id="infoBackupNuvem" style="font-size:11px;color:var(--ink-soft);margin-top:6px"></div>
         <button class="btn btn-ghost" onclick="restaurarAutoBackup()">♻️ Restaurar Backup Automático</button>
       </div>
@@ -5992,6 +5993,36 @@ async function backupNuvem(manual) {
   }
 }
 
+async function restaurarNuvem(silencioso) {
+  if (!APPS_SCRIPT_URL_DIARIO) { if (!silencioso) toast('❌ URL do Apps Script não configurada'); return false; }
+  const obra = state.obra.nome || 'Obra';
+  try {
+    const resp = await fetch(`${APPS_SCRIPT_URL_DIARIO}?path=backup&action=buscar-ultimo&obra=${encodeURIComponent(obra)}`);
+    const json = await resp.json().catch(() => null);
+    if (!json || !json.ok) {
+      if (!silencioso) toast('❌ ' + ((json && json.msg) || 'Nenhum backup encontrado na nuvem'));
+      return false;
+    }
+    const dados = JSON.parse(json.conteudo);
+    if (dados.state) state = mergeDefaults(dados.state);
+    if (dados.history) history = dados.history;
+    saveState(); saveHistory();
+    if (dados.chavesDia) {
+      Object.keys(dados.chavesDia).forEach(k => localStorage.setItem(k, dados.chavesDia[k]));
+    }
+    initCurrentDay(todayISO());
+    atualizarHeader();
+    renderConfig();
+    renderCalendario();
+    toast('☁️ Restaurado — backup de ' + new Date(json.data).toLocaleString('pt-BR'));
+    return true;
+  } catch (err) {
+    console.error('Restaurar nuvem falhou:', err);
+    if (!silencioso) toast('❌ Falha ao restaurar: ' + (err.message || 'erro'));
+    return false;
+  }
+}
+
 function exportarBackup(silencioso) {
   const data = { state, history, exportado: new Date().toISOString(), versao: 'v3', tipo: 'manual' };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -6084,6 +6115,37 @@ function resetarApp() {
 // ============================================================
 // INIT
 // ============================================================
+function apareceVazio() {
+  const nColab = state.colaboradores.categorias.reduce((s, c) => s + c.itens.length, 0);
+  const nEquip = state.equipamentos.length;
+  const nAtiv = state.atividades.length;
+  const nHist = Object.keys(history).length;
+  return nColab === 0 && nEquip === 0 && nAtiv === 0 && nHist === 0;
+}
+
+async function checarRestauracaoAutomatica() {
+  if (!apareceVazio() || !APPS_SCRIPT_URL_DIARIO) return;
+  if (sessionStorage.getItem('restauracaoDispensada')) return;
+  const obra = state.obra.nome || 'Obra';
+  try {
+    const resp = await fetch(`${APPS_SCRIPT_URL_DIARIO}?path=backup&action=buscar-ultimo&obra=${encodeURIComponent(obra)}`);
+    const json = await resp.json().catch(() => null);
+    if (!json || !json.ok) return;
+    const dataBackup = new Date(json.data).toLocaleString('pt-BR');
+    const banner = document.createElement('div');
+    banner.id = 'bannerRestaurar';
+    banner.style.cssText = 'position:fixed;left:12px;right:12px;bottom:88px;z-index:9998;background:#2c2c2c;border:1.5px solid #f5b334;border-radius:10px;padding:14px;box-shadow:0 4px 16px rgba(0,0,0,.3)';
+    banner.innerHTML = `
+      <div style="color:#f5b334;font-weight:800;font-size:13px;margin-bottom:4px">☁️ Dados não encontrados neste aparelho</div>
+      <div style="color:#e8e0d0;font-size:12px;margin-bottom:10px">Há um backup na nuvem de ${dataBackup}. Restaurar?</div>
+      <div style="display:flex;gap:8px">
+        <button onclick="document.getElementById('bannerRestaurar').remove();sessionStorage.setItem('restauracaoDispensada','1')" style="flex:1;padding:9px;border:none;border-radius:6px;background:#555;color:#fff;font-size:12px;font-weight:700">Agora não</button>
+        <button onclick="restaurarNuvem(false).then(()=>document.getElementById('bannerRestaurar')?.remove())" style="flex:1;padding:9px;border:none;border-radius:6px;background:#f5b334;color:#1a1a1a;font-size:12px;font-weight:700">☁️ Restaurar</button>
+      </div>`;
+    document.body.appendChild(banner);
+  } catch (e) { console.error('checar restauração:', e); }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   atualizarHeader();
   initCurrentDay(todayISO());
@@ -6091,6 +6153,7 @@ window.addEventListener('DOMContentLoaded', () => {
   cal.year = t.getFullYear();
   cal.month = t.getMonth();
   atualizarInfoAutoBackup();
+  checarRestauracaoAutomatica();
 
   // Autosave local a cada 10 segundos
   setInterval(() => salvarDiarioDia(false), 10000);
