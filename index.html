@@ -1033,6 +1033,17 @@
   }
 
 /* ===== PDF do RDO ===== */
+.pdf-capa { text-align: center; padding: 30px 10px 10px; page-break-after: always; }
+.pdf-capa-logo { max-width: 300px; max-height: 140px; object-fit: contain; margin-bottom: 24px; }
+.pdf-capa-titulo { font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #1a1a1a; }
+.pdf-capa-num { font-size: 14px; font-weight: 700; color: #b85c1e; margin-top: 4px; }
+.pdf-capa-obra { font-size: 17px; font-weight: 700; margin-top: 16px; }
+.pdf-capa-data { font-size: 13px; color: #444; margin-top: 4px; }
+.pdf-capa table { text-align: left; }
+.pdf-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.pdf-card { border: 1px solid #999; border-radius: 6px; text-align: center; padding: 8px 4px; }
+.pdf-card .v { font-size: 18px; font-weight: 800; color: #1a1a1a; }
+.pdf-card .t { font-size: 9px; color: #555; margin-top: 2px; }
 #pdfOverlay { position: fixed; inset: 0; background: #fff; z-index: 9999; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .pdf-toolbar { position: sticky; top: 0; background: #2c2c2c; padding: 10px 14px; display: flex; gap: 10px; z-index: 2; }
 .pdf-toolbar button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
@@ -1125,7 +1136,22 @@
   <div class="section">
     <div class="section-title"><div class="section-title-text">🌤️ Condições do Tempo</div></div>
     <div style="margin-bottom:12px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:6px">🌅 Manhã</div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:6px">🌌 Madrugada (00h–07h)</div>
+      <div class="tempo-chips" id="tempoChipsMadrugada">
+        <div class="tempo-chip" data-periodo="madrugada" data-tempo="sol">☀️ Sol</div>
+        <div class="tempo-chip" data-periodo="madrugada" data-tempo="nublado">⛅ Nublado</div>
+        <div class="tempo-chip" data-periodo="madrugada" data-tempo="chuva">🌧️ Chuva</div>
+      </div>
+      <div id="chuvaMadrugadaBox" style="display:none;margin-top:8px">
+        <input type="number" id="chuvaMadrugadaQtd" placeholder="Quantidade de chuva (mm)" min="0" step="0.1" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg-card);font-family:var(--sans);font-size:14px;color:var(--ink)">
+      </div>
+      <div class="tempo-chips" id="pratChipsMadrugada" style="margin-top:8px">
+        <div class="tempo-chip prat-chip" data-periodo="madrugada" data-prat="praticavel">✅ Operação</div>
+        <div class="tempo-chip prat-chip" data-periodo="madrugada" data-prat="impraticavel">⛔ Sem operação</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:6px">🌅 Manhã (07h–12h)</div>
       <div class="tempo-chips" id="tempoChipsManha">
         <div class="tempo-chip" data-periodo="manha" data-tempo="sol">☀️ Sol</div>
         <div class="tempo-chip" data-periodo="manha" data-tempo="nublado">⛅ Nublado</div>
@@ -1135,12 +1161,12 @@
         <input type="number" id="chuvaManhaQtd" placeholder="Quantidade de chuva (mm)" min="0" step="0.1" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg-card);font-family:var(--sans);font-size:14px;color:var(--ink)">
       </div>
       <div class="tempo-chips" id="pratChipsManha" style="margin-top:8px">
-        <div class="tempo-chip prat-chip" data-periodo="manha" data-prat="praticavel">✅ Praticável</div>
-        <div class="tempo-chip prat-chip" data-periodo="manha" data-prat="impraticavel">⛔ Impraticável</div>
+        <div class="tempo-chip prat-chip" data-periodo="manha" data-prat="praticavel">✅ Operação</div>
+        <div class="tempo-chip prat-chip" data-periodo="manha" data-prat="impraticavel">⛔ Sem operação</div>
       </div>
     </div>
-    <div>
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:6px">🌇 Tarde</div>
+    <div style="margin-top:12px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:6px">🌇 Tarde (13h–17h)</div>
       <div class="tempo-chips" id="tempoChipsTarde">
         <div class="tempo-chip" data-periodo="tarde" data-tempo="sol">☀️ Sol</div>
         <div class="tempo-chip" data-periodo="tarde" data-tempo="nublado">⛅ Nublado</div>
@@ -1150,8 +1176,23 @@
         <input type="number" id="chuvaTardeQtd" placeholder="Quantidade de chuva (mm)" min="0" step="0.1" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg-card);font-family:var(--sans);font-size:14px;color:var(--ink)">
       </div>
       <div class="tempo-chips" id="pratChipsTarde" style="margin-top:8px">
-        <div class="tempo-chip prat-chip" data-periodo="tarde" data-prat="praticavel">✅ Praticável</div>
-        <div class="tempo-chip prat-chip" data-periodo="tarde" data-prat="impraticavel">⛔ Impraticável</div>
+        <div class="tempo-chip prat-chip" data-periodo="tarde" data-prat="praticavel">✅ Operação</div>
+        <div class="tempo-chip prat-chip" data-periodo="tarde" data-prat="impraticavel">⛔ Sem operação</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:6px">🌃 Noite (17h–24h)</div>
+      <div class="tempo-chips" id="tempoChipsNoite">
+        <div class="tempo-chip" data-periodo="noite" data-tempo="sol">☀️ Sol</div>
+        <div class="tempo-chip" data-periodo="noite" data-tempo="nublado">⛅ Nublado</div>
+        <div class="tempo-chip" data-periodo="noite" data-tempo="chuva">🌧️ Chuva</div>
+      </div>
+      <div id="chuvaNoiteBox" style="display:none;margin-top:8px">
+        <input type="number" id="chuvaNoiteQtd" placeholder="Quantidade de chuva (mm)" min="0" step="0.1" style="width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg-card);font-family:var(--sans);font-size:14px;color:var(--ink)">
+      </div>
+      <div class="tempo-chips" id="pratChipsNoite" style="margin-top:8px">
+        <div class="tempo-chip prat-chip" data-periodo="noite" data-prat="praticavel">✅ Operação</div>
+        <div class="tempo-chip prat-chip" data-periodo="noite" data-prat="impraticavel">⛔ Sem operação</div>
       </div>
     </div>
   </div>
@@ -1276,7 +1317,7 @@
   <div class="section">
     <div class="section-title">
       <div class="section-title-text">📷 Fotos do Dia</div>
-      <span id="fotosContador" style="font-size:12px;font-weight:700;color:var(--ink-soft)">0/6</span>
+      <span id="fotosContador" style="font-size:12px;font-weight:700;color:var(--ink-soft)">0/20</span>
     </div>
     <div id="fotosGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px"></div>
     <button class="add-btn-full" onclick="document.getElementById('fotoInput').click()">📷 Adicionar foto</button>
@@ -1426,6 +1467,16 @@
       <datalist id="descricaoObraSugestoes"></datalist>
       <label>Contrato / Código (opcional)</label>
       <input type="text" id="cfgContrato" placeholder="Ex.: CT-2026-001">
+      <label>Cliente</label>
+      <input type="text" id="cfgCliente" placeholder="Ex.: Governo do Estado do Paraná">
+      <label>Gestor da Obra</label>
+      <input type="text" id="cfgGestor" placeholder="Ex.: Eduardo Barrozo">
+      <label>Gerenciadora (opcional)</label>
+      <input type="text" id="cfgGerenciadora" placeholder="Ex.: Consórcio XYZ">
+      <div class="grid-2" style="gap:6px">
+        <div><label>📅 Início do Contrato</label><input type="date" id="cfgDataInicio"></div>
+        <div><label>📅 Término do Contrato</label><input type="date" id="cfgDataTermino"></div>
+      </div>
     </div>
     <div class="section">
       <div class="section-title"><div class="section-title-text">🖼️ Logo da Empresa</div></div>
@@ -1999,8 +2050,14 @@ const EMPTY_DAY = () => ({
   chuvaManhaQtd: '',
   tempoTarde: '',
   chuvaTardeQtd: '',
+  tempoMadrugada: '',
+  chuvaMadrugadaQtd: '',
+  tempoNoite: '',
+  chuvaNoiteQtd: '',
+  pratMadrugada: '',
   pratManha: '',   // 'praticavel' | 'impraticavel' | ''
   pratTarde: '',
+  pratNoite: '',
   horimetros: {},  // equipId -> {ini, fim}
   assinaturas: {}, // {apontador: dataURL, fiscal: dataURL}
   cafeInicio: '06:30', cafeFim: '07:00',
@@ -2023,6 +2080,7 @@ const EMPTY_DAY = () => ({
   descricaoLocal: '',
   veiculosParados: {},  // id -> justificativa (para equips e VLs não selecionados)
   atividadesParalisadas: [],  // [{id (opcional, do cadastro), desc, just}]
+  atividadesStatus: {},       // atId -> 'andamento' | 'concluida'
   fotos: []  // [{fileId, url}] — arquivos no Google Drive, app guarda só links
 });
 
@@ -2131,13 +2189,39 @@ function pratLabel(v) {
   if (v === 'impraticavel') return ' · ⛔ Impraticável';
   return '';
 }
+const PERIODOS_RDO = [
+  { suf: 'Madrugada', nome: 'Madrugada', faixa: '00h–07h' },
+  { suf: 'Manha',     nome: 'Manhã',     faixa: '07h–12h' },
+  { suf: 'Tarde',     nome: 'Tarde',     faixa: '13h–17h' },
+  { suf: 'Noite',     nome: 'Noite',     faixa: '17h–24h' }
+];
+
+function mmPeriodo(day, Suf) {
+  const v = parseFloat(String(day['chuva' + Suf + 'Qtd'] || '').replace(',', '.'));
+  return isNaN(v) ? 0 : v;
+}
+
+function totalPrecipitacao(day) {
+  return PERIODOS_RDO.reduce((s, p) => s + mmPeriodo(day, p.suf), 0);
+}
+
 function tempoLabel(day) {
   const map = { sol: '☀️ Sol', nublado: '⛅ Nublado', chuva: '🌧️ Chuva' };
-  const manha = map[day.tempoManha] || '—';
-  const manhaChuva = (day.tempoManha === 'chuva' && day.chuvaManhaQtd) ? ` (${day.chuvaManhaQtd}mm)` : '';
-  const tarde = map[day.tempoTarde] || '—';
-  const tardeChuva = (day.tempoTarde === 'chuva' && day.chuvaTardeQtd) ? ` (${day.chuvaTardeQtd}mm)` : '';
-  return `Manhã: ${manha}${manhaChuva}${pratLabel(day.pratManha)} | Tarde: ${tarde}${tardeChuva}${pratLabel(day.pratTarde)}`;
+  const partes = [];
+  PERIODOS_RDO.forEach(p => {
+    const cond = day['tempo' + p.suf];
+    const prat = day['prat' + p.suf];
+    const mm = mmPeriodo(day, p.suf);
+    if (!cond && !prat && !mm) return;
+    let s = `${p.nome}: ${map[cond] || '—'}`;
+    if (mm) s += ` (${mm.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}mm)`;
+    s += pratLabel(prat);
+    partes.push(s);
+  });
+  const total = totalPrecipitacao(day);
+  let label = partes.join(' | ') || '—';
+  if (total > 0) label += ` | Acum.: ${total.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}mm`;
+  return label;
 }
 
 function jornadaPadraoPorDia(iso) {
@@ -2269,26 +2353,18 @@ function preencherCampos() {
     dssMin.innerHTML = opts.join('');
   }
   document.getElementById('dataDiario').value = currentDay.data;
-  // tempo — manhã
-  document.querySelectorAll('#tempoChipsManha .tempo-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.tempo === currentDay.tempoManha);
-  });
-  document.getElementById('chuvaManhaBox').style.display = currentDay.tempoManha === 'chuva' ? 'block' : 'none';
-  const chuvaManhaEl = document.getElementById('chuvaManhaQtd');
-  if (chuvaManhaEl) chuvaManhaEl.value = currentDay.chuvaManhaQtd || '';
-  // tempo — tarde
-  document.querySelectorAll('#tempoChipsTarde .tempo-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.tempo === currentDay.tempoTarde);
-  });
-  document.getElementById('chuvaTardeBox').style.display = currentDay.tempoTarde === 'chuva' ? 'block' : 'none';
-  const chuvaTardeEl = document.getElementById('chuvaTardeQtd');
-  if (chuvaTardeEl) chuvaTardeEl.value = currentDay.chuvaTardeQtd || '';
-  // praticabilidade
-  document.querySelectorAll('#pratChipsManha .prat-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.prat === currentDay.pratManha);
-  });
-  document.querySelectorAll('#pratChipsTarde .prat-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.prat === currentDay.pratTarde);
+  // clima — 4 períodos
+  ['Madrugada', 'Manha', 'Tarde', 'Noite'].forEach(Suf => {
+    document.querySelectorAll(`#tempoChips${Suf} .tempo-chip`).forEach(c => {
+      c.classList.toggle('active', c.dataset.tempo === currentDay['tempo' + Suf]);
+    });
+    const box = document.getElementById(`chuva${Suf}Box`);
+    if (box) box.style.display = currentDay['tempo' + Suf] === 'chuva' ? 'block' : 'none';
+    const inp = document.getElementById(`chuva${Suf}Qtd`);
+    if (inp) inp.value = currentDay['chuva' + Suf + 'Qtd'] || '';
+    document.querySelectorAll(`#pratChips${Suf} .prat-chip`).forEach(c => {
+      c.classList.toggle('active', c.dataset.prat === currentDay['prat' + Suf]);
+    });
   });
   renderFotosDia();
 }
@@ -2310,44 +2386,43 @@ document.addEventListener('DOMContentLoaded', () => {
     salvarDiarioDia(false);
     initCurrentDay(novaData);
   });
+  const PERIODOS_CLIMA = ['madrugada', 'manha', 'tarde', 'noite'];
+  const sufPeriodo = p => p.charAt(0).toUpperCase() + p.slice(1);
   document.querySelectorAll('.tempo-chip').forEach(c => {
+    if (c.dataset.prat) return; // chips de operação têm handler próprio
     c.addEventListener('click', () => {
-      const periodo = c.dataset.periodo; // 'manha' ou 'tarde'
+      const periodo = c.dataset.periodo;
+      const Suf = sufPeriodo(periodo);
       const val = c.dataset.tempo;
-      const chipsId = periodo === 'manha' ? '#tempoChipsManha .tempo-chip' : '#tempoChipsTarde .tempo-chip';
-      const boxId   = periodo === 'manha' ? 'chuvaManhaBox' : 'chuvaTardeBox';
-      const field   = periodo === 'manha' ? 'tempoManha' : 'tempoTarde';
+      const field = 'tempo' + Suf;
       const already = currentDay[field] === val;
-      document.querySelectorAll(chipsId).forEach(x => x.classList.remove('active'));
-      if (!already) {
-        c.classList.add('active');
-        currentDay[field] = val;
-      } else {
-        currentDay[field] = '';
-      }
-      document.getElementById(boxId).style.display = currentDay[field] === 'chuva' ? 'block' : 'none';
+      document.querySelectorAll(`#tempoChips${Suf} .tempo-chip`).forEach(x => x.classList.remove('active'));
+      if (!already) { c.classList.add('active'); currentDay[field] = val; }
+      else { currentDay[field] = ''; }
+      const box = document.getElementById(`chuva${Suf}Box`);
+      if (box) box.style.display = currentDay[field] === 'chuva' ? 'block' : 'none';
       salvarDiarioDia(false);
     });
   });
-  // praticabilidade
+  // operação (praticabilidade) por período
   document.querySelectorAll('.prat-chip').forEach(c => {
     c.addEventListener('click', () => {
-      const periodo = c.dataset.periodo;
+      const Suf = sufPeriodo(c.dataset.periodo);
       const val = c.dataset.prat;
-      const chipsId = periodo === 'manha' ? '#pratChipsManha .prat-chip' : '#pratChipsTarde .prat-chip';
-      const field   = periodo === 'manha' ? 'pratManha' : 'pratTarde';
+      const field = 'prat' + Suf;
       const already = currentDay[field] === val;
-      document.querySelectorAll(chipsId).forEach(x => x.classList.remove('active'));
+      document.querySelectorAll(`#pratChips${Suf} .prat-chip`).forEach(x => x.classList.remove('active'));
       if (!already) { c.classList.add('active'); currentDay[field] = val; }
       else { currentDay[field] = ''; }
       salvarDiarioDia(false);
     });
   });
-  // quantidade de chuva
-  ['chuvaManhaQtd', 'chuvaTardeQtd'].forEach(id => {
-    const el = document.getElementById(id);
+  // quantidade de chuva por período
+  PERIODOS_CLIMA.forEach(p => {
+    const Suf = sufPeriodo(p);
+    const el = document.getElementById(`chuva${Suf}Qtd`);
     if (el) el.addEventListener('input', () => {
-      currentDay[id] = el.value;
+      currentDay['chuva' + Suf + 'Qtd'] = el.value;
       salvarDiarioDia(false);
     });
   });
@@ -2456,7 +2531,7 @@ function removerAtivParalisada(idx) {
 // ============================================================
 // FOTOS DO DIA — upload ao Google Drive via Apps Script
 // ============================================================
-const MAX_FOTOS_DIA = 6;
+const MAX_FOTOS_DIA = 20;
 
 function renderFotosDia() {
   const grid = document.getElementById('fotosGrid');
@@ -2477,6 +2552,12 @@ function renderFotosDia() {
       <input type="text" placeholder="Legenda..." value="${escAttr(f.legenda || '')}"
         onchange="salvarLegendaFoto(${i}, this.value)"
         style="width:100%;margin-top:4px;font-size:11px;padding:5px 6px">
+      <select onchange="salvarAtivFoto(${i}, this.value)"
+        style="width:100%;margin-top:3px;font-size:11px;padding:4px 4px;border:1px solid var(--line);border-radius:5px;background:var(--bg-card);color:var(--ink)">
+        <option value="">📎 Geral</option>
+        ${state.atividades.filter(a => currentDay.atividadesMarcadas && currentDay.atividadesMarcadas[a.id]).map(a =>
+          `<option value="${a.id}" ${f.ativId === a.id ? 'selected' : ''}>${escAttr(a.desc.slice(0, 40))}</option>`).join('')}
+      </select>
     </div>`).join('');
 }
 
@@ -2548,6 +2629,13 @@ function escAttr(s) {
   return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+function salvarAtivFoto(idx, ativId) {
+  currentDay.fotos = currentDay.fotos || [];
+  if (!currentDay.fotos[idx]) return;
+  currentDay.fotos[idx].ativId = ativId || '';
+  salvarDiarioDia(false);
+}
+
 function salvarLegendaFoto(idx, valor) {
   currentDay.fotos = currentDay.fotos || [];
   if (!currentDay.fotos[idx]) return;
@@ -2610,6 +2698,14 @@ function copiarUltimoDiario() {
 // ============================================================
 // PDF DO RDO
 // ============================================================
+const LOGO_PADRAO = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCADwAeADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD6oooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigApHdY1LuwVRySTgCuI8d/FTSvB8MkaSRz3S/KecqjenHLN7D8SK+ffFHxU8Q+KJm3XDxwZ4VufyX7o/In3r1sHk9bELmfuo8rF5tSoPlj7zPp2+8deGNOJFzrdkCOoR95H/fOaitviF4Wu0EkOsQsh43FWA/UV8dyyT3DbpriWQn1Y4/Kt/S4c6bB1GC3Q+9Z5/gY5dhlWpu7cktdtn/AJdzhw+c1Ks+Wyt8/wDM+vLHV9O1MZsb62ufaKQMR+FW6+RIXmtpFkgnljdTkMrkEV6D4S+MOs6M6QauTqVn0JY/vUHs3f6H8xXy9HNIt2qKx6lPHRek1Y96oqjout2HiCwS+064WaF/Tqp9COxq9XqqSkro7k01dBRRRTGFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFedfFr4kReE7F7G1lIvJFy7IfmQHoo9GPr2HPpXca1qsGh6Td6ncn91axNK3vgcD6k8fjXx94s1258R6zPd3T73ZyzY6Fz1x7DgD2Ar28lwCrzdSfwx/Fni5xjnQgqcN5fl/wTN1DULnV7trq7fe5+6v8KD0FQgU+KF5ZFjjRndyFVVGSxPQCvpb4W/B+x8LWsOqaxBHc6y4DhXAZLX2UdN3q35e/0+NxtPBw5pb9F3Pm8Hg6mLnyx2W77Hi2h/Cbxlr8SzWuiyxQsMrLcsIgR6gNyfyrrbf4LeMrOxVGtbSVkydsdwCTz74r6Jor4rNcdPMafsaitFO+m/X/ADPp8Pk1Gjrdtnyhqmk3+iXX2XUrOe0mPRZUI3fQ9D+FViK+q9X0bT9esZLHUrWO5gccq45B9QeoPuK+e/Hvge48FamsQZptOuMm2nbrx1Rv9ofqK+QxWBdFc0XdCr4V01zLVEHgzxheeEdUS5hYvbuQs8BPEi/4jsa+j9O1C21axgvrSQSQToHRh6H+tfJ5Feu/A7xI5a68PzvlQDcW+T0/vL/I/nWmW4hxn7J7P8y8FWcZcj2Z65RRRXvHqhRRRQAUUUUAFFFFABRRRQAUV5x8Qfjl4e8DtNZw41TUoeJIopAsVufSWTop/wBkAt7V8+eLP2kvF2tSOlpqT2sJ6R6ev2dB/wADOZG+uV+lb08NOavsjKdaMdD7K7c0DnpzX52al4q1rV5TLeX1xKx7yXEsh/NmNVoNY1a2YNb6jd27DvDMyEfka3+pPuZfWl2P0cor4X8N/HT4h+GXTyPEVxewr1g1D9+pHplvmH4EV798N/2nNC8VSxab4jgXQ9RchVlL5tZW/wB48ofZuPesZ4Wcddy4V4y0PaqKAQwBBBB5BHeiuc3CiivjLxZ8cvHemeJ9XsYNcuvJgvZ44wGC7VEjADp2AFbUaLqXs9jOpVUNz7Nor4bPx9+IH/QevR/21H/xNNPx8+IR6eIL0f8AbQf/ABNbfUpd0ZfWo9j7mor4Y/4X38RO3iG9/wC+x/8AE0H4+fEX/oYLv/vsf4UfUpd0H1qPY+56K8b/AGZ/GeveNfD2s3evajNeyw3qxxGTGUXywcDAHc5r2SuacOSTizeEuZXCij614h8Sf2kLDQXlsfDP2e6kjYo9/KC8W4cERICDIQf4shR6minTlN2iE5qKuz2+jIzjIz6V8HeJfjD4t8TTO11rGoPG38BuGjT/AL4j2r/OuTOqX7OX+1yqx53K5B/PNdSwT6s53il0R+jtFfAnh34qeOfC0ivpfifUlVTnyZ5TNEfbY+RX0L8J/wBpi08TXMGi+LoYNN1GUhIbyI4t527BgfuMfqQfas6mFnFXWpcMRGTse7UUUVzG4UV8v/HX4r+L/CHxGvtN0nV7mCzWKFkhUgBCYwTjjuTXnh+P/wAQf+g9dj/gY/8Aia644OTSd1qc8sSk2rH3HRXw0fj78Qj/AMzBeD/ga/8AxNH/AAvz4idvEV5/30v/AMTT+pS7oX1qPY+5aK+KdN/aR+JGnOC2rx3ag/cuYEYH8QAf1r2D4dftS6Vr9zFpviuzTRrqQhUu42JtmP8AtZ5T6nI9xUTws467lRxEJaHu1FIrK6hlYMrDIIOQRS1zG4UV8b+NvjX460rxbrNjba7drBBfXEcaq4G1RKwA6dgBWC/x7+IR6eIb4f8AbQf/ABNdn1KXdHN9aj2PuaivhQ/Hj4jHp4lvx/wNf/iaafjv8SO3ie+/Nf8A4mj6lLug+tR7H3bRXwkPjx8Sh/zNF7+a/wDxNfQf7MfjbxD410bXbjxBqc1/Jb3UaRGTHyKUyQMAd6iphpQjzNlQrqbsj2qiiiuY3PNPj9rDab4LjtkbDXt0iEeqqC5/VVr5mHWve/2mSw0vQSM7TcSg/XYMf1rwLPNfc5FFLCJrq2fFZ228U12SPT/gH4aj1rxi1/cIHh0uLzgCODIThPy+Y/UCvpevD/2ZnjMevr/y03QH8MPXuFfO55UcsXKL6W/K57+SU1HCprd3/OwUUUV5B6wVz/j3QI/Efha+syoMqoZoTjlZFGRj68j8a6CkIBBB6GpnFSi4vqTKKkmmfJLAqcHg1veAtQbTPGGlXCkgG4WNv91/lP8AOvR5/gPYzTPIddvF3EnaIUwPanWfwKsrO9guhr16xhkWQKYkAOCDj9K8Gnl9eMlK23meTHCVU07HqFFFFfQHsBRRRQAUUUUAFFFFABXgnx7+OB0Nrjwv4fumjnT5L+8hbDxkj/Uxns+PvN/CDxyePRfjD49Hw88D3epwsv2+Yi1slbp5z5w2PRQCx/3a+Fb67kvbl5ZHeQkk7nOWYk5LE9ySST9a7MLRUvflsc2Iq8vuoS8vZ9QcGU7Y1J2RL91M9fqfUnk11vgD4Q+LPiNIH0ewEdiG2vf3J2QL6gHGWPsoNdH8BPg9/wALJ1iTUNWV10DT3AmAJBuZOoiB9McsfQgd+PsuzsrbTrSKzs4Ire2hUJHFEoVUUdAAOgravieR8sdzKlQ5tXsfPuj/ALH2mxxK2s+KLyaQj5ks4FjUH2LbifyFT6h+x/ockR/s7xNqcEmOPtESSrn8Npr6Borj+sVN7nT7CHY+H/iF8CfF3w9ie9uLePUdLTre2eWCD/bU8r9eR71532x1r9IpI0lRo5EV0cFWVhkEHqCK+Ufjf8AdS0nxAmpeCtGur7Tb/cz2dpGXNpIOoAHRD1Hocj0rroYnm92Zz1cPbWJb/Z6+N8+lXlv4Q8SXbSafMwisrmVsm2c8BCT/AAHoP7p9un1LXwOPhN8QlYFfBWvAjv8AZTX2R8JdT17VPAunnxNp15YatbA2063UZR5NvCyYPXIxk+uayxUI/HE0oSl8MjsK/Pfx3g+NNe/7CNz/AOjWr9CK/Pbxv/yOev8A/YSuf/RrVWC3kTitkdL8FvhjafFPX77S73ULiwS1tftCyQIrFjvC4Oe3Nexf8Me6F/0NOqf9+I65L9kQf8VxrP8A2Df/AGqtfV9LEVpxnZMdGlGUbtHz9/wx9of/AENOqf8AfiOj/hj7Qv8AoadU/wC/EdfQNFYfWKnc19jDscR8K/hZZ/CvS73T7PUrm/W7nE7POiqVIULgY+ldvRRWUpOTuzRJJWR4v+0v8RZPC+gW/h2xneG71ZWaeSM4ZLZeGAPYuSFz6bq+Rrm4e5lMsuAcYAHAUDoAOwFeuftTXM03xVaFyfLh06BUB7AlmP6k1598P7K01Hx34esr8j7LPqMEcoPQqXHB9j0/GvUoJQpJ/M8+s3Kdj1D4Z/sxap4s0631jxFfvo9jcKJIrdI91xIh6Mc8ID2yCfYV6Y/7JngMwFFvNdWXH+s+0IefpsxXtQwAAOlFcMsTUbvc640IJbHxt8Vf2edY+HtnJrGnXX9r6PGf3rhNs1uPV1HBX/aH4gV5LjPWv0eu7WG+tZrW5jWWCdGjkRhkMpGCD+FfPkn7HuntIxTxfdIhJKr9iU4HYZ3100cUrWqGFXDu/uHV/s2/EOfxl4Pk0zUZmm1LRmWFpHOWlhIPlsfUjBUn/ZHrXrteW/Cf4Gx/CvWbzUYPEE2oJdW/kNC9uIwMMGDZDHpgj8a9SrjrOLm3HY6aXMopS3PjL9pzH/C1r/18mD/0UtcV8O/CsXjbxppfh64uZLWK+kZGmjUFlwjNwDx2rtP2mjn4s6iPSC3/APRS1kfAb/krvhr/AK+H/wDRT16adqSa7focLV6ln3PZB+x7oWP+Rp1T/vxHSH9j7RMceKtUB/64R19BUV531ip3O32MOx8i+Pv2X/EPhawm1PQ72PXbSFS8kQjMdwqjqQuSGx7HPsa8WPTrke1fpGelfBfxc0i20L4meI7CyjWO2S8Z0Vei7wHIHsCxrsw1aU7qRzV6Shqj3n9lj4iXOt6Xd+EdSmMs2moJrN2OWMBOCn/ASRj2bHavexXxn+zDJInxbs1Qna9pcB8f3duf5gV9mVy4qKjU0N8PJuGp+f8A8SOfHviD21G5/wDRrVtfBr4aWnxR8SXekXl/cWCQWhuRJAisSQ6rg57fN+lYnxG58e+IvbUrn/0a1enfslf8lB1L/sFv/wCjY69CrJqm2uxx00nOzOx/4Y90Lv4p1T/vxHS/8Me6F/0NOqf9+Y6+gaK836xU7nd7CHY+ff8Ahj3Qv+hp1T/vxHXpHwp+FFl8KbHULSy1K5vxeyrKzToqlSq4wMV3VFKVaclZscaUYu6QUUUVkaHmH7Q+kNqHgH7ai5bT7qOc47Icof8A0IflXzJvr7e1jSrbXNKvNMu13W93C0Mg9mGPzr4r8QaJd+GNbvdFv1K3FnIYyccOv8LD2Iwfxr6zIMSnTdF7rU+Xz3DPnVZbPQ774D+KovD/AIzW1uZAlvqSfZixPAfOUP58f8Cr6ir4PSVo3DqSGByCO1fSHwo+N1lq9nDo/iW6S21CMBI7qU4S4HbcezfXg/WozvASqP29NX7/AOZWTY2NNewqO3b/ACPYKKRSGUMpBBGQR0NLXyx9MFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAfKn7XPiR7vxXpPh9H/c2Nobl1H/AD0kJAz9FT/x6vBNpY4UZY8Aepr0r9o2dpvjHrocn92tui+w8lD/AFNcR4WhS68UaNBJjZJf26Nn0Mig169FctNHm1XebPuv4ZeEofA/gbSdEjQLJFAr3BAxvmb5nJ/EkfQCuoooryW7u7PRSsrIKKKKQwooooAKKKKACvz18bH/AIrPX/8AsJXP/o1q/Qqvzy8bH/is/EH/AGErn/0a1d2C3Zy4rZHpn7MPiXRvDHi/VbrWtStdPglsPLR7hwoZvMU4HvgV9LD4reBmGR4q0rH/AF2FfALSBOS2PfNH2yT/AJ+H/wC+zW9TDRnLmbMYV5QVkj7+PxW8Df8AQ1aV/wB/hR/wtbwLjP8AwlWk8f8ATcV8A/a5f+fl/wDvs0jXbEEGdj9XNR9Th3Zf1mXY/SSyvbbUrOG9s5457adBJFLGcq6kZBB9CKmrmPhd/wAk38L8f8wu26f9c1rp685qzsdid0fL37XPhOe31nSfFkUZNrcQ/YLhx0SRSWTP1BYf8Br5+imkt5Ulhdo5EYMjKcFSDkEe9foh4i8PaZ4q0a60bV7VLqyuk2SRt+hB7EHkHsRXyT8Rv2bfFXhCaW70OKbxDpWSVMC5uYl9HjH3seq5+grvw1ePLySOSvRd+ZHo3w3/AGp9LubODT/GqSWd6gCHUIYy0Uv+0yjlT64BH06V7fonifQ/EsAn0bVrHUIyM5t5lcj6gHI/GvztljkglaGaN4pUOGjdSrKfcHkU+3vLizmWa3nkhlXkPGxVh9CKqeEhLWOhMcTJaPU/SKivh7wz+0H8QfDJRI9ZbUIF/wCWOoL5wI9Nx+Yfg1e7fDz9qDw94nli0/xHCNCv5CFWUvutpG/3jyn/AALj3rmnhZx1WpvDERlpse10UisHAZSCCMgjoaWuY3Pi79pg5+Lupj/phbf+ilrJ+BEix/Fvw2zsqgTvkscD/VPWp+0wf+Lv6p/1723/AKKFeW7iOlexBc1JLyPMk7VG/M/R/wC22v8Az8wf9/BR9ttf+fmD/v4K/ODex6sfzpTI3qfzrm+pf3jf615H3b45+MPhTwNZStcanb3uobT5On2sqvLI3YHH3B6s2AK+JvE+uTeItcvNUun8y5upnmmZful2OTt/2RwB7CsjjsMV6B8JbH4bXWrxN471S/gIf5IPK22r+nmSKS2PbCj3ranSjRTe5lOo6rS2PVf2S/AtzE2oeM7yAxxSxmzsSw5cbgZHHtkBQf8Aer6SqtpsdlHp9smmrbrZLGogFvjywmONuOMY9Ks151WbnJyZ3U4KEbI/P34iNnx74j/7Cdz/AOjWrvP2ZfEmj+GvHF/da1qVrp8EmnNGklw+0M3mIcD3wD+VeffENs+PfEn/AGFLr/0a1c60gUZJxXrSipxszzU+WVz79/4Wz4E/6GvSf+/4o/4Wx4E/6GvSf+/4r4C+1sOkzf8AfVJ9rfvO3/fdc/1OHdnR9Zl2Pv7/AIWx4E6/8JXpP/f8V0lhf2uqWUF9Y3Edza3CCSKaM5V1PQg+lfm4bpj1mYj/AHq+/Pg//wAkt8K9P+QZB0/3BXPiKEaaTRrRqubszr6KKK5ToCvLvjZ8Kj4309dX0iNRrdkhCp0+1R9fLJ/vDqp/Dvx6jRWtCtOjNVIPVGdalGrBwnsz4JcPFK8UsbxSxsUkjkGGRh1BB6GgORyK+sfiV8FdE8flr+F/7L1oDAvIkyJcdBIv8X16j17V86+LPhb4x8Gyv/aGjT3FqvS9sgZoSPU4GV/4EBX2ODzWlXVpO0ux8risrq0neKuiHRPiJ4q8OxiLTNdvbeJekW/cg/4C2R+lfUfwi1/UfE/gHT9U1W4NxeTNKHk2hc7ZGA4AA6AV8aCeMnHmLn0zyK+uvgCQ3ws0kj+/P/6NauPPYQ9ippK99/kzpyaU/auLbtbb7j0OiiivlT6UKKKKACiiigAooooAKKKKACiiigD4x/ai0t9O+LNzcsuE1CzgnU+uAYz/AOgV5ZYXb2N/bXcf34JUlX6qwI/lX1N+1r4LfVfC9h4ptYt8ukSGO4wOfIkIGf8AgLBfwY18n7q9bDyUqaPOrx5Zn6Q6VqMGsaZaajbMGgu4UnjYd1ZQR/OrVeDfsufEyDWNAHg6/mC3+ngtabj/AK6HOSo91JPH90j0Ne815tWm4ScWd0J80bhRRRWZYUUVxXxB+Lnhr4bXFnbazJO9xdq0ixW6qxRBxubJAAJ4Hqc+lVGLk7ITaSuztaK8bb9qvwGuf3WqHH+xF/8AF16L4H8Z2Pj/AMPxa9plvdw2czukRuUCtIFOCwAJ4zkZ9qqVKcVeSJjUjLRM36/PDxuf+K08Qf8AYTuf/RrV+h9fnf43P/Fa+If+wndf+jWrpwW7MMVsj1X9k/TLDVPGmsRX9lbXca6cGVJ4lkAPmryAQea+pf8AhEvDv/QA0n/wDj/wr5i/ZA/5HnWv+wb/AO1Vr6zrPFN+0ZeHXuGT/wAIl4d/6AGk/wDgHH/hR/wiXh0f8y/pP/gHH/hWtRXPdm1kMihjt4khhjSKNFCoiDCqB0AA6Cn0UUhhRWJd+N/C2n3Utpd+I9It7iJtskUt3GrofQgnINLZ+NvC+oXUVpZ+I9IuLiVtscUV3GzufQAHJNVyvewuZDfEfgbwz4uTZruhafqBxgPNEC4+jj5h+BryvxL+yZ4Q1PfJol/qGjSnom7z4h+DfN/49XuFFONSUfhYpQjLdHxL49/Z58Z+BbeW/EMWsabGCz3NjktGvq8Z5A9xkD1rzDAPvX6UkZBBGR6V8KfHbw3YeFfijrFhpqJFayGO5SFBgRGRAxUDsMk4Hoa78PXc3yy3OOtRUFdHs37LXxQudXgm8FapM0stpF51hK5yTECA0ee+3II9sjsK+ha+FvgDeTWnxe8OeTn95O8TY7q0Tg1901zYqKU9Opvh5Nw1Piv9pn/ksGqf9e9t/wCihXPfB3RtP8QfEvQtL1W1ju7K5mdZYXztcCNiM49wK6D9ps/8Xh1T/r3tv/RQrK+AZz8X/DX/AF3f/wBFPXav4PyOVr978z6uPwI+GjdfCGn/AJv/APFUn/CiPhr/ANCjYf8AfT//ABVd7RXme0n3Z38kex494r/Zd8Da5ayf2RFcaFeY+SSCRpI8/wC0jk5H0Ir5S8Y+EdT8DeI7vQNWRVurUj505SVDyrqe4I/qO1fodXyv+2FBAniXw9cJtE72UqyY6lQ425/FmrqwtaTlyt3OevSio8yIf2Y/ind6Xr0XgzU7lpNNvyRZ7z/x7zddo/2W549cepr6ur86fCt7LYeJ9Hu7fIlhvYHQj1Ei1+i1TjIpSTXUeGk3Gz6H57/ET/kf/Ev/AGFLr/0a1ekfsp6bY6n491KK+s7e7jXTGYJPGsig+bHzgjrXm3xEOPH/AIl/7Cl1/wCjWr1H9kTn4han/wBgt/8A0bHXXW/hP0Oen/EPqL/hEvDv/QA0n/wDj/wo/wCES8O/9ADSf/AOP/CtaivKuz0LIyf+ES8O/wDQA0n/AMA4/wDCtOCCK1hSCCKOKKMBUjjUKqj0AHQU+ii47BRRRSAKKKKACiiigDH1Pwb4a1pi+paBpV456tNaozH8SM1d0rSdP0OxjsNMs4LK0jzshgQIi5OTgD3Jq3RVOTatcXKr3CiiipGFFFFABRRRQAUUUUAFFFFABRRRQBX1HT7XVrC40+9hSe1uY2hmicZDowwQfwNfCHxd+F+ofCvxM9hIsk2lXLF9PvCOJE/uMf769CO/B71971jeLvB+i+OdDn0TXrNbq0m59Gjbs6N1Vh2I/lW1Gs6b8jOpTU1Y/PPStXvdD1GDUNPuJbe6t3EkcsbYZWHQg19W/DL9qLRtbtorHxeV06/UBftaKTDL7sByh/MfTpXj3xO/Zw8U+BJZr3SYZde0UZZZoEzPCvpJGOeP7y5H0ryPJDHBIZTz6g16DVOsjjXPSZ+lOnazpmsQrPp2oWl5EwyHglVwfyNTXd9a2EJmu7mC2iXkvNIEUfia/N211m/tG3Q3Lg+p5p91r2oXv/HxMsh/20DfzrB4Jfzfga/WX2Psb4g/tJeFvDFvNb6BPFrmpAFQ0Tf6LCfV5Bw3+6mSfavkjxb4t1LxfrFzqmqXb3V1cNuklYY3Y6AL/CoHAXt9aw5J3lOZJC2PU9K9E+GvwK8WfEeeKaK1fTNIJ+fULpCqkf8ATNern6cepFbQhCirmUpyqOxjfDP4eal8S/FNvotirpCCJLu5C5W3hzyx9z0A7n8a++9H0iz0DSrTStOhWC0s4lhijH8KqMCsX4f/AA80P4baCmkaJAQCd09xJgy3D/3nP8h0Haumrhr1vaPTY66VPkXmFfnZ44b/AIrXxD/2E7r/ANGtX6Jivzp8cnHjfxD/ANhO6/8ARrVtgt2Z4nZHrf7JF9a2PjbWZLu6gt0Om4DSyBAT5q8ZNfVf/CRaL/0GNO/8CU/xr83Dz1pAoPYflW1XDc8ua5lTr8itY/ST/hItF/6DGnf+BKf40f8ACQ6N/wBBfT//AAIT/Gvzc2j0FKAPSs/qS7l/WvI/Sq11KxviwtLy2uCoywilV8fXBqxXyt+xsAPEHiXgf8ekH/obV9U1yVYckuU6Kc+aNz41/al8KXHh/wCIzazGjJZa3EsquvA85AFdfrgK3/Aq8n0nWLzRNUs9Us5mS5s5kniY87WU5B/Svvr4j/D3S/iX4Zm0PUwYyT5lvcqMvbyjo4/kR3BIr4i8f/DPxJ8N9Se01uycQFiIb2JSYJx6q3Y/7JwRXdhqqlHle5yV6bT5kfY3w0+M3hv4iabAUvILLVtoE1hK4Vg3fZn76/Tn1xXf1+aMc0kLB43KkehrVi8YeIIYjFHrN+kZGNi3DhfyBqZYNN3i7FRxLtqj7x8cfEnw58P9Pe51e+j8/H7myiIa4nbsFTr+JwB3NfDXj7xTP4z8VX+u3e0XN5IXdUbKxjACxg9wqgDPc5NYEl5cSM7PIxaT77d2+p6mui8BfDjxH8R9UWx0KxaSMMBNdyArBbj1Zv6Dk+la0qUaKbbIqVJVNEeh/sq+F59Z+I39stEfsejwPI0hHHmuCiL9cFz+FfY9cr8Nvh7pnw08LwaHp2ZWz5lzcsMNcSnqx9B2A7ACuqrgr1OeVzrpQ5I2Pif9pw4+MWq/9e9t/wCihWP8B7iKD4ueG5JpUijWdyzuwAH7p+pNav7T5/4vHqv/AF723/opa8oJ4r0YLmpJeRxTdqjfmfpJ/b2kDrqlh/4EJ/jR/buknpqlj/3/AE/xr82sD0FLiuf6ku5t9a8j9BfFHxY8F+EbZpdS1+yeUD5bW2kE08h9FRcn88D3r42+LPxAuPiD4on1edBEGAigt9277NCudqE9CxJLNjucdq4VJHjBCMVB4O3jNdF4M+H/AIl8fX62fh/TJrrnDzkFYYR6s/QfTr6CtqVGNL3mzOpVlU0SNn4J+FJ/GPxL0WzSNnt7adb25YDhYoyG5+pCr+NfetcB8H/hHp3wq0R4EkW81W7w15ebcbiOiIOyDJ+vU+g7+uHEVeeWmx1UafJHU/PP4iN/xcDxN/2Fbr/0a1emfsmX1tZeP9TkurmG3Q6YwDSuEBPmx8ZNeX/EU/8AFwfE3/YVuv8A0a1c6TmvScOeHKcKlyyufpF/wkOjf9BfT/8AwJT/ABo/4SHRv+gvp/8A4Ep/jX5u9ewpdvsK5vqS7m/1ryP0h/4SHRv+gvp//gQn+NT2upWN8zJa3ttcMoyVilViB+Br818D0Fe//sdADxnrvAz/AGcvP/bVazqYVQi5XLhiOaVrH1lRRRXGdIUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFch4r+Efgbxq7S634bsZ7hutzGpimP1dME/jXX0U02tgaueH337IfgG4Yta3uu2ef4UuEcD/vpCf1qO0/Y/8AA0LhrnVNfuQP4TNGgP5JmvdKK09tPuR7OPY4Pwx8C/h54TkSew8N2stynInvCbhwfUbyQD9AK7wAAAAAAcADtRRWbk3uUklsFFFFIYVwV78CPhtqF5PeXXhW1luLiRpZXMsoLuxyTw3ck13tFNSa2Ymk9zzz/hnz4X/9Chaf9/pf/i6X/hn34X/9Cjaf9/Zf/i69CoqvaS7i5V2PPf8Ahn74Yf8AQo2f/f2X/wCKo/4Z9+F5/wCZRtP+/sv/AMXXoVFHtJdw5Y9jm/Cfw48J+Bprifw5osOnSXKhJWjd23gHIHzE+tdJRRUtt6saVtgqC9sbXUrWS0vbaG6t5Bh4pkDow9weDU9FIZ5Xr37M3w21yVpU0mfTJG5JsJ2jX/vk5UfgK5xv2P8AwYZNy61r4T+75kX89le70Vqq01syHTi+h5Pof7MPw30eRZZtOutUdeR9uuCy/wDfK7QfxBr0/TtNstIs47LTrO3s7WIYSGCMIi/QDirNFRKcpbsailsgoooqSjj/ABF8IfAvi3VpdX1vw9b3t/Kqq8zySAsFGBwGA4ArM/4Z9+F//QoWn/f2X/4uvQ6KpTkuouVdjzz/AIZ9+F//AEKFn/39l/8Ai6P+Gffhf/0KNp/39l/+Lr0Oin7SXcXKuxxGn/BH4caZIJLfwfpRZTkGWMy/+hk12Vta29lAlvawRW8KDCxxIFVR7AcCpaKlyb3Y0ktgooopDOE1D4F/DjVL64v7zwrazXNzK00shlkBd2OSeGxySar/APDPvwv/AOhRtP8Av7L/APF16HRV+0l3J5V2PPf+Gffhh/0KFp/39l/+Lo/4Z++GH/Qo2n/f2X/4uvQqKPaS7hyx7Hnv/DPvww/6FG0/7+y//F1ueFPhp4R8D3U114d0SDTp54/KkeN3Ysuc4+YnvXTUUnOT0bHypdAoooqRhRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAU15EjwXdVz03HFOryz46wxXB8J29w222m1VY5jvKfuyAG+YdOM81vhqKrVFTbtcwxNZ0qbmlex6f8AaYM486LPpuFSV5rZ/DD4ZS3kQtZkmuN4ZETVXdiw54G/npXpVFeEINKDfzVv1YUak5puaXyd/wBEIzorBSyhj0BPJpenOeK8Z+OFvql54w8I22iTmDUmE7W7ZwN67WA/HGPxrtPCvjOPxn4OvLiRDb6lbQyQX1q3DQyhSDx2Bxx+Xatp4NqjCqne+/lrZfkZRxadWVJq1tvPS/6nYq6uu5WDD1ByKWvP/gSxf4aaczEk+ZN1Of8Alo1djr2sQ+H9FvtVuATFaQtMyjq2BnH49KxrUHCs6S1s7G1Ksp0lVel1cuSzRwJvlkSNf7zsAKWKWOdA8UiSKejKcivKPCXgqX4k6fH4p8a3V3cC9zJa6dFM0cMEWflztIJJ69enqa2LT4W/8I34gstR8JazPploJP8ATbGZ2mimj/2QTkH6njqOmDvPD0YNwc/eXlpfte9/wMIYitJKah7r89bd7Wt+J6DSM6RjLuqj3OKUV5d+0AiyeGtIRpCitqsSsQ235SrA8/SsMNR9tVjTva5tiK3sqbqWvY9N+0wf89o/++hUleaRfDD4ZXEyRRTRySudqomrOWY+gG/mvSlUIoVegGBRXpwhbkb+at+rCjUnO/Ol8nf9EDOqkBmAJOBk9aWvKPj1a3d+vhizsJzb3VxqHlRSZI2uQACSPfFdL8OvGUviXSp7LVU+z69ph+z39ueDuHAcD0OPz/CtZYRqhGune+67a2M44tOvKi1a2z76XOxV1cZRlYdMg5pa81+ATtJ4MuyxJ/4mU+M/8Br0qscTR9jVlTvexrh6vtacalrXER0kGUZWGcZU5pC6BghdQx6DPJryn4Ia3plj4d1WO81KztpDqs5CzTqhxhecE9Kf4s1Wyv8A4s+BzY3kFyoM4cwShwPlPBwa6XgWq0qd9EnrbsrnNHHJ0o1Ora0v3dj1WiisTxr4jj8J+FtR1hyu63iJjB/ikPCj8yK46cHOShHdnbOahFylsjaV1fIV1bHBwc4pa8P+GsepeAPFmmWus3DvH4ssxcHd0jugS2z64YD6tXuFb4vDqjO0XdPZ/wBeZhhcQ60LyVmt1/XkIzKg3MwUepOKas8TnassbE9gwrifjYSvwz1hlJVgIsEHGP3q1jaZ8HPB954Zsr64F7aTy2ccz3KXsi7GKAluTgc89MVVLD03SVSpJq7tor9vNdyKmIqKq6cIp2V9Xbv5PsepUEgAknAFeffBHXdS1vwjMuo3D3n2K8ktYbpzkzxqAQSe/XGa67xPx4a1b/ryn/8AQDWVWg6dZ0W9nY1p11UpKqlurmkrK67lYMD3BzS1wnwQYv8ADLSCxJP77k/9dXru6mvT9lUlTvezaLo1PaU4z7pMazorBWZQzdATyadXhHj6bVPF3iLW9d0iYi38GrGYdvSWUOGk/IAn8BXtGgaxb+INFstVtSDFdwrKP9nI5H4HI/Ct8RhHRhGd7338na6X3GGHxaqzlG1rbea2v95fooorjOsKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACvK/jrBbXLeEob0p9kfVkWYOcKUON2T6YzXqlZut+G9H8SQxQ6xp1tfxxMXRZ03BTjGRXRhKyo1VUfT/ACOfFUnVpOC6/wCZymlaB8LdF1GG/wBOGhW15C26KRboZU4xxlveu9rl1+F/gpWVh4Z0wMpyD5I4NdR7U8RUjNpxbfqGHhKCakkvQ8x+IJA+K3gH1Mk4/wDHRVb4k6Le+DdTm8daBBviniMGs2oOBLGRgS/UcZP0PrXpN5oemX+oWmo3VjBNeWRJt5nXLRZ67T2q3NDHcRPDNGskcilXRhkMCMEEelbQxnLyWWiVmu6u3/XmZTwfNz3erd15aJHA/Abj4Z6cCc/vJ+f+2jV1PjDQ28S+F9U0hXCPd2zxIx6BiOM+2cVd0rSNP0OxSw0y0htLWMkrFEuFXJycD61brCtX5q7rR0u7/ibUqPLRVKXRWPM/hb4005PDsPhXXJk0rWNKQ2c1vdOIyyrwGUnrxiuJ8eeFPCVp9n0TwfdX1/4ivpVSGOK+eVIlz8zPzgDH5de1e0a/4L8O+KSra1o9neugwskifOB6bhg4/GnaB4O8P+Fg40XSLSxLjDPGnzsPQseT+ddtPHU6c3VhdN62vpf87eX4nFUwM6kVSnZpaXtrb8r+Zd0iw/svSrOw3l/s0EcO7+9tUDP6V5x+0HHFL4a0hZv9WdViDgnAI2tnP4V6lWfrXh7SfEdslrrGn299AjiRY5l3ANgjP15NceGrqlWVWXQ7MRR9pRdOJx1j4f8AhTpN7BqFoNAt7i3cSRSi7GUYdD96vQFZXUMpDKRkEdxXLH4WeBz18L6X/wB+RXUoixoqIAqqMADsKMRUhOzi5P1DD05wupJL0PNfjAT/AGx4H+baP7aj/mtP+I+g3mganD8QfDsJe+sl2ajbr0vLbvn3UfoPau61LQ9M1iW0l1CyhupLOUTW7SLkxOOjD0PFXWAYFWAIPBB71pDF8igktrp+abM5YXmc23vZryaR5n+z7MbjwPcS4wH1CZgPQELXptUtI0TTdAtWtdKsoLKBnMhjhXapY9Tj8Ku1jiqyq1ZVF1ZrhqTpUo030R4l8Ivh/wCGfFGh6ne61pFvfzrqc8ayOWBCgKQOCO5P51Z1nwnoXhP4s+CotE0+KxWczmRYyfnIQ4zkn3r1bSdD03QYJLfS7KGzikkMrpEuAznqx9zgUXWh6bfajaalc2UE17Z7vs87rlos9dp7ZrslmMnWlNt8rTVr91Y5Y4BKlGFlzJrW3Z3L1eRfFqW/8X+K9I8E6KkE00I/tG6SdiIcL91XI5x7f7Qr12qNvoemWmqXOqwWMEd/dKFmuAvzyAYwCfTgflXLha6oz9pa7S09TpxNF1ocl7K+voeR/ELQ/iVqWiJqOoReH1/sZ/t8TWLSecpQZO3IweOce1eq+Fdeh8T+HbDWIMbbqFXIH8LdGX8CCPwrTeNJUZJFDowKlWGQQe1VNI0XTtAshZaXZw2dqGLCKIYUE9SBV1sUqtJQlGzT0t2e5FLDOlUc07prW/focl8biR8MdZKkZCxdf+ui1w3iD4TRj4e2us6LPqNxeJbQ3U9pNdO0dxHsDOgUdPUY9MV7Rqmk2Ot2MthqVrFd2suN8MoyrYORkfUCp4LeK1gjt4Y1jiiQIiKOFUDAA/CtMPj50KcYw3Tv5PbQivgYVqjlPqrem5g/D3UND1Pwjp9x4dgittPMeFgj/wCWTfxKfcHPJ69e9X/E/wDyLWrY/wCfKf8A9ANSaRoGlaAk0elWEFkk8hlkWFdqs3rj1q5PBFcwSQTIJIpVKOh6MpGCD+Fcspx9rzxva99dzojCXs+SW9rHDfA3/kmGj/8Abb/0a9bfxA8TL4R8I6jq2R5scZSEH+KRuF/Xn8K19L0qx0SxjsNNtYrS0izshiGFXJJOB9Sai1fQtL16KKHVLGC8ihkEqJMu4K46HHrWkq0J4h1ZL3W72+exCpTjQVKL1Stc8q8FeGfiToHhlbSxtPDIivc3MwvHlMrNIOQ+BjOMDHtWh8Frq90C51jwJq+xb3TZBcQhCShifBOwnkgEg/8AAq9UqidC0xtYXWTYwf2ksfki62/vNn93PpW9THurGcakV72uncxp4FUpQlCT93TXsXqKKK847wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA//9k=';
+
+function dataPorExtenso(iso) {
+  const d = parseISO(iso);
+  const dias = ['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+  return `${formatDateBR(iso)}, ${dias[d.getDay()]}`;
+}
+
 function escHtml(s) {
   return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
@@ -2624,29 +2720,94 @@ function gerarPdfRDO() {
   const dSemana = diaDaSemana(day.data);
 
   let h = '';
+  const logoSrc = state.obra.logo || LOGO_PADRAO;
 
-  // Cabeçalho
-  h += `<div class="pdf-cab">`;
-  if (state.obra.logo) h += `<img src="${state.obra.logo}" alt="logo">`;
-  h += `<div class="pdf-cab-info">
-          <h1>${escHtml(state.obra.empresa || 'EMPRESA')} — Relatório Diário de Obra</h1>
-          <div>${escHtml(state.obra.nome || '')}</div>
-          <div>${escHtml(state.obra.local || '')}${state.obra.contrato ? ' · Contrato: ' + escHtml(state.obra.contrato) : ''}</div>
-        </div>
-        <div class="pdf-cab-num"><div class="n">RDO Nº ${num}</div><div class="d">${dataBR}<br>${escHtml(dSemana)}</div></div>
-      </div>`;
+  // ================= CAPA =================
+  // Condições de área (derivada da operação dos períodos de trabalho)
+  const opM = day.pratManha, opT = day.pratTarde;
+  let condArea = '—';
+  if (opM === 'praticavel' && opT === 'praticavel') condArea = 'Operável';
+  else if (opM === 'impraticavel' && opT === 'impraticavel') condArea = 'Inoperável';
+  else if (opM || opT) condArea = 'Parcialmente operável';
 
-  // Clima + Jornada + DSS
-  const chuvaM = day.chuvaManhaQtd ? ` (${day.chuvaManhaQtd} mm)` : '';
-  const chuvaT = day.chuvaTardeQtd ? ` (${day.chuvaTardeQtd} mm)` : '';
-  h += `<div class="pdf-sec"><h2>CONDIÇÕES DO TEMPO · JORNADA · DSS</h2>
-    <table><tr>
-      <th style="width:25%">Manhã</th><th style="width:25%">Tarde</th><th>Jornada</th><th>DSS</th></tr>
+  // Prazos do contrato
+  let prazoHtml = '';
+  if (state.obra.dataInicio && state.obra.dataTermino) {
+    const ini = parseISO(state.obra.dataInicio);
+    const fim = parseISO(state.obra.dataTermino);
+    const hoje = parseISO(day.data);
+    const dia = 86400000;
+    const total = Math.round((fim - ini) / dia);
+    const incorrido = Math.max(0, Math.min(total, Math.round((hoje - ini) / dia)));
+    const faltante = total - incorrido;
+    prazoHtml = `<table style="margin-top:14px"><tr><th>Prazo</th><th>Incorrido</th><th>Faltante</th><th>Início</th><th>Término</th></tr>
+      <tr><td>${total} dias</td><td>${incorrido} dias</td><td>${faltante} dias</td><td>${formatDateBR(state.obra.dataInicio)}</td><td>${formatDateBR(state.obra.dataTermino)}</td></tr></table>`;
+  }
+
+  h += `<div class="pdf-capa">
+    <img src="${logoSrc}" alt="logo" class="pdf-capa-logo">
+    <div class="pdf-capa-titulo">RELATÓRIO DIÁRIO DE OBRAS</div>
+    <div class="pdf-capa-num">RDO Nº ${num}</div>
+    <div class="pdf-capa-obra">${escHtml(state.obra.nome || '')}</div>
+    <div class="pdf-capa-data">${escHtml(dataPorExtenso(day.data))}</div>
+    <table style="margin-top:22px">
+      <tr><th style="width:50%">Cliente</th><th>Gestor da Obra</th></tr>
+      <tr><td>${escHtml(state.obra.cliente || '—')}</td><td>${escHtml(state.obra.gestor || '—')}</td></tr>
+      <tr><th>Construtora</th><th>Gerenciadora</th></tr>
+      <tr><td>${escHtml(state.obra.empresa || '—')}</td><td>${escHtml(state.obra.gerenciadora || '—')}</td></tr>
+      <tr><th>Jornada de Trabalho</th><th>Condições de Área</th></tr>
+      <tr><td>${day.cafeFim || '--'} às ${day.encerramento || '--'}</td><td><strong>${condArea}</strong></td></tr>
+    </table>
+    ${prazoHtml}
+    ${state.obra.contrato ? `<div style="margin-top:14px;font-size:11px;color:#555">Contrato: ${escHtml(state.obra.contrato)} · ${escHtml(state.obra.local || '')}</div>` : ''}
+  </div>`;
+
+  // ================= RESUMO GERAL =================
+  let totEfCard = 0;
+  state.colaboradores.categorias.forEach(cat => { totEfCard += cat.itens.filter(c => day.efetivo[c.id]).length; });
+  const savedEquipCard = S.get(`equipDia_${day.data}`) || {};
+  const nEquip = state.equipamentos.filter(e => savedEquipCard[e.id]).length;
+  const nAtiv = state.atividades.filter(a => day.atividadesMarcadas[a.id]).length + (day.atividadesAvulsas || []).length;
+  const nOcor = (day.eventosSeguranca || []).length + (day.eventosAmbiente || []).length;
+  const nParal = (day.atividadesParalisadas || []).length;
+  const nFotos = (day.fotos || []).length;
+  const mmTotal = totalPrecipitacao(day);
+  const card = (v, t) => `<div class="pdf-card"><div class="v">${v}</div><div class="t">${t}</div></div>`;
+  h += `<div class="pdf-sec"><h2>RESUMO GERAL</h2><div class="pdf-cards">
+    ${card(totEfCard, 'Efetivo presente')}
+    ${card(nAtiv, 'Atividades')}
+    ${card(nEquip, 'Equipamentos')}
+    ${card(nOcor, 'Ocorrências SSMA')}
+    ${card(nParal, 'Paralisações')}
+    ${card(mmTotal.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mm', 'Precipitação')}
+    ${card(nFotos, 'Fotos')}
+  </div></div>`;
+
+  // Condições climáticas — 4 períodos
+  const mapCond = { sol: 'Limpo', nublado: 'Nublado', chuva: 'Chuvoso' };
+  let linhasClima = '';
+  PERIODOS_RDO.forEach(p => {
+    const cond = day['tempo' + p.suf];
+    const prat = day['prat' + p.suf];
+    const mm = mmPeriodo(day, p.suf);
+    linhasClima += `<tr>
+      <td>${p.nome} (${p.faixa})</td>
+      <td>${prat === 'praticavel' ? 'Sim' : prat === 'impraticavel' ? 'Não' : '—'}</td>
+      <td>${mapCond[cond] || '—'}</td>
+      <td style="text-align:right">${mm.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mm</td>
+    </tr>`;
+  });
+  h += `<div class="pdf-sec"><h2>CONDIÇÕES CLIMÁTICAS</h2>
+    <table><tr><th>Período</th><th style="width:16%">Operação</th><th style="width:20%">Condição</th><th style="width:18%">Precipitação</th></tr>
+    ${linhasClima}
+    <tr><th colspan="3">Total acumulado</th><th style="text-align:right">${totalPrecipitacao(day).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mm</th></tr></table></div>`;
+
+  // Jornada + DSS
+  h += `<div class="pdf-sec"><h2>JORNADA · DSS</h2>
+    <table><tr><th>Jornada</th><th>DSS</th></tr>
       <tr>
-        <td>${escHtml(day.tempoManha || '—')}${chuvaM}${day.pratManha ? '<br><strong>' + (day.pratManha === 'praticavel' ? '✅ Praticável' : '⛔ Impraticável') + '</strong>' : ''}</td>
-        <td>${escHtml(day.tempoTarde || '—')}${chuvaT}${day.pratTarde ? '<br><strong>' + (day.pratTarde === 'praticavel' ? '✅ Praticável' : '⛔ Impraticável') + '</strong>' : ''}</td>
-        <td>Café: ${day.cafeInicio || '--'}–${day.cafeFim || '--'}<br>Almoço: ${day.almocoInicio || '--'}–${day.almocoFim || '--'}<br>Encerramento: ${day.encerramento || '--'}</td>
-        <td>Horário: ${escHtml(day.dssHorario || '—')}<br>Ministrante: ${escHtml(day.dssMinistrou ? (day.dssMinistrou.includes('|') ? day.dssMinistrou.split('|')[1] : day.dssMinistrou) : '—')}<br>Tema: ${escHtml(day.dssTema || '—')}</td>
+        <td>Café: ${day.cafeInicio || '--'}–${day.cafeFim || '--'} · Almoço: ${day.almocoInicio || '--'}–${day.almocoFim || '--'} · Encerramento: ${day.encerramento || '--'}</td>
+        <td>Horário: ${escHtml(day.dssHorario || '—')} · Ministrante: ${escHtml(day.dssMinistrou ? (day.dssMinistrou.includes('|') ? day.dssMinistrou.split('|')[1] : day.dssMinistrou) : '—')} · Tema: ${escHtml(day.dssTema || '—')}</td>
       </tr></table></div>`;
 
   if (day.localObra || day.descricaoLocal) {
@@ -2655,38 +2816,52 @@ function gerarPdfRDO() {
   }
 
   // Efetivo
-  // Resumo por função e por empresa (sem lista nominal)
-  const porFuncao = {};
-  const porEmpresa = {};
-  let totalEf = 0;
+  // Efetivo — Mão de obra própria (Função | Qtd por categoria) + Subcontratada (Função | Qtd | Empresa)
   const empresaPropria = (state.obra.empresa || 'Empresa própria').trim();
+  let totalEf = 0, totProprios = 0, totTerceiros = 0;
+  let htmlProprios = '', linhasTerc = '';
+  const tercMap = {}; // 'funcao|empresa' -> qtd
+
   state.colaboradores.categorias.forEach(cat => {
-    cat.itens.filter(c => day.efetivo[c.id]).forEach(c => {
-      totalEf++;
-      const f = (c.funcao || 'Sem função').trim();
-      porFuncao[f] = (porFuncao[f] || 0) + 1;
-      const emp = (c.empresa || '').trim() || empresaPropria;
-      porEmpresa[emp] = (porEmpresa[emp] || 0) + 1;
+    const presentes = cat.itens.filter(c => day.efetivo[c.id]);
+    if (!presentes.length) return;
+    const proprios = presentes.filter(c => !(c.empresa || '').trim());
+    const terceiros = presentes.filter(c => (c.empresa || '').trim());
+    totalEf += presentes.length;
+    totProprios += proprios.length;
+    totTerceiros += terceiros.length;
+
+    if (proprios.length) {
+      const porFunc = {};
+      proprios.forEach(c => { const f = (c.funcao || 'Sem função').trim(); porFunc[f] = (porFunc[f] || 0) + 1; });
+      let linhas = '';
+      Object.keys(porFunc).sort((a, b) => a.localeCompare(b, 'pt-BR')).forEach(f => {
+        linhas += `<tr><td>${escHtml(f)}</td><td style="text-align:right">${porFunc[f]}</td></tr>`;
+      });
+      htmlProprios += `<table style="margin-bottom:6px"><tr><th>${escHtml(cat.nome)} — Função</th><th style="width:14%">Qtd</th></tr>${linhas}
+        <tr><th>Subtotal</th><th style="text-align:right">${proprios.length}</th></tr></table>`;
+    }
+    terceiros.forEach(c => {
+      const k = `${(c.funcao || 'Sem função').trim()}|${(c.empresa || '').trim()}`;
+      tercMap[k] = (tercMap[k] || 0) + 1;
     });
   });
-  const proprios = porEmpresa[empresaPropria] || 0;
-  const terceiros = totalEf - proprios;
 
-  let linhasFunc = '';
-  Object.keys(porFuncao).sort((a, b) => a.localeCompare(b, 'pt-BR')).forEach(f => {
-    linhasFunc += `<tr><td>${escHtml(f)}</td><td style="text-align:right">${porFuncao[f]}</td></tr>`;
-  });
-  let linhasEmp = '';
-  Object.keys(porEmpresa).sort((a, b) => (a === empresaPropria ? -1 : b === empresaPropria ? 1 : a.localeCompare(b, 'pt-BR'))).forEach(emp => {
-    linhasEmp += `<tr><td>${escHtml(emp)}${emp === empresaPropria ? '' : ' <em>(terceiro)</em>'}</td><td style="text-align:right">${porEmpresa[emp]}</td></tr>`;
+  Object.keys(tercMap).sort((a, b) => a.localeCompare(b, 'pt-BR')).forEach(k => {
+    const [f, emp] = k.split('|');
+    linhasTerc += `<tr><td>${escHtml(f)}</td><td style="text-align:right">${tercMap[k]}</td><td>${escHtml(emp)}</td></tr>`;
   });
 
-  h += `<div class="pdf-sec"><h2>EFETIVO — TOTAL: ${totalEf}${terceiros > 0 ? ` (Próprios: ${proprios} · Terceiros: ${terceiros})` : ''}</h2>
-    <table><tr><th>Função</th><th style="width:14%">Qtd</th></tr>${linhasFunc || '<tr><td colspan="2">—</td></tr>'}
-      <tr><th>Total</th><th style="text-align:right">${totalEf}</th></tr></table>`;
-  if (Object.keys(porEmpresa).length > 1) {
-    h += `<table style="margin-top:6px"><tr><th>Empresa</th><th style="width:14%">Qtd</th></tr>${linhasEmp}</table>`;
+  h += `<div class="pdf-sec"><h2>EFETIVO — TOTAL: ${totalEf}${totTerceiros > 0 ? ` (Próprios: ${totProprios} · Terceiros: ${totTerceiros})` : ''}</h2>`;
+  if (htmlProprios) {
+    h += `<div style="font-weight:700;font-size:11px;margin:4px 0">Mão de obra própria — ${escHtml(empresaPropria)}</div>${htmlProprios}`;
   }
+  if (linhasTerc) {
+    h += `<div style="font-weight:700;font-size:11px;margin:8px 0 4px">Mão de obra subcontratada — Terceiros</div>
+      <table><tr><th>Função</th><th style="width:14%">Qtd</th><th style="width:42%">Empresa</th></tr>${linhasTerc}
+      <tr><th colspan="2">Total terceiros</th><th style="text-align:right">${totTerceiros}</th></tr></table>`;
+  }
+  if (!htmlProprios && !linhasTerc) h += `<table><tr><td>—</td></tr></table>`;
   h += `</div>`;
 
   // Equipamentos / VL / Parados
@@ -2739,22 +2914,29 @@ function gerarPdfRDO() {
 
   // Atividades
   const ativsMarc = state.atividades.filter(a => day.atividadesMarcadas[a.id]);
+  const statusAtiv = id => ((day.atividadesStatus || {})[id] === 'concluida') ? 'Concluída' : 'Em andamento';
+  const fotosDaAtiv = id => (day.fotos || []).filter(f => f.ativId === id).length;
   let linhasAtiv = '';
+  let numA = 0;
   ativsMarc.forEach(a => {
+    numA++;
     const q = qtdAtividadeDia(day, a.id);
-    linhasAtiv += `<tr><td>${escHtml(a.desc)}</td><td>${escHtml(a.local || (day.atividadesMarcadas[a.id] && day.atividadesMarcadas[a.id].local) || '')}</td><td style="text-align:right">${q > 0 ? q.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : ''}</td><td>${escHtml(a.unidade || '')}</td></tr>`;
+    const nFa = fotosDaAtiv(a.id);
+    linhasAtiv += `<tr><td style="text-align:center">${String(numA).padStart(2, '0')}</td><td>${escHtml(a.desc)}${q > 0 ? ` — <strong>${q.toLocaleString('pt-BR', { maximumFractionDigits: 2 })} ${escHtml(a.unidade || '')}</strong>` : ''}</td><td>${escHtml(a.local || (day.atividadesMarcadas[a.id] && day.atividadesMarcadas[a.id].local) || '')}</td><td>${statusAtiv(a.id)}</td><td style="text-align:center">${nFa ? nFa + ' arq.' : '—'}</td></tr>`;
   });
   (day.atividadesAvulsas || []).forEach(a => {
-    linhasAtiv += `<tr><td>${escHtml(a.desc)}</td><td>${escHtml(a.local || '')}</td><td></td><td></td></tr>`;
+    numA++;
+    linhasAtiv += `<tr><td style="text-align:center">${String(numA).padStart(2, '0')}</td><td>${escHtml(a.desc)}</td><td>${escHtml(a.local || '')}</td><td>Em andamento</td><td style="text-align:center">—</td></tr>`;
   });
   if (day.atividadesExtra) {
     day.atividadesExtra.split('\n').filter(x => x.trim()).forEach(l => {
-      linhasAtiv += `<tr><td colspan="4">${escHtml(l)}</td></tr>`;
+      numA++;
+      linhasAtiv += `<tr><td style="text-align:center">${String(numA).padStart(2, '0')}</td><td colspan="4">${escHtml(l)}</td></tr>`;
     });
   }
   if (linhasAtiv) {
-    h += `<div class="pdf-sec"><h2>ATIVIDADES DO DIA</h2>
-      <table><tr><th>Descrição</th><th style="width:22%">Local</th><th style="width:10%">Qtd</th><th style="width:8%">Un</th></tr>${linhasAtiv}</table></div>`;
+    h += `<div class="pdf-sec"><h2>ATIVIDADES</h2>
+      <table><tr><th style="width:6%">#</th><th>Descrição</th><th style="width:20%">Local</th><th style="width:15%">Status</th><th style="width:10%">Anexos</th></tr>${linhasAtiv}</table></div>`;
   }
 
   // Atividades Paralisadas
@@ -2785,16 +2967,25 @@ function gerarPdfRDO() {
   h += eventos('EVENTOS DE SEGURANÇA', day.eventosSeguranca);
   h += eventos('EVENTOS DE MEIO AMBIENTE', day.eventosAmbiente);
 
-  // Fotos
+  // Fotos — agrupadas por atividade (padrão de anexos)
   if ((day.fotos || []).length) {
-    let figs = '';
-    day.fotos.forEach((f, i) => {
-      figs += `<figure>
+    h += `<div class="pdf-sec"><h2>REGISTRO FOTOGRÁFICO — ${day.fotos.length}</h2>`;
+    const figHtml = f => `<figure>
         <img src="https://drive.google.com/thumbnail?id=${f.fileId}&sz=w800" onerror="this.parentElement.style.display='none'">
-        <figcaption>Foto ${i + 1}${f.legenda ? ' — ' + escHtml(f.legenda) : ''}</figcaption>
+        <figcaption>${f.legenda ? escHtml(f.legenda) : '&nbsp;'}</figcaption>
       </figure>`;
+    ativsMarc.forEach(a => {
+      const fs = day.fotos.filter(f => f.ativId === a.id);
+      if (!fs.length) return;
+      h += `<div style="font-weight:700;font-size:11px;margin:8px 0 4px">Anexos — ${escHtml(a.desc)}</div>
+        <div class="pdf-fotos">${fs.map(figHtml).join('')}</div>`;
     });
-    h += `<div class="pdf-sec"><h2>REGISTRO FOTOGRÁFICO — ${day.fotos.length}</h2><div class="pdf-fotos">${figs}</div></div>`;
+    const gerais = day.fotos.filter(f => !f.ativId || !ativsMarc.some(a => a.id === f.ativId));
+    if (gerais.length) {
+      h += `<div style="font-weight:700;font-size:11px;margin:8px 0 4px">Anexos — Geral</div>
+        <div class="pdf-fotos">${gerais.map(figHtml).join('')}</div>`;
+    }
+    h += `</div>`;
   }
 
   // Assinaturas (toque na caixa para assinar em tela)
@@ -2816,9 +3007,13 @@ function gerarPdfRDO() {
   // Montar overlay
   const overlay = document.createElement('div');
   overlay.id = 'pdfOverlay';
+  const emModoApp = (navigator.standalone === true);
+  const btnImprimir = emModoApp
+    ? `<button style="background:#f5b334;color:#1a1a1a" onclick="abrirRdoNoSafari()">🖨️ Salvar PDF (abre no Safari)</button>`
+    : `<button style="background:#f5b334;color:#1a1a1a" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>`;
   overlay.innerHTML = `
     <div class="pdf-toolbar">
-      <button style="background:#f5b334;color:#1a1a1a" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+      ${btnImprimir}
       <button style="background:#555;color:#fff" onclick="fecharPdfRDO()">✕ Fechar</button>
     </div>
     <div class="pdf-doc">${h}</div>`;
@@ -2831,6 +3026,29 @@ function fecharPdfRDO() {
   if (el) el.remove();
   document.body.classList.remove('pdf-printing');
 }
+
+function abrirRdoNoSafari() {
+  // iOS bloqueia window.print() em apps da tela de início; no Safari funciona
+  const url = location.origin + location.pathname + '?rdo=' + encodeURIComponent(currentDay.data);
+  window.open(url, '_blank');
+}
+
+// Se a página foi aberta com ?rdo=YYYY-MM-DD, carrega esse diário e abre direto o PDF
+window.addEventListener('DOMContentLoaded', () => {
+  const p = new URLSearchParams(location.search);
+  const dataRdo = p.get('rdo');
+  if (!dataRdo) return;
+  setTimeout(() => {
+    try {
+      if (history[dataRdo]) {
+        currentDay = JSON.parse(JSON.stringify(history[dataRdo]));
+        currentDay.data = dataRdo;
+      }
+      gerarPdfRDO();
+      toast('Toque em 🖨️ Imprimir / Salvar PDF');
+    } catch (e) { console.error('auto-rdo:', e); }
+  }, 600);
+});
 
 // ============================================================
 // ASSINATURA EM TELA
@@ -3190,9 +3408,20 @@ function renderAtividadesDia() {
           onblur="event.stopPropagation();salvarQtdAtividade('${a.id}',this.value)">
         ${unid ? `<span style="font-size:11px;color:var(--ink-faint);white-space:nowrap">${escapeHtml(unid)}</span>` : ''}
       </div>
+      <select onclick="event.stopPropagation()" onchange="event.stopPropagation();salvarStatusAtividade('${a.id}', this.value)"
+        style="width:118px;padding:5px 4px;font-size:12px;border:1px solid var(--line);border-radius:5px;background:var(--bg-card);color:var(--ink)">
+        <option value="andamento" ${(currentDay.atividadesStatus && currentDay.atividadesStatus[a.id]) === 'concluida' ? '' : 'selected'}>Em andamento</option>
+        <option value="concluida" ${(currentDay.atividadesStatus && currentDay.atividadesStatus[a.id]) === 'concluida' ? 'selected' : ''}>Concluída</option>
+      </select>
     `;
     cont.appendChild(row);
   });
+}
+
+function salvarStatusAtividade(atId, valor) {
+  if (!currentDay.atividadesStatus) currentDay.atividadesStatus = {};
+  currentDay.atividadesStatus[atId] = valor;
+  salvarDiarioDia(false);
 }
 
 function salvarQtdAtividade(atId, valor) {
@@ -3870,6 +4099,11 @@ function salvarConfigObra() {
     state.obra.descricaoHistorico = hist.slice(0, 20);
   }
   state.obra.contrato = document.getElementById('cfgContrato').value.trim();
+  state.obra.cliente = document.getElementById('cfgCliente').value.trim();
+  state.obra.gestor = document.getElementById('cfgGestor').value.trim();
+  state.obra.gerenciadora = document.getElementById('cfgGerenciadora').value.trim();
+  state.obra.dataInicio = document.getElementById('cfgDataInicio').value;
+  state.obra.dataTermino = document.getElementById('cfgDataTermino').value;
   state.obra.encerramentoNormal = document.getElementById('cfgEncerramentoNormal').value || '17:00';
   state.obra.encerramentoSexta = document.getElementById('cfgEncerramentoSexta').value || '16:00';
   state.obra.encerramentoSabado = document.getElementById('cfgEncerramentoSabado').value || '16:00';
@@ -3948,6 +4182,11 @@ function renderConfig() {
     dlDesc.innerHTML = (state.obra.descricaoHistorico || []).map(d => `<option value="${escapeHtml(d)}">`).join('');
   }
   document.getElementById('cfgContrato').value = state.obra.contrato || '';
+  document.getElementById('cfgCliente').value = state.obra.cliente || '';
+  document.getElementById('cfgGestor').value = state.obra.gestor || '';
+  document.getElementById('cfgGerenciadora').value = state.obra.gerenciadora || '';
+  document.getElementById('cfgDataInicio').value = state.obra.dataInicio || '';
+  document.getElementById('cfgDataTermino').value = state.obra.dataTermino || '';
   // exibe resumo na aba Diário
   _atualizarResumoObraNosDiario();
   document.getElementById('cfgEncerramentoNormal').value = state.obra.encerramentoNormal || '17:00';
