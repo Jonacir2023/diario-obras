@@ -1081,13 +1081,15 @@
    fazendo a página impressa ter recuo bem maior que o configurado aqui. Com margin:0
    a margem real de 5mm é aplicada via padding de cada .pdf-page (abaixo), o que o
    iOS respeita corretamente. */
-@page { size: A4; margin: 0; }
+@page { size: A4; margin: 15mm 5mm; }
 #pdfOverlay { position: fixed; inset: 0; background: #eeeae3; z-index: 9999; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .pdf-toolbar { position: sticky; top: 0; background: #2c2c2c; padding: 10px 14px; display: flex; gap: 10px; z-index: 2; }
 .pdf-toolbar button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
 .pdf-doc { max-width: 800px; margin: 16px auto; font-family: 'Barlow', Arial, 'Helvetica Neue', sans-serif; font-size: 8pt; line-height: 1.4; color: var(--rdo-ink); background: #fff; box-shadow: 0 4px 24px rgba(0,0,0,.15); }
-.pdf-page { page-break-before: always; padding: 5mm; box-sizing: border-box; }
-.pdf-page:first-child { page-break-before: avoid; }
+.pdf-page { padding: 5mm; box-sizing: border-box; break-inside: avoid; }
+.pdf-page-header { font-size: 7pt; color: #999; border-bottom: 1px solid #ddd; padding-bottom: 4px; margin-bottom: 8px; line-height: 1.2; }
+.pdf-page-footer { font-size: 7pt; color: #999; border-top: 1px solid #ddd; padding-top: 4px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; line-height: 1.2; }
+.pdf-page-footer-num { text-align: right; }
 
 /* Capa */
 .pdf-capa-head { display: flex; align-items: flex-end; gap: 14px; border-bottom: 3px solid var(--rdo-navy); padding-bottom: 10px; }
@@ -1110,16 +1112,12 @@
 .pdf-pg-head .htext .t { font-size: 10pt; font-weight: 800; }
 .pdf-pg-head .htext .s { font-size: 8pt; color: var(--rdo-ink-soft); }
 
-.pdf-resumo-table { table-layout: fixed; }
-.pdf-doc .pdf-resumo-table td { text-align: center; padding: 5px 2px; vertical-align: middle; word-break: break-word; }
-.pdf-resumo-table .v { font-size: 10pt; font-weight: 800; color: var(--rdo-ink); }
-.pdf-resumo-table .t { font-size: 8pt; color: var(--rdo-ink-faint); margin-top: 2px; word-break: break-word; }
 .pdf-sec { margin-bottom: 10px; page-break-inside: avoid; }
 .pdf-sec h2 {
-  font-size: 10pt; font-weight: 700; letter-spacing: .01em;
+  font-size: 8pt; font-weight: 700; letter-spacing: .01em;
   background: var(--rdo-navy);
   color: #fff; border: 1px solid var(--rdo-navy);
-  padding: 3px 6px; margin: 0 0 6px; border-radius: 3px;
+  padding: 2px 4px; margin: 0 0 6px; border-radius: 3px;
 }
 .pdf-doc table { width: 100%; border-collapse: collapse; font-size: 8pt; }
 .pdf-doc th, .pdf-doc td { border: 1px solid var(--rdo-line); padding: 4px 7px; text-align: left; vertical-align: top; }
@@ -2859,17 +2857,18 @@ function gerarPdfRDO() {
   const nParal = (day.atividadesParalisadas || []).length;
   const nFotos = (day.fotos || []).length;
   const mmTotal = totalPrecipitacao(day);
-  const card = (v, t) => `<td><div class="v">${v}</div><div class="t">${t}</div></td>`;
   h += `<div class="pdf-sec"><h2>RESUMO GERAL</h2>
-    <table class="pdf-resumo-table"><tr>
-    ${card(totEfCard, 'Efetivo presente')}
-    ${card(nAtiv, 'Atividades')}
-    ${card(nEquip, 'Equipamentos')}
-    ${card(nOcor, 'Ocorrências SSMA')}
-    ${card(nParal, 'Paralisações')}
-    ${card(mmTotal.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mm', 'Precipitação')}
-    ${card(nFotos, 'Fotos')}
-    </tr></table></div>`;
+    <table>
+      <tr><th style="width:70%">Descrição</th><th style="width:30%;text-align:right">Quantidade</th></tr>
+      <tr><td>Efetivo presente</td><td style="text-align:right"><strong>${totEfCard}</strong></td></tr>
+      <tr><td>Atividades</td><td style="text-align:right"><strong>${nAtiv}</strong></td></tr>
+      <tr><td>Equipamentos</td><td style="text-align:right"><strong>${nEquip}</strong></td></tr>
+      <tr><td>Ocorrências SSMA</td><td style="text-align:right"><strong>${nOcor}</strong></td></tr>
+      <tr><td>Paralisações</td><td style="text-align:right"><strong>${nParal}</strong></td></tr>
+      <tr><td>Precipitação</td><td style="text-align:right"><strong>${mmTotal.toLocaleString('pt-BR', { maximumFractionDigits: 1 })} mm</strong></td></tr>
+      <tr><td>Fotos</td><td style="text-align:right"><strong>${nFotos}</strong></td></tr>
+    </table>
+  </div>`;
 
   // Condições climáticas — 4 períodos
   const mapCond = { sol: 'Limpo', nublado: 'Nublado', chuva: 'Chuvoso' };
@@ -3165,6 +3164,28 @@ function gerarPdfRDO() {
     <div class="pdf-doc">${h}</div>`;
   document.body.appendChild(overlay);
   document.body.classList.add('pdf-printing');
+
+  // Adiciona cabeçalho e rodapé com numeração em cada página
+  adicionarHeaderFooterPDF();
+}
+
+function adicionarHeaderFooterPDF() {
+  const paginas = document.querySelectorAll('.pdf-page');
+  const totalPages = paginas.length;
+
+  paginas.forEach((page, idx) => {
+    const numPag = idx + 1;
+
+    const header = document.createElement('div');
+    header.className = 'pdf-page-header';
+    header.textContent = 'RDO — Relatório Diário de Obra';
+    page.insertBefore(header, page.firstChild);
+
+    const footer = document.createElement('div');
+    footer.className = 'pdf-page-footer';
+    footer.innerHTML = `<span>${new Date().toLocaleString('pt-BR')}</span><span class="pdf-page-footer-num">Página ${numPag} de ${totalPages}</span>`;
+    page.appendChild(footer);
+  });
 }
 
 function fecharPdfRDO() {
