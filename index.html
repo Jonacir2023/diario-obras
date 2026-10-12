@@ -1051,6 +1051,8 @@
   .cal-day.today.has-data { background: var(--accent); }
   .cal-day.weekend { color: var(--accent); }
   .cal-day.today.weekend { color: white; }
+  .cal-day.da-planilha { border-style: dashed; }
+  .cal-day.da-planilha .cal-day-dot { background: #2f7d32; }
   .cal-day-dot {
     width: 4px;
     height: 4px;
@@ -3356,6 +3358,41 @@ function comprimirFoto(file, maxDim, qualidade) {
   });
 }
 
+// POST ao Apps Script. Lê a resposta como texto: quando o Google devolve uma página de
+// erro (cota estourada, autorização vencida) o app mostra isso em vez de "Unexpected token <".
+// Repete até 3 vezes só em falha de rede/tempo esgotado; erro devolvido pelo servidor não se repete.
+async function postarAppsScript(corpo, tentativas) {
+  const max = tentativas || 3;
+  let ultimo = null;
+  for (let t = 1; t <= max; t++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 60000);
+    try {
+      const resp = await fetch(APPS_SCRIPT_URL_DIARIO, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(corpo),
+        signal: ctrl.signal
+      });
+      const texto = await resp.text();
+      let json = null;
+      try { json = JSON.parse(texto); } catch (e) { /* não é JSON */ }
+      if (!json) {
+        throw new Error(resp.ok
+          ? 'o Google devolveu uma página em vez de dados (cota do Drive/Apps Script, autorização vencida ou implantação desatualizada)'
+          : 'HTTP ' + resp.status);
+      }
+      return json;
+    } catch (err) {
+      ultimo = (err && err.name === 'AbortError') ? new Error('tempo esgotado (60 s)') : err;
+      if (t < max) await new Promise(r => setTimeout(r, 1500 * t));
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  throw ultimo;
+}
+
 async function adicionarFotoDia(ev) {
   const file = ev.target.files[0];
   ev.target.value = '';
@@ -3370,17 +3407,12 @@ async function adicionarFotoDia(ev) {
   if (status) status.style.display = 'block';
   try {
     const base64 = await comprimirFoto(file, 1280, 0.72);
-    const resp = await fetch(APPS_SCRIPT_URL_DIARIO, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        path: 'foto',
-        data: currentDay.data,
-        obra: state.obra.nome || 'Obra',
-        base64: base64
-      })
+    const json = await postarAppsScript({
+      path: 'foto',
+      data: currentDay.data,
+      obra: state.obra.nome || 'Obra',
+      base64: base64
     });
-    const json = await resp.json();
     if (!json || !json.fileId) throw new Error((json && (json.error || json.erro || json.msg)) || 'Resposta inválida do Apps Script');
     currentDay.fotos.push({ fileId: json.fileId, url: json.url });
     salvarDiarioDia(false);
@@ -7412,13 +7444,85 @@ function renderCalendario() {
     const div = document.createElement('div');
     div.className = 'cal-day';
     if (dow === 0 || dow === 6) div.classList.add('weekend');
-    const temRdo = chavesDaData(iso).length > 0;
+    const soPlanilha = chavesDaData(iso).length === 0 && linhasPlanilhaDaData(iso).length > 0;
+    const temRdo = chavesDaData(iso).length > 0 || soPlanilha;
     if (temRdo) div.classList.add('has-data');
+    if (soPlanilha) div.classList.add('da-planilha');
     if (iso === hoje) div.classList.add('today');
     div.innerHTML = `${d}${temRdo ? '<div class="cal-day-dot"></div>' : ''}`;
     div.onclick = () => abrirResumoData(iso);
     grid.appendChild(div);
   }
+  carregarMesDaPlanilha(cal.year, cal.month);
+}
+
+// ---- Diários que já estão na planilha (lançados por outros aparelhos) ----
+// A planilha é a fonte de verdade: o calendário mostra o que ela tem mesmo que este
+// aparelho ainda não tenha recebido o diário completo pela sincronização.
+var planilhaMes = {};   // 'AAAA-MM' -> { em, dias: { 'AAAA-MM-DD': [linhas] } }
+
+function dataDaLinhaPlanilha(v) {
+  const s = String(v || '').trim();
+  const br = s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+  if (br) return br[3] + '-' + br[2] + '-' + br[1];
+  const iso = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  return iso ? iso[1] : '';
+}
+
+function linhasPlanilhaDaData(iso) {
+  const m = planilhaMes[String(iso).slice(0, 7)];
+  return (m && m.dias[iso]) || [];
+}
+
+async function carregarMesDaPlanilha(ano, mes0, forcar) {
+  if (!APPS_SCRIPT_URL_DIARIO || !navigator.onLine) return;
+  const mes = `${ano}-${String(mes0 + 1).padStart(2, '0')}`;
+  const atual = planilhaMes[mes];
+  if (!forcar && atual && Date.now() - atual.em < 120000) return;
+  try {
+    const resp = await fetch(`${APPS_SCRIPT_URL_DIARIO}?path=diario&action=lista-mes&mes=${mes}`);
+    const json = await resp.json().catch(() => null);
+    if (!json || !json.ok || !Array.isArray(json.diarios)) return;
+    const dias = {};
+    json.diarios.forEach(l => {
+      const iso = dataDaLinhaPlanilha(l['Data']);
+      if (iso.slice(0, 7) === mes) (dias[iso] = dias[iso] || []).push(l);
+    });
+    const antes = JSON.stringify(Object.keys((atual && atual.dias) || {}).sort());
+    planilhaMes[mes] = { em: Date.now(), dias };
+    const depois = JSON.stringify(Object.keys(dias).sort());
+    if (antes !== depois && cal.year === ano && cal.month === mes0) renderCalendario();
+  } catch (err) {
+    console.warn('Não foi possível ler a planilha:', err);
+  }
+}
+
+// Linhas da planilha que este aparelho ainda não tem (outro apontador, ou dia ausente)
+function linhasPlanilhaSemRdoLocal(iso) {
+  const meus = rdosDaData(iso).map(d => slugApontador(d.apontador));
+  return linhasPlanilhaDaData(iso).filter(l => !meus.includes(slugApontador(l['Apontador'])));
+}
+
+function relatorioDaLinhaPlanilha(l) {
+  const v = (k) => String(l[k] == null ? '' : l[k]).trim();
+  const bloco = (titulo, k) => v(k) ? `\n${titulo}\n${v(k)}\n` : '';
+  return [
+    `📋 RDO ${v('RDO Nº') || '—'} · ${v('Obra')} · ${v('Empresa')}`,
+    `Apontador: ${v('Apontador') || '—'}`,
+    `Tempo: ${v('Tempo / Clima') || '—'}`,
+    `Jornada: ${v('Jornada') || '—'}`,
+    bloco('ATIVIDADES', 'Atividades do Dia'),
+    `Efetivo total: ${v('Efetivo Total') || 0}`,
+    v('Efetivo por Função'),
+    bloco('COLABORADORES', 'Colaboradores Presentes'),
+    bloco('EQUIPAMENTOS', 'Equipamentos Utilizados'),
+    bloco('VEÍCULOS LEVES', 'Veículos Leves'),
+    bloco('PARADOS', 'Veículos/Equip. Parados'),
+    bloco('SEGURANÇA', 'Eventos de Segurança'),
+    bloco('MEIO AMBIENTE', 'Eventos de Meio Ambiente'),
+    bloco('OBSERVAÇÕES', 'Observações do Dia'),
+    bloco('FOTOS', 'Fotos')
+  ].filter(x => x !== '').join('\n');
 }
 function navegarMes(delta) {
   cal.month += delta;
@@ -7429,11 +7533,18 @@ function navegarMes(delta) {
 function abrirResumoData(iso) {
   activeResumoData = iso;
   const rdos = rdosDaData(iso);
+  const daPlanilha = linhasPlanilhaSemRdoLocal(iso);
+  const totalRdos = rdos.length + daPlanilha.length;
   const titulo = `📅 ${DIAS_SEMANA_CURTO[parseISO(iso).getDay()]} · ${formatDateBR(iso)}`
-    + (rdos.length > 1 ? ` · ${rdos.length} RDOs` : '');
+    + (totalRdos > 1 ? ` · ${totalRdos} RDOs` : '');
   document.getElementById('modalResumoTitle').textContent = titulo;
 
-  if (!rdos.length) {
+  if (daPlanilha.length) {
+    const partesLocais = rdos.map(d => `━━━ APONTADOR: ${d.apontador || '—'} ━━━\n\n` + buildRelatorio(d));
+    const partesPlanilha = daPlanilha.map(l =>
+      `━━━ DA PLANILHA · APONTADOR: ${String(l['Apontador'] || '—')} ━━━\n\n` + relatorioDaLinhaPlanilha(l));
+    document.getElementById('modalResumoTexto').textContent = partesLocais.concat(partesPlanilha).join('\n\n\n');
+  } else if (!rdos.length) {
     document.getElementById('modalResumoTexto').textContent =
       'Nenhum diário registrado.\n\nToque em "Editar este Diário" para criar.';
   } else if (rdos.length === 1) {
@@ -7448,6 +7559,15 @@ function abrirResumoData(iso) {
 }
 function editarDiarioPassado() {
   if (!activeResumoData) return;
+  if (linhasPlanilhaSemRdoLocal(activeResumoData).length) {
+    const data = activeResumoData;
+    confirmar('Este dia já tem diário na planilha, lançado em outro aparelho. Editar aqui cria um diário novo neste aparelho e, se o apontador for o mesmo, substitui o da planilha. Continuar?',
+      () => { activeResumoData = data; abrirEdicaoDiarioPassado(); }, '⚠️ Dia já está na planilha');
+    return;
+  }
+  abrirEdicaoDiarioPassado();
+}
+function abrirEdicaoDiarioPassado() {
   salvarDiarioDia(false);
   fecharModal('modalResumo');
   initCurrentDay(activeResumoData);
@@ -7459,11 +7579,11 @@ function editarDiarioPassado() {
   toast('Editando ' + formatDateBR(activeResumoData));
 }
 function copiarResumoModal() {
-  if (!activeResumoData || !rdosDaData(activeResumoData).length) { toast('Nada para copiar'); return; }
+  if (!activeResumoData || !(rdosDaData(activeResumoData).length || linhasPlanilhaDaData(activeResumoData).length)) { toast('Nada para copiar'); return; }
   copiarTexto(document.getElementById('modalResumoTexto').textContent);
 }
 function enviarResumoWhatsApp() {
-  if (!activeResumoData || !rdosDaData(activeResumoData).length) { toast('Nada para enviar'); return; }
+  if (!activeResumoData || !(rdosDaData(activeResumoData).length || linhasPlanilhaDaData(activeResumoData).length)) { toast('Nada para enviar'); return; }
   abrirWhatsApp(document.getElementById('modalResumoTexto').textContent);
 }
 function excluirDiarioPassado() {
@@ -7498,7 +7618,7 @@ const AUTOBACKUP_META_KEY = 'diario_obras_v3_autobackup_meta';
 // valendo a gravação mais recente. Nada de outro apontador é apagado.
 // ============================================================
 const SYNC_INTERVALO_MS = 3 * 60 * 1000;   // busca a cada 3 minutos
-const SYNC_ESPERA_ENVIO_MS = 8 * 1000;     // agrupa gravações seguidas
+const SYNC_ESPERA_ENVIO_MS = 45 * 1000;    // agrupa gravações seguidas (antes 8 s: gerava um arquivo de ~560 KB a cada gravação)
 let _syncTimerEnvio = null;
 let _syncEmAndamento = false;
 
@@ -7637,24 +7757,33 @@ async function enviarSincronizacao() {
       const k = localStorage.key(i);
       if (/^(efetivoDia_|equipDia_|vlDia_|ativDia_)/.test(k)) chavesDia[k] = localStorage.getItem(k);
     }
+    // não reenvia se nada mudou desde o último envio (o carimbo "exportado" não conta)
+    const assinatura = hashTexto(JSON.stringify({ state, history, chavesDia }));
+    if (localStorage.getItem('ultimoEnvioHash') === assinatura) return true;
     const conteudo = JSON.stringify({
       state, history, chavesDia,
       exportado: new Date().toISOString(),
       versao: 'v4', tipo: 'sync', aparelho: aparelhoId()
     });
-    const resp = await fetch(APPS_SCRIPT_URL_DIARIO, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ path: 'backup', obra: state.obra.nome || 'Obra', conteudo })
+    const json = await postarAppsScript({
+      path: 'backup', obra: state.obra.nome || 'Obra', conteudo,
+      tipo: 'sync', aparelho: aparelhoId()
     });
-    const json = await resp.json().catch(() => null);
     if (!json || !json.ok) throw new Error((json && json.error) || 'resposta inválida');
     localStorage.setItem('ultimoEnvioSync', new Date().toISOString());
+    localStorage.setItem('ultimoEnvioHash', assinatura);
     return true;
   } catch (err) {
     console.warn('Envio da sincronização falhou (será tentado de novo):', err);
     return false;
   }
+}
+
+// Assinatura rápida (djb2) para saber se o conteúdo mudou
+function hashTexto(t) {
+  let h = 5381;
+  for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0;
+  return t.length + ':' + (h >>> 0).toString(36);
 }
 
 // Agenda o envio, agrupando gravações seguidas
@@ -7670,7 +7799,9 @@ async function sincronizarNuvem(silencioso) {
   _syncEmAndamento = true;
   try {
     const obra = state.obra.nome || 'Obra';
-    const resp = await fetch(`${APPS_SCRIPT_URL_DIARIO}?path=backup&action=buscar-ultimo&obra=${encodeURIComponent(obra)}`);
+    // "excluir": pede o envio mais recente de OUTRO aparelho (o servidor atualizado entende;
+    // o antigo ignora e devolve o último de todos, e o teste abaixo continua valendo)
+    const resp = await fetch(`${APPS_SCRIPT_URL_DIARIO}?path=backup&action=buscar-ultimo&obra=${encodeURIComponent(obra)}&excluir=${encodeURIComponent(aparelhoId())}`);
     const json = await resp.json().catch(() => null);
     if (!json || !json.ok) { if (!silencioso) toast('Nada novo na nuvem'); return null; }
 
@@ -7776,12 +7907,7 @@ async function backupNuvem(manual) {
       exportado: new Date().toISOString(),
       versao: 'v4', tipo: manual ? 'manual' : 'auto-nuvem'
     });
-    const resp = await fetch(APPS_SCRIPT_URL_DIARIO, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ path: 'backup', obra: state.obra.nome || 'Obra', conteudo })
-    });
-    const json = await resp.json().catch(() => null);
+    const json = await postarAppsScript({ path: 'backup', obra: state.obra.nome || 'Obra', conteudo, tipo: 'backup' });
     if (!json || !json.ok) throw new Error((json && json.error) || 'Resposta inválida');
     localStorage.setItem('ultimoBackupNuvem', hoje);
     const el = document.getElementById('infoBackupNuvem');
